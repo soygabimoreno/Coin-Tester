@@ -44,6 +44,7 @@ import com.appacoustic.cointester.analyzer.model.SamplingLoop;
 import com.appacoustic.cointester.analyzer.view.AnalyzerGraphicView;
 import com.appacoustic.cointester.analyzer.view.AnalyzerViews;
 import com.appacoustic.cointester.analyzer.view.SelectorText;
+import com.appacoustic.cointester.domain.Coin;
 import com.gabrielmorenoibarra.g.GLog;
 
 import butterknife.BindArray;

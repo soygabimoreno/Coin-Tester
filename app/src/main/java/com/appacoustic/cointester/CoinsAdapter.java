@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.appacoustic.cointester.CoinsFragment.OnListFragmentInteractionListener;
+import com.appacoustic.cointester.domain.Coin;
 import com.gabrielmorenoibarra.g.G;
 
 import java.util.List;

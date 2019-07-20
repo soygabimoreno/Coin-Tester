@@ -24,7 +24,7 @@ android {
     buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.appacoustic.cointester"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 3
         versionName "0.9.0"
@@ -43,6 +43,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':domain')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
