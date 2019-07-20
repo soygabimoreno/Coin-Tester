@@ -74,20 +74,6 @@ public class MainActivity extends AppCompatActivity implements CoinsFragment.OnL
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        GLog.d(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
-        App.getInstance().setUpdatable(this);
-    }
-
-    @Override
-    public void onStop() {
-        GLog.d(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
-        App.getInstance().setUpdatable(null);
-        super.onStop();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
