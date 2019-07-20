@@ -84,7 +84,6 @@ public class CoinsAdapter extends RecyclerView.Adapter<CoinsAdapter.Holder> {
     }
 
     static class Holder extends RecyclerView.ViewHolder {
-
         @BindView(R.id.rlItemCoinParent) RelativeLayout rlParent;
         @BindView(R.id.ivItemCoin) ImageView iv;
         @BindView(R.id.tvItemCoinName) TextView tvName;

@@ -1,5 +1,6 @@
 package com.appacoustic.cointester;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -63,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements CoinsFragment.OnL
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         setSupportActionBar(toolbar);
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
 
