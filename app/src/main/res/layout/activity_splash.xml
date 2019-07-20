@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout style="@style/MatchParent"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:background="@drawable/gradient"
+                android:gravity="center">
+
+    <ImageView
+        style="@style/WrapContent"
+        android:padding="48dp"
+        android:src="@drawable/ic_logo_planet_devices"/>
+</RelativeLayout>

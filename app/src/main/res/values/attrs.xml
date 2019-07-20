@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CustomTextView">
+        <attr name="ttf_name" format="string">
+            <enum name="titillium_web_regular" value="0"/>
+            <enum name="titillium_web_semi_bold" value="1"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="SelectorText">
+        <attr name="items" format="string" />
+        <attr name="itemsDisplay" format="string" />
+        <attr name="itemsSeparator" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="AnalyzerGraphicView">
+        <attr name="sampleRate" format="integer" />
+        <attr name="cutoffDB" format="integer" />
+    </declare-styleable>
+</resources>

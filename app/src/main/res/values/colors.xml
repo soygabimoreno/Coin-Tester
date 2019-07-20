@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <color name="colorPrimary">@color/deep_peach</color>
+  <color name="colorPrimaryDark">@color/candy_pink</color>
+  <color name="colorAccent">@color/cadet</color>
+
+  <color name="deep_peach">#f3c7a1</color>
+  <color name="candy_pink">#e87975</color>
+  <color name="cadet">#4d606f</color>
+  <color name="cadet_1">#5b636b</color>
+</resources>

@@ -1,0 +1,182 @@
+<RelativeLayout
+    style="@style/MatchParent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/gradient"
+    android:paddingBottom="64dp"
+    android:paddingEnd="@dimen/activity_padding"
+    android:paddingStart="@dimen/activity_padding"
+    android:paddingTop="@dimen/activity_padding">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardViewAnalyzerChecker"
+        style="@style/MatchParent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"
+        android:layout_marginEnd="@dimen/activity_padding"
+        android:layout_marginStart="@dimen/activity_padding"
+        android:layout_marginTop="@dimen/activity_padding"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp">
+
+        <RelativeLayout
+            android:id="@+id/rlAnalyzerSpectrum"
+            style="@style/MatchParent">
+
+            <LinearLayout
+                style="@style/MatchParent"
+                android:orientation="vertical">
+
+                <com.appacoustic.cointester.analyzer.view.AnalyzerGraphicView
+                    android:id="@+id/agvAnalyzer"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.32"
+                    app:cutoffDB="-25"
+                    app:sampleRate="16000"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tvAnalyzerRMS"
+                        style="@style/TvAnalyzer"
+                        android:layout_width="@dimen/tv_RMS_layout_width"
+                        android:lines="2"
+                        android:text="@string/tv_rms_text"/>
+
+                    <TextView
+                        android:id="@+id/tvAnalyzerMarker"
+                        style="@style/TvAnalyzer"
+                        android:layout_toEndOf="@id/tvAnalyzerRMS"
+                        android:text="@string/tv_marker_text"/>
+
+                    <TextView
+                        android:id="@+id/tvAnalyzerPeak"
+                        style="@style/TvAnalyzer"
+                        android:layout_below="@id/tvAnalyzerMarker"
+                        android:layout_toEndOf="@id/tvAnalyzerRMS"
+                        android:text="@string/tv_peak_text"/>
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tvAnalyzerRec"
+                    style="@style/TvAnalyzer"
+                    android:text="@string/tv_rec_text"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <com.appacoustic.cointester.analyzer.view.SelectorText
+                        android:id="@+id/tvAnalyzerMonitorRecord"
+                        style="@style/SelectorText"
+                        app:items="Mon Rec"
+                        app:itemsDisplay="@string/tv_monitor_record"/>
+
+                    <Button
+                        android:id="@+id/btnAnalyzerSampleRate"
+                        style="@style/BtnAnalyzer"
+                        android:textSize="@dimen/btn_text_font_size"
+                        tools:text="8000"/>
+
+                    <Button
+                        android:id="@+id/btnAnalyzerFFTLength"
+                        style="@style/BtnAnalyzer"
+                        android:textSize="@dimen/btn_text_font_size"
+                        tools:text="1024"/>
+
+                    <Button
+                        android:id="@+id/btnAnalyzerAverage"
+                        style="@style/BtnAnalyzer"
+                        android:textSize="@dimen/btn_text_font_size"
+                        tools:text="1"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end">
+
+                    <com.appacoustic.cointester.analyzer.view.SelectorText
+                        android:id="@+id/tvAnalyzerSpectrumSpectrogramMode"
+                        style="@style/SelectorText"
+                        app:items="spum spam"
+                        app:itemsDisplay="@string/tv_spectrum_spectrogram_mode"/>
+
+                    <com.appacoustic.cointester.analyzer.view.SelectorText
+                        android:id="@+id/tvAnalyzerDBDBA"
+                        style="@style/SelectorText"
+                        app:items="dB dBA"
+                        app:itemsDisplay="@string/tv_dB_dBA"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end">
+
+                    <com.appacoustic.cointester.analyzer.view.SelectorText
+                        android:id="@+id/tvAnalyzerLinearLogNote"
+                        style="@style/SelectorText"
+                        app:items="linear log note"
+                        app:itemsDisplay="@string/tv_linear_log_note"/>
+
+                    <com.appacoustic.cointester.analyzer.view.SelectorText
+                        android:id="@+id/tvAnalyzerRunStop"
+                        style="@style/SelectorText"
+                        app:items="run stop"
+                        app:itemsDisplay="@string/tv_run_stop"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llAnalyzerCheckerCoin"
+                style="@style/WrapContent"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:orientation="vertical">
+
+                <com.appacoustic.cointester.views.CustomTextView
+                    android:id="@+id/tvAnalyzerCheckerCoinName"
+                    style="@style/Tv"
+                    android:textColor="@color/cadet"
+                    android:textSize="22sp"
+                    app:ttf_name="titillium_web_semi_bold"
+                    tools:text="Euro"/>
+
+                <com.appacoustic.cointester.views.CustomTextView
+                    android:id="@+id/tvAnalyzerCheckerCoinPlace"
+                    style="@style/Tv"
+                    android:textColor="@color/cadet_1"
+                    android:textSize="16sp"
+                    tools:text="Europe"/>
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/cbAnalyzerCheckerStuckTab"
+                style="@style/WrapContent"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="35dp"
+                android:layout_marginStart="20dp"
+                android:layout_toEndOf="@id/llAnalyzerCheckerCoin"
+                android:text="@string/stuck_tab"/>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAnalyzerChecker"
+        style="@style/WrapContent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:scaleType="center"
+        android:src="@drawable/peseta"
+        app:backgroundTint="@color/candy_pink"
+        app:fabSize="normal"/>
+</RelativeLayout>

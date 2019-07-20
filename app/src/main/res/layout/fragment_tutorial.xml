@@ -1,0 +1,27 @@
+<ScrollView style="@style/MatchParent"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:padding="32dp"
+            android:background="@android:color/white"
+            tools:context="com.appacoustic.cointester.TutorialFragment"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.appacoustic.cointester.views.CustomTextView
+            style="@style/Tv"
+            android:layout_gravity="center"
+            android:text="@string/tutorial"
+            app:ttf_name="titillium_web_semi_bold"
+            android:textSize="48sp"/>
+
+        <com.appacoustic.cointester.views.CustomTextView
+            style="@style/Tv"
+            android:text="@string/hello_blank_fragment"/>
+    </LinearLayout>
+
+
+</ScrollView>

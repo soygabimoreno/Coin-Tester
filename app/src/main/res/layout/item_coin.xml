@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/rlItemCoinParent"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white">
+
+    <ImageView
+        android:id="@+id/ivItemCoin"
+        style="@style/WrapContent"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="19dp"
+        android:src="@drawable/circulo_vd"/>
+
+    <LinearLayout
+        style="@style/WrapContent"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="13dp"
+        android:layout_toEndOf="@+id/ivItemCoin"
+        android:orientation="vertical">
+
+        <com.appacoustic.cointester.views.CustomTextView
+            android:id="@+id/tvItemCoinName"
+            style="@style/Tv"
+            android:textColor="@color/cadet"
+            android:textSize="22sp"
+            app:ttf_name="titillium_web_semi_bold"
+            tools:text="Euro"/>
+
+        <com.appacoustic.cointester.views.CustomTextView
+            android:id="@+id/tvItemCoinPlace"
+            style="@style/Tv"
+            android:textColor="@color/cadet_1"
+            android:textSize="16sp"
+            tools:text="Europa"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.2"
+        android:background="@color/cadet_1">
+    </View>
+
+    <com.appacoustic.cointester.views.CustomButton
+        android:id="@+id/btnItemCoin"
+        android:layout_width="100dp"
+        android:layout_height="33dp"
+        android:layout_marginEnd="25dp"
+        android:background="@drawable/bg_datasheet"
+        android:gravity="center"
+        android:text="@string/datasheet"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"/>
+</RelativeLayout>
