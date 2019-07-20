@@ -7,6 +7,7 @@ import android.content.res.Resources;
  * Common resources of the application.
  * Created by Gabriel Moreno on 2017-09-30.
  */
+@Deprecated()
 public class AppResources {
 
     private Resources resources;
