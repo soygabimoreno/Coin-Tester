@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -114,7 +113,7 @@ public class AnalyzerViews {
         cbStuckTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) activity).getVp().setPagingEnabled(!((AppCompatCheckBox) v).isChecked());
+                ((MainActivity) activity).getVp().setStuck(((AppCompatCheckBox) v).isChecked());
             }
         });
     }

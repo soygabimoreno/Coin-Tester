@@ -44,7 +44,6 @@ public class CoinsFragment extends Fragment {
         return rootView;
     }
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

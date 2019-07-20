@@ -1,6 +1,5 @@
 package com.appacoustic.cointester;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,7 +20,7 @@ import android.widget.ImageView;
 
 import com.appacoustic.cointester.domain.Coin;
 import com.appacoustic.cointester.utils.DataManager;
-import com.appacoustic.cointester.views.CustomViewPager;
+import com.appacoustic.cointester.view.CustomViewPager;
 import com.crashlytics.android.Crashlytics;
 import com.gabrielmorenoibarra.g.G;
 import com.gabrielmorenoibarra.g.GGraphics;

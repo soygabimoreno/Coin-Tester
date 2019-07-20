@@ -11,14 +11,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.appacoustic.cointester.views.CustomTextView
+        <com.appacoustic.cointester.view.CustomTextView
             style="@style/Tv"
             android:layout_gravity="center"
             android:text="@string/tutorial"
             app:ttf_name="titillium_web_semi_bold"
             android:textSize="48sp"/>
 
-        <com.appacoustic.cointester.views.CustomTextView
+        <com.appacoustic.cointester.view.CustomTextView
             style="@style/Tv"
             android:text="@string/hello_blank_fragment"/>
     </LinearLayout>
