@@ -11,9 +11,8 @@ public class AnalyzerParams {
 
     public static final String TAG = AnalyzerParams.class.getSimpleName();
 
-    //    public static final int RECORDER_AGC_OFF = MediaRecorder.AudioSource.VOICE_RECOGNITION; // ERASE: OLD
     public static final int RECORDER_AGC_OFF = MediaRecorder.AudioSource.DEFAULT;
-    public static final int BYTES_PER_SAMPLE = 2; // COMMENT: formerly named BYTE_OF_SAMPLE
+    public static final int BYTES_PER_SAMPLE = 2;
     public static final double SAMPLE_VALUE_MAX = 32767.0;
 
     public static final int N_MIC_SOURCES = 7;
@@ -39,6 +38,28 @@ public class AnalyzerParams {
         this.audioSourceNames = audioSourceNames;
         this.audioSourceIds = audioSourceIds;
         this.windowFunctionNames = windowFunctionNames;
+    }
+
+    public String getAudioSourceName() {
+        return getAudioSourceNameFromId(audioSourceId);
+    }
+
+    private String getAudioSourceNameFromId(int id) {
+        for (int i = 0; i < audioSourceNames.length; i++) {
+            if (audioSourceIds[i] == id) {
+                return audioSourceNames[i];
+            }
+        }
+        GLog.e(TAG, "getAudioSourceNameFromId(): non-standard entry");
+        return String.valueOf(id);
+    }
+
+    public int[] getAudioSourceIds() {
+        return audioSourceIds;
+    }
+
+    public String getWindowFunctionName() {
+        return windowFunctionName;
     }
 
     public int getSampleRate() {
@@ -71,10 +92,6 @@ public class AnalyzerParams {
 
     public void setOverlapPercent(double overlapPercent) {
         this.overlapPercent = overlapPercent;
-    }
-
-    public String getWindowFunctionName() {
-        return windowFunctionName;
     }
 
     public void setWindowFunctionName(String windowFunctionName) {
@@ -119,24 +136,6 @@ public class AnalyzerParams {
 
     public String[] getAudioSourceNames() {
         return audioSourceNames;
-    }
-
-    public int[] getAudioSourceIds() {
-        return audioSourceIds;
-    }
-
-    public String getAudioSourceName() {
-        return getAudioSourceNameFromId(audioSourceId);
-    }
-
-    private String getAudioSourceNameFromId(int id) {
-        for (int i = 0; i < audioSourceNames.length; i++) {
-            if (audioSourceIds[i] == id) {
-                return audioSourceNames[i];
-            }
-        }
-        GLog.e(TAG, "getAudioSourceNameFromId(): non-standard entry");
-        return String.valueOf(id);
     }
 
     public int getAudioSourceId() {
