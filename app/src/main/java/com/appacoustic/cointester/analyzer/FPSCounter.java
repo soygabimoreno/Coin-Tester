@@ -2,7 +2,7 @@ package com.appacoustic.cointester.analyzer;
 
 import android.os.SystemClock;
 
-import com.gabrielmorenoibarra.g.GLog;
+import com.appacoustic.cointester.framework.KLog;
 
 /**
  * Frames Per Second Counter.
@@ -26,7 +26,7 @@ public class FPSCounter {
         long timeNow = SystemClock.uptimeMillis();
         if (timeOld + timeUpdateInterval <= timeNow) {
             fps = 1000 * (double) frameCount / (timeNow - timeOld);
-            GLog.d(tag, Thread.currentThread().getStackTrace()[2].getMethodName() + ": FPS: " + Math.round(100 * fps) / 100.0 +
+            KLog.Companion.d(": FPS: " + Math.round(100 * fps) / 100.0 +
                     " (" + frameCount + "/" + (timeNow - timeOld) + " ms)");
             timeOld = timeNow;
             frameCount = 0;

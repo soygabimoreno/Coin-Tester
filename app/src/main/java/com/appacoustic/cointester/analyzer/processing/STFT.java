@@ -18,7 +18,7 @@ package com.appacoustic.cointester.analyzer.processing;
 import com.appacoustic.cointester.analyzer.BesselCal;
 import com.appacoustic.cointester.analyzer.model.AnalyzerParams;
 import com.appacoustic.cointester.fft.RealDoubleFFT;
-import com.gabrielmorenoibarra.g.GLog;
+import com.appacoustic.cointester.framework.KLog;
 
 import java.util.Arrays;
 
@@ -72,12 +72,12 @@ public class STFT {
 
     public STFT(AnalyzerParams params) {
         this.sampleRate = params.getSampleRate();
-        this.fFTLength = params.getFFTLength();
+        this.fFTLength = params.getFftLength();
         this.hopLength = params.getHopLength(); // 50% overlap by default
         this.windowFunctionName = params.getWindowFunctionName();
         this.windowFunctionNames = params.getWindowFunctionNames();
 
-        if (params.getNFFTAverage() <= 0) {
+        if (params.getNFftAverage() <= 0) {
             throw new IllegalArgumentException(TAG + "::init(): nFFTAverage <= 0");
         }
         if (((-fFTLength) & fFTLength) != fFTLength) {
@@ -98,12 +98,12 @@ public class STFT {
 
         micGain = params.getMicGainDB();
         if (micGain != null) {
-            GLog.i(TAG, "Calibration load");
+            KLog.Companion.i("Calibration load");
             for (int i = 0; i < micGain.length; i++) {
                 micGain[i] = pow(10, micGain[i] / 10.0); // COMMENT: dB --> Linear No sería dividir entre 20 en vez de 10 ???
             }
         } else {
-            GLog.w(TAG, "No calibration");
+            KLog.Companion.w("No calibration");
         }
         setDBAWeighting(params.isDBAWeighting());
     }
@@ -222,7 +222,7 @@ public class STFT {
 
     public void feedData(short[] data, int length) {
         if (length > data.length) {
-            GLog.w(TAG, "Trying to read more samples than there are in the buffer");
+            KLog.Companion.w("Trying to read more samples than there are in the buffer");
             length = data.length;
         }
         int inLength = spectrumAmplitudeIn.length;

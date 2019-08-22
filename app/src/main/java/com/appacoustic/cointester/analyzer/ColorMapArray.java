@@ -1,6 +1,6 @@
 package com.appacoustic.cointester.analyzer;
 
-import com.gabrielmorenoibarra.g.GLog;
+import com.appacoustic.cointester.framework.KLog;
 
 /**
  * Colors for Spectrogram.
@@ -28,7 +28,7 @@ class ColorMapArray {
             case "viridis":
                 return viridis;
             default:
-                GLog.i("ColorMapArray:", "No this color map: " + colorMapName);
+                KLog.Companion.i("No this color map: " + colorMapName);
                 return hot;
         }
     }

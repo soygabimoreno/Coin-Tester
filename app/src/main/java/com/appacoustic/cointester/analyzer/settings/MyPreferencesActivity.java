@@ -11,7 +11,7 @@ import android.preference.PreferenceActivity;
 import com.appacoustic.cointester.AnalyzerFragment;
 import com.appacoustic.cointester.R;
 import com.appacoustic.cointester.analyzer.AnalyzerUtil;
-import com.gabrielmorenoibarra.g.GLog;
+import com.appacoustic.cointester.framework.KLog;
 
 @SuppressWarnings("deprecation")
 public class MyPreferencesActivity extends PreferenceActivity {
@@ -27,7 +27,7 @@ public class MyPreferencesActivity extends PreferenceActivity {
                 return audioSourcesName[i];
             }
         }
-        GLog.e(TAG, "getAudioSourceName(): no this entry.");
+        KLog.Companion.e("getAudioSourceName(): no this entry.");
         return "";
     }
 
@@ -43,7 +43,7 @@ public class MyPreferencesActivity extends PreferenceActivity {
     private SharedPreferences.OnSharedPreferenceChangeListener prefListener =
             new SharedPreferences.OnSharedPreferenceChangeListener() {
                 public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                    GLog.i(TAG, key + "=" + prefs);
+                    KLog.Companion.i(key + "=" + prefs);
                     if (key == null || key.equals("windowFunction")) {
                         Preference connectionPref = findPreference(key);
                         connectionPref.setSummary(prefs.getString(key, ""));
@@ -79,8 +79,8 @@ public class MyPreferencesActivity extends PreferenceActivity {
         // Get list of supported sources
         AnalyzerUtil au = new AnalyzerUtil(this);
         final int[] audioSourcesId = au.GetAllAudioSource(4);
-        GLog.i(TAG, " n_as = " + audioSourcesId.length);
-        GLog.i(TAG, " n_ex = " + nExtraSources);
+        KLog.Companion.i(" n_as = " + audioSourcesId.length);
+        KLog.Companion.i(" n_ex = " + nExtraSources);
         audioSourcesName = new String[audioSourcesId.length + nExtraSources];
         for (int i = 0; i < audioSourcesId.length; i++) {
             audioSourcesName[i] = au.getAudioSourceName(audioSourcesId[i]);

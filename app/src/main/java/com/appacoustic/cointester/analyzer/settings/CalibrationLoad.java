@@ -3,7 +3,7 @@ package com.appacoustic.cointester.analyzer.settings;
 import android.content.Context;
 import android.net.Uri;
 
-import com.gabrielmorenoibarra.g.GLog;
+import com.appacoustic.cointester.framework.KLog;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -32,11 +32,11 @@ public class CalibrationLoad {
         try {
             inputStream = context.getContentResolver().openInputStream(calibUri);
         } catch (FileNotFoundException e) {
-            GLog.e(TAG, "no calib file found: " + calibPath);
+            KLog.Companion.e("no calib file found: " + calibPath);
             return;
         }
         if (inputStream == null) {
-            GLog.e(TAG, "open calib file fail: " + calibPath);
+            KLog.Companion.e("open calib file fail: " + calibPath);
             return;
         }
         br = new BufferedReader(new InputStreamReader(inputStream));
@@ -59,7 +59,7 @@ public class CalibrationLoad {
                     // 20.00	-4.2
                     String[] strs = line.split("[ \t]+");
                     if (strs.length != 2) {
-                        GLog.w(TAG, "Fail to parse line " + lineCount + " :" + line);
+                        KLog.Companion.w("Fail to parse line " + lineCount + " :" + line);
                         continue;
                     }
                     freqList.add(Double.valueOf(strs[0]));
@@ -69,7 +69,7 @@ public class CalibrationLoad {
                     //*1000Hz	-37.4
                     String[] strs = line.substring(1).split("Hz[ \t]+");
                     if (strs.length == 2) {
-                        GLog.i(TAG, "Dayton Audio header");
+                        KLog.Companion.i("Dayton Audio header");
                         centralFreq = Double.valueOf(strs[0]);
                         centralGain = Double.valueOf(strs[1]);
                     }
@@ -87,7 +87,7 @@ public class CalibrationLoad {
                     // Shell style comment line
                     // Skip
                 } else {
-                    GLog.e(TAG, "Bad calibration file.");
+                    KLog.Companion.e("Bad calibration file.");
                     freqList.clear();
                     amplitudeDBList.clear();
                     break;
@@ -104,7 +104,7 @@ public class CalibrationLoad {
                 gain[j] = (double) itr2.next();
             }
         } catch (IOException e) {
-            GLog.e(TAG, "Fail to read file: " + calibPath);
+            KLog.Companion.e("Fail to read file: " + calibPath);
         }
     }
 }

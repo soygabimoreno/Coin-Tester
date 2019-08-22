@@ -2,7 +2,7 @@ package com.appacoustic.cointester.analyzer;
 
 import android.os.SystemClock;
 
-import com.gabrielmorenoibarra.g.GLog;
+import com.appacoustic.cointester.framework.KLog;
 
 /**
  * Monitor for recording.
@@ -55,14 +55,14 @@ public class RecorderMonitor {
         long nSamplesFromTime = (long) ((timeNow - timeStarted) * sampleRateReal / 1000);
         double f1 = (double) nSamplesRead / sampleRateReal;
         double f2 = (double) nSamplesFromTime / sampleRateReal;
-//    GLog.i(TAG, "Buffer"
+//    KLog.Companion.i("Buffer"
 //        + " should read " + nSamplesFromTime + " (" + Math.round(f2*1000)/1000.0 + "s),"
 //        + " actual read " + nSamplesRead + " (" + Math.round(f1*1000)/1000.0 + "s)\n"
 //        + " diff " + (nSamplesFromTime-nSamplesRead) + " (" + Math.round((f2-f1)*1000)/1e3 + "s)"
 //        + " sampleRate = " + Math.round(sampleRateReal*100)/100.0);
         // Check if buffer overrun occur
         if (nSamplesFromTime > bufferSampleSize + nSamplesRead) {
-            GLog.w(TAG, METHOD_NAME + ": Buffer Overrun occurred !\n"
+            KLog.Companion.w(METHOD_NAME + ": Buffer Overrun occurred !\n"
                     + " should read " + nSamplesFromTime + " (" + Math.round(f2 * 1000) / 1000.0 + "s),"
                     + " actual read " + nSamplesRead + " (" + Math.round(f1 * 1000) / 1000.0 + "s)\n"
                     + " diff " + (nSamplesFromTime - nSamplesRead) + " (" + Math.round((f2 - f1) * 1000) / 1e3 + "s)"
@@ -75,7 +75,7 @@ public class RecorderMonitor {
         if (nSamplesRead > 10 * sampleRate) {
             sampleRateReal = 0.9 * sampleRateReal + 0.1 * (nSamplesRead * 1000.0 / (timeNow - timeStarted));
             if (Math.abs(sampleRateReal - sampleRate) > 0.0145 * sampleRate) {  // 0.0145 = 25 cent
-                GLog.w(TAG, METHOD_NAME + ": Sample rate inaccurate, possible hardware problem !\n"
+                KLog.Companion.w(METHOD_NAME + ": Sample rate inaccurate, possible hardware problem !\n"
                         + " should read " + nSamplesFromTime + " (" + Math.round(f2 * 1000) / 1000.0 + "s),"
                         + " actual read " + nSamplesRead + " (" + Math.round(f1 * 1000) / 1000.0 + "s)\n"
                         + " diff " + (nSamplesFromTime - nSamplesRead) + " (" + Math.round((f2 - f1) * 1000) / 1e3 + "s)"

@@ -32,9 +32,9 @@ import android.widget.Toast;
 import com.appacoustic.cointester.AnalyzerFragment;
 import com.appacoustic.cointester.MainActivity;
 import com.appacoustic.cointester.R;
+import com.appacoustic.cointester.analyzer.AnalyzerUtil;
 import com.appacoustic.cointester.analyzer.SBNumFormat;
 import com.appacoustic.cointester.analyzer.model.AnalyzerParams;
-import com.appacoustic.cointester.analyzer.AnalyzerUtil;
 
 import butterknife.BindArray;
 import butterknife.BindDimen;

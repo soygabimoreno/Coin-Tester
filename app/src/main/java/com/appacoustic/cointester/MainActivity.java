@@ -19,12 +19,12 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.appacoustic.cointester.domain.Coin;
+import com.appacoustic.cointester.framework.KLog;
 import com.appacoustic.cointester.utils.DataManager;
 import com.appacoustic.cointester.view.CustomViewPager;
 import com.crashlytics.android.Crashlytics;
 import com.gabrielmorenoibarra.g.G;
 import com.gabrielmorenoibarra.g.GGraphics;
-import com.gabrielmorenoibarra.g.GLog;
 
 import butterknife.BindDrawable;
 import butterknife.BindString;
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements CoinsFragment.OnL
     }
 
     public void updateActivityOnUiThread() {
-        GLog.d(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
+        KLog.Companion.d(Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

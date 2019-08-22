@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.appacoustic.cointester.AnalyzerFragment;
 import com.appacoustic.cointester.R;
 import com.appacoustic.cointester.analyzer.view.AnalyzerGraphicView;
-import com.gabrielmorenoibarra.g.GLog;
+import com.appacoustic.cointester.framework.KLog;
 
 import java.text.DecimalFormat;
 
@@ -69,7 +69,7 @@ public class RangeViewDialogC {
     private void SetRangeView(boolean loadSaved) {
         final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
         if (rangeViewDialog == null) {
-            GLog.d(TAG, METHOD_NAME + ": rangeViewDialog is not prepared.");
+            KLog.Companion.d(METHOD_NAME + ": rangeViewDialog is not prepared.");
             return;
         }
         double[] vals = graphView.getViewPhysicalRange();
@@ -82,7 +82,7 @@ public class RangeViewDialogC {
             for (int i = 0; i < rr.length; i++) {
                 rr[i] = AnalyzerUtil.getDouble(sharedPref, "view_range_rr_" + i, 0.0 / 0.0);
                 if (Double.isNaN(rr[i])) {  // not properly initialized
-                    GLog.w(TAG, METHOD_NAME + ": rr is not properly initialized");
+                    KLog.Companion.w(METHOD_NAME + ": rr is not properly initialized");
                     rr = null;
                     break;
                 }
@@ -149,14 +149,14 @@ public class RangeViewDialogC {
                                 R.id.etRangesDBLowerBound, R.id.etRangesDBUpperBound};
                         for (int i = 0; i < resList.length; i++) {
                             EditText et = (EditText) rangeViewView.findViewById(resList[i]);
-                            if (et == null) GLog.d(TAG, "EditText[" + i + "] == null");
+                            if (et == null) KLog.Companion.d("EditText[" + i + "] == null");
                             if (et == null) continue;
-                            if (et.getTag() == null) GLog.d(TAG, "EditText[" + i + "].getTag == null");
+                            if (et.getTag() == null) KLog.Companion.d("EditText[" + i + "].getTag == null");
                             if (et.getTag() == null || (boolean) et.getTag() || isLock) {
                                 rr[i] = AnalyzerUtil.parseDouble(et.getText().toString());
                             } else {
                                 rr[i] = rangeDefault[i];
-                                GLog.d(TAG, "EditText[" + i + "] not change. rr[i] = " + rr[i]);
+                                KLog.Companion.d("EditText[" + i + "] not change. rr[i] = " + rr[i]);
                             }
                         }
                         // Save setting to preference, after sanitized.
@@ -172,7 +172,7 @@ public class RangeViewDialogC {
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        GLog.d(TAG, "rangeViewDialog: Canceled");
+                        KLog.Companion.d("rangeViewDialog: Canceled");
                     }
                 });
 //    freqDialogBuilder

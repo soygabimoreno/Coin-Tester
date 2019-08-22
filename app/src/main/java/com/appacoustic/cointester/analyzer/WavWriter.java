@@ -19,7 +19,7 @@ import android.annotation.SuppressLint;
 import android.os.Environment;
 import android.os.StatFs;
 
-import com.gabrielmorenoibarra.g.GLog;
+import com.appacoustic.cointester.framework.KLog;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -123,7 +123,7 @@ public class WavWriter {
         }
         File path = new File(Environment.getExternalStorageDirectory().getPath() + relativeDir);
         if (!path.exists() && !path.mkdirs()) {
-            GLog.e(TAG, "Failed to make directory: " + path.toString());
+            KLog.Companion.e("Failed to make directory: " + path.toString());
             return false;
         }
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH'h'mm'm'ss.SSS's'", Locale.US);
@@ -135,7 +135,7 @@ public class WavWriter {
             out.write(header, 0, 44);
             // http://developer.android.com/reference/android/os/Environment.html#getExternalStoragePublicDirectory%28java.lang.String%29
         } catch (IOException e) {
-            GLog.w(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + ": Error writing " + outPath, e);
+            e.printStackTrace();
             out = null;
         }
         return true;
@@ -144,13 +144,13 @@ public class WavWriter {
     public void stop() {
         final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
         if (out == null) {
-            GLog.w(TAG, METHOD_NAME + ": Error closing " + outPath + "  null pointer");
+            KLog.Companion.w(METHOD_NAME + ": Error closing " + outPath + "  null pointer");
             return;
         }
         try {
             out.close();
         } catch (IOException e) {
-            GLog.w(TAG, METHOD_NAME + ": Error closing " + outPath, e);
+            e.printStackTrace();
         }
         out = null;
         // Modify totalDataLen and totalAudioLen to match data
@@ -171,7 +171,7 @@ public class WavWriter {
             raf.write((byte) ((totalAudioLen >> 24) & 0xff));
             raf.close();
         } catch (IOException e) {
-            GLog.w(TAG, METHOD_NAME + ": Error modifying " + outPath, e);
+            e.printStackTrace();
         }
     }
 
@@ -181,7 +181,7 @@ public class WavWriter {
     public void pushAudioShort(short[] ss, int numOfReadShort) {
         final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
         if (out == null) {
-            GLog.w(TAG, METHOD_NAME + ": Error writing " + outPath + "  null pointer");
+            KLog.Companion.w(METHOD_NAME + ": Error writing " + outPath + "  null pointer");
             return;
         }
         if (byteBuffer == null || byteBuffer.length != ss.length * 2) {
@@ -196,7 +196,7 @@ public class WavWriter {
             out.write(byteBuffer, 0, numOfReadShort * 2);
             // if use out.write(byte), then a lot of GC will generated
         } catch (IOException e) {
-            GLog.w(TAG, METHOD_NAME + ": Error writing " + outPath, e);
+            e.printStackTrace();
             out = null;
         }
     }

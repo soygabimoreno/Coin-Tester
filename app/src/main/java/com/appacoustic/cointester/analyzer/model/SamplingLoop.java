@@ -10,8 +10,8 @@ import com.appacoustic.cointester.analyzer.SineGenerator;
 import com.appacoustic.cointester.analyzer.WavWriter;
 import com.appacoustic.cointester.analyzer.processing.STFT;
 import com.appacoustic.cointester.analyzer.view.AnalyzerViews;
+import com.appacoustic.cointester.framework.KLog;
 import com.appacoustic.cointester.utils.Tools;
-import com.gabrielmorenoibarra.g.GLog;
 
 import java.util.Arrays;
 
@@ -56,19 +56,19 @@ public class SamplingLoop extends Thread {
     public SamplingLoop(AnalyzerFragment analyzerFragment, AnalyzerParams params) {
         this.analyzerFragment = analyzerFragment;
         this.params = params;
-        bytesPerSample = AnalyzerParams.BYTES_PER_SAMPLE;
-        sampleValueMax = AnalyzerParams.SAMPLE_VALUE_MAX;
+        bytesPerSample = AnalyzerParams.Companion.getBYTES_PER_SAMPLE();
+        sampleValueMax = AnalyzerParams.Companion.getSAMPLE_VALUE_MAX();
         audioSourceId = params.getAudioSourceId();
         sampleRate = params.getSampleRate();
-        fFTLength = params.getFFTLength();
-        nFFTAverage = params.getNFFTAverage();
+        fFTLength = params.getFftLength();
+        nFFTAverage = params.getNFftAverage();
         analyzerViews = analyzerFragment.getAnalyzerViews();
 
         paused = analyzerFragment.getTvRun().getValue().equals("stop");
         double amp0 = Tools.dBToLinear(TEST_SIGNAL_1_DB_1);
         double amp1 = Tools.dBToLinear(TEST_SIGNAL_2_DB_1);
         double amp2 = Tools.dBToLinear(TEST_SIGNAL_2_DB_2);
-        if (audioSourceId == AnalyzerParams.ID_TEST_SIGNAL_1) {
+        if (audioSourceId == AnalyzerParams.Companion.getID_TEST_SIGNAL_1()) {
             sineGenerator0 = new SineGenerator(TEST_SIGNAL_1_FREQ_1, sampleRate, sampleValueMax * amp0);
         } else {
             sineGenerator0 = new SineGenerator(TEST_SIGNAL_2_FREQ_1, sampleRate, sampleValueMax * amp1);
@@ -84,13 +84,13 @@ public class SamplingLoop extends Thread {
         try {
             analyzerFragment.graphInit.join();  // TODO: Seems not working as intended
         } catch (InterruptedException e) {
-            GLog.w(TAG, METHOD_NAME + ": analyzerFragment.graphInit.join() failed");
+            KLog.Companion.w(METHOD_NAME + ": analyzerFragment.graphInit.join() failed");
         }
         long timeEnd = SystemClock.uptimeMillis();
         long time = timeEnd - timeStart;
         if (time < 500) {
             long timeWaiting = 500 - time;
-            GLog.i(TAG, METHOD_NAME + "Wait " + timeWaiting + " ms more...");
+            KLog.Companion.i(METHOD_NAME + "Wait " + timeWaiting + " ms more...");
             try {
                 Thread.sleep(timeWaiting);
             } catch (InterruptedException e) {
@@ -103,7 +103,7 @@ public class SamplingLoop extends Thread {
                 AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT);
         if (minBufferSize == AudioRecord.ERROR_BAD_VALUE) {
-            GLog.e(TAG, METHOD_NAME + ": Invalid AudioRecord parameters");
+            KLog.Companion.e(METHOD_NAME + ": Invalid AudioRecord parameters");
             return;
         }
 
@@ -116,19 +116,19 @@ public class SamplingLoop extends Thread {
         // The buffer size here seems not relate to the delay.
         // So choose a larger size (~1sec) so that overrun is unlikely.
         try {
-            if (audioSourceId < AnalyzerParams.ID_TEST_SIGNAL_1) {
+            if (audioSourceId < AnalyzerParams.Companion.getID_TEST_SIGNAL_1()) {
                 record = new AudioRecord(audioSourceId, sampleRate, AudioFormat.CHANNEL_IN_MONO,
                         AudioFormat.ENCODING_PCM_16BIT, bytesPerSample * bufferSampleSize);
             } else {
-                record = new AudioRecord(AnalyzerParams.RECORDER_AGC_OFF, sampleRate, AudioFormat.CHANNEL_IN_MONO,
+                record = new AudioRecord(AnalyzerParams.Companion.getRECORDER_AGC_OFF(), sampleRate, AudioFormat.CHANNEL_IN_MONO,
                         AudioFormat.ENCODING_PCM_16BIT, bytesPerSample * bufferSampleSize);
             }
         } catch (IllegalArgumentException e) {
-            GLog.e(TAG, METHOD_NAME + "Fail to initialize recorder");
+            KLog.Companion.e(METHOD_NAME + "Fail to initialize recorder");
             analyzerViews.notifyToast("Illegal recorder argument: change source");
             return;
         }
-        GLog.i(TAG, METHOD_NAME + ": Starting recorder... \n" +
+        KLog.Companion.i(METHOD_NAME + ": Starting recorder... \n" +
                 "Source: " + params.getAudioSourceName() + "\n" +
                 String.format("Sample rate: %d Hz (requested %d Hz)\n", record.getSampleRate(), sampleRate) +
                 String.format("Min buffer size: %d samples, %d bytes\n", minBufferSize / bytesPerSample, minBufferSize) +
@@ -139,7 +139,7 @@ public class SamplingLoop extends Thread {
         params.setSampleRate(record.getSampleRate());
 
         if (record.getState() == AudioRecord.STATE_UNINITIALIZED) {
-            GLog.e(TAG, METHOD_NAME + ": Fail initializing the AudioRecord");
+            KLog.Companion.e(METHOD_NAME + ": Fail initializing the AudioRecord");
             analyzerViews.notifyToast("Fail initializing the recorder.");
             return;
         }
@@ -163,14 +163,14 @@ public class SamplingLoop extends Thread {
             wavWriter.start();
             wavSecondsRemain = wavWriter.secondsLeft();
             wavSeconds = 0;
-            GLog.i(TAG, METHOD_NAME + "PCM write to file '" + wavWriter.getPath() + "'");
+            KLog.Companion.i(METHOD_NAME + "PCM write to file '" + wavWriter.getPath() + "'");
         }
 
         try {
             record.startRecording();
         } catch (IllegalStateException e) {
             String error = "Fail start recording";
-            GLog.e(TAG, METHOD_NAME + ": " + error);
+            KLog.Companion.e(METHOD_NAME + ": " + error);
             analyzerViews.notifyToast(error);
             return;
         }
@@ -180,7 +180,7 @@ public class SamplingLoop extends Thread {
         // related to recorder: e.g. audioSourceId, sampleRate, bufferSampleSize
         // TODO: allow change of FFT length on the fly
         while (running) {
-            if (audioSourceId >= AnalyzerParams.ID_TEST_SIGNAL_1) {
+            if (audioSourceId >= AnalyzerParams.Companion.getID_TEST_SIGNAL_1()) {
                 numOfReadShort = readTestData(audioSamples, 0, readChunkSize, audioSourceId);
             } else {
                 numOfReadShort = record.read(audioSamples, 0, readChunkSize);   // COMMENT: read
@@ -221,12 +221,12 @@ public class SamplingLoop extends Thread {
                 analyzerFragment.setDtRMSFromFT(sTFT.getRMSFromFT());
             }
         }
-        GLog.i(TAG, METHOD_NAME + ": Actual sample rate: " + recorderMonitor.getSampleRate());
-        GLog.i(TAG, METHOD_NAME + ": Stopping and releasing recorder.");
+        KLog.Companion.i(METHOD_NAME + ": Actual sample rate: " + recorderMonitor.getSampleRate());
+        KLog.Companion.i(METHOD_NAME + ": Stopping and releasing recorder.");
         record.stop();
         record.release();
         if (saveWav) {
-            GLog.i(TAG, METHOD_NAME + ": Ending saved wav.");
+            KLog.Companion.i(METHOD_NAME + ": Ending saved wav.");
             wavWriter.stop();
             analyzerViews.notifyWAVSaved(wavWriter.relativeDir);
         }
@@ -237,7 +237,7 @@ public class SamplingLoop extends Thread {
             data = new double[sizeInShorts];
         }
         Arrays.fill(data, 0.0);
-        switch (id - AnalyzerParams.ID_TEST_SIGNAL_1) {
+        switch (id - AnalyzerParams.Companion.getID_TEST_SIGNAL_1()) {
             case 1:
                 sineGenerator1.getSamples(data);
                 // No break, so values of data added
@@ -253,7 +253,7 @@ public class SamplingLoop extends Thread {
                 }
                 break;
             default:
-                GLog.w(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + ": this id has no source: " + audioSourceId);
+                KLog.Companion.w(Thread.currentThread().getStackTrace()[2].getMethodName() + ": this id has no source: " + audioSourceId);
         }
         limitFrameRate(1000.0 * sizeInShorts / sampleRate); // Block this thread, so that behave as if read from real device
         return sizeInShorts;

@@ -1,6 +1,6 @@
 package com.appacoustic.cointester.analyzer;
 
-import com.gabrielmorenoibarra.g.GLog;
+import com.appacoustic.cointester.framework.KLog;
 
 import static java.lang.Math.ceil;
 import static java.lang.Math.floor;
@@ -59,11 +59,11 @@ public class GridLabel {
                                            double gridDensity, Type scale_mode) {
         final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
         if (Double.isInfinite(startValue + endValue) || Double.isNaN(startValue + endValue)) {
-            GLog.e(TAG, METHOD_NAME + ": value invalid");
+            KLog.Companion.e(METHOD_NAME + ": value invalid");
             return 0;
         }
         if (startValue == endValue) {
-            GLog.e(TAG, METHOD_NAME + ": startValue == endValue");
+            KLog.Companion.e(METHOD_NAME + ": startValue == endValue");
             return 0;
         }
         if (startValue > endValue) {
@@ -129,7 +129,7 @@ public class GridLabel {
         }
 
         if (gridPointsArray == null || gridPointsArray.length != 2) {
-            GLog.e(TAG, METHOD_NAME + " : empty array!!");
+            KLog.Companion.e(METHOD_NAME + " : empty array!!");
             return 0;
         }
 
@@ -162,15 +162,15 @@ public class GridLabel {
                                                 double gridDensity) {
         final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
         if (Double.isInfinite(startValue + endValue) || Double.isNaN(startValue + endValue)) {
-            GLog.e(TAG, METHOD_NAME + ": value invalid");
+            KLog.Companion.e(METHOD_NAME + ": value invalid");
             return 0;
         }
         if (startValue == endValue) {
-            GLog.e(TAG, METHOD_NAME + ": startValue == endValue");
+            KLog.Companion.e(METHOD_NAME + ": startValue == endValue");
             return 0;
         }
         if (startValue <= 0 || endValue <= 0) {
-            GLog.e(TAG, METHOD_NAME + ": startValue <=0 || endValue <= 0 !!");
+            KLog.Companion.e(METHOD_NAME + ": startValue <=0 || endValue <= 0 !!");
             return 0;
         }
         if (startValue > endValue) {
@@ -186,7 +186,7 @@ public class GridLabel {
             // Minor:  1, 2, 3, ... , 9, 10, 20, 30, ...
             double gapChangingPoint = pow(10, floor(log10(startValue)));
             double gridIntervalSmall = ceil(startValue / gapChangingPoint) * gapChangingPoint;
-//            GLog.i(TAG, "startValue = " + startValue + "  gapChangingPoint = " + gapChangingPoint + "  gridIntervalSmall = " + gridIntervalSmall);
+//            KLog.Companion.i("startValue = " + startValue + "  gapChangingPoint = " + gapChangingPoint + "  gridIntervalSmall = " + gridIntervalSmall);
 
             double b1 = pow(10, ceil(log10(startValue)));
             double b2 = pow(10, floor(log10(endValue)));
@@ -256,9 +256,9 @@ public class GridLabel {
             // reduce gridDensity when endValue/startValue is large
             gridDensity /= log(49 * endValue / startValue + 1) / log(50);
             double gridIntervalGuess = pow(endValue / startValue, 1 / gridDensity);
-//            GLog.i(TAG, "  gridIntervalGuess = " + gridIntervalGuess + "  gridDensity = " + gridDensity + "  s = " + startValue + "  e = " + endValue);
+//            KLog.Companion.i("  gridIntervalGuess = " + gridIntervalGuess + "  gridDensity = " + gridDensity + "  s = " + startValue + "  e = " + endValue);
             gridIntervalGuess = (gridIntervalGuess - 1) * startValue;
-//            GLog.i(TAG, "  gridIntervalGuess2 = " + gridIntervalGuess);
+//            KLog.Companion.i("  gridIntervalGuess2 = " + gridIntervalGuess);
 
             double gridIntervalBig, gridIntervalSmall;
             double exponent = pow(10, floor(log10(gridIntervalGuess)));
@@ -321,11 +321,11 @@ public class GridLabel {
         final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
         // For Type.FREQ_NOTE
         if (Double.isInfinite(startValue + endValue) || Double.isNaN(startValue + endValue)) {
-            GLog.e(TAG, METHOD_NAME + ": value invalid");
+            KLog.Companion.e(METHOD_NAME + ": value invalid");
             return 0;
         }
         if (startValue == endValue) {
-            GLog.e(TAG, METHOD_NAME + ": startValue == endValue");
+            KLog.Companion.e(METHOD_NAME + ": startValue == endValue");
             return 0;
         }
         if (startValue > endValue) {
@@ -399,7 +399,7 @@ public class GridLabel {
             }
         }
 
-//        GLog.i(TAG, "Note: " + startPitch + "(" + startValue + ") ~ " + endPitch + " (" + endValue + ") div " + gridPointsArray[0].length);
+//        KLog.Companion.i("Note: " + startPitch + "(" + startValue + ") ~ " + endPitch + " (" + endValue + ") div " + gridPointsArray[0].length);
         for (int k = 0; k < 2; k++) {
             for (int i = 0; i < gridPointsArray[k].length; i++) {
                 gridPointsArray[k][i] = AnalyzerUtil.pitch2freq(gridPointsArray[k][i]);

@@ -35,17 +35,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appacoustic.cointester.analyzer.AnalyzerUtil;
-import com.appacoustic.cointester.analyzer.settings.CalibrationLoad;
-import com.appacoustic.cointester.analyzer.settings.AudioSourcesCheckerActivity;
-import com.appacoustic.cointester.analyzer.settings.MyPreferencesActivity;
 import com.appacoustic.cointester.analyzer.RangeViewDialogC;
 import com.appacoustic.cointester.analyzer.model.AnalyzerParams;
 import com.appacoustic.cointester.analyzer.model.SamplingLoop;
+import com.appacoustic.cointester.analyzer.settings.AudioSourcesCheckerActivity;
+import com.appacoustic.cointester.analyzer.settings.CalibrationLoad;
+import com.appacoustic.cointester.analyzer.settings.MyPreferencesActivity;
 import com.appacoustic.cointester.analyzer.view.AnalyzerGraphicView;
 import com.appacoustic.cointester.analyzer.view.AnalyzerViews;
 import com.appacoustic.cointester.analyzer.view.SelectorText;
 import com.appacoustic.cointester.domain.Coin;
-import com.gabrielmorenoibarra.g.GLog;
+import com.appacoustic.cointester.framework.KLog;
 
 import butterknife.BindArray;
 import butterknife.BindColor;
@@ -133,10 +133,10 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
         for (int i = 0; i < audioSourcesString.length; i++) {
             audioSources[i] = Integer.parseInt(audioSourcesString[i]);
         }
-        int sourcesCounter = AnalyzerParams.N_MIC_SOURCES;
-        AnalyzerParams.ID_TEST_SIGNAL_1 = audioSources[sourcesCounter];
-        AnalyzerParams.ID_TEST_SIGNAL_2 = audioSources[sourcesCounter + 1];
-        AnalyzerParams.ID_TEST_SIGNAL_WHITE_NOISE = audioSources[sourcesCounter + 2];
+        int sourcesCounter = AnalyzerParams.Companion.getN_MIC_SOURCES();
+        AnalyzerParams.Companion.setID_TEST_SIGNAL_1(audioSources[sourcesCounter]);
+        AnalyzerParams.Companion.setID_TEST_SIGNAL_2(audioSources[sourcesCounter + 1]);
+        AnalyzerParams.Companion.setID_TEST_SIGNAL_WHITE_NOISE(audioSources[sourcesCounter + 2]);
 
         params = new AnalyzerParams(audioSourcesEntries, audioSources, windowFunctions);
 
@@ -215,7 +215,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
 
     @Override
     public void onResume() {
-        GLog.d(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
+        KLog.Companion.d(Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
         super.onResume();
 
         LoadPreferences();
@@ -231,7 +231,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
 
     @Override
     public void onPause() {
-        GLog.d(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
+        KLog.Companion.d(Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
         bSamplingPreparation = false;
         if (samplingThread != null) {
             samplingThread.finish();
@@ -242,7 +242,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        GLog.d(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
+        KLog.Companion.d(Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
         savedInstanceState.putDouble("dtRMS", dtRMS);
         savedInstanceState.putDouble("dtRMSFromFT", dtRMSFromFT);
         savedInstanceState.putDouble("maxAmpDB", maxAmpDB);
@@ -254,7 +254,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) { // Equivalent to onRestoreInstanceState()
         super.onActivityCreated(savedInstanceState);
-        GLog.d(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
+        KLog.Companion.d(Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
         if (savedInstanceState != null) {
             dtRMS = savedInstanceState.getDouble("dtRMS");
             dtRMSFromFT = savedInstanceState.getDouble("dtRMSFromFT");
@@ -268,10 +268,10 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
         if (requestCode == REQUEST_CALIB_LOAD && resultCode == Activity.RESULT_OK) {
             final Uri uri = data.getData();
             calibLoad.loadFile(uri, getActivity());
-            GLog.w(TAG, "mime:" + getActivity().getContentResolver().getType(uri));
+            KLog.Companion.w("mime:" + getActivity().getContentResolver().getType(uri));
             fillFftCalibration(params, calibLoad);
         } else if (requestCode == REQUEST_AUDIO_GET) {
-            GLog.w(TAG, "requestCode == REQUEST_AUDIO_GET");
+            KLog.Companion.w("requestCode == REQUEST_AUDIO_GET");
         }
     }
 
@@ -326,7 +326,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(intent, requestType);
         } else {
-            GLog.e(TAG, "No file chooser found!.");
+            KLog.Companion.e("No file chooser found!.");
 
             // Potentially direct the user to the Market with a Dialog
             Toast.makeText(getActivity(), "Please install a File Manager.",
@@ -347,13 +347,13 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
         if (_calibLoad.freq == null || _calibLoad.freq.length == 0 || params == null) {
             return;
         }
-        double[] freqTick = new double[params.getFFTLength() / 2];
+        double[] freqTick = new double[params.getFftLength() / 2];
         for (int i = 0; i < freqTick.length; i++) {
-            freqTick[i] = (i + 1.0) / params.getFFTLength() * params.getSampleRate();
+            freqTick[i] = (i + 1.0) / params.getFftLength() * params.getSampleRate();
         }
         params.setMicGainDB(AnalyzerUtil.interpLinear(_calibLoad.freq, _calibLoad.gain, freqTick));
 //        for (int i = 0; i < _analyzerParam.micGainDB.length; i++) {
-//            GLog.i(TAG, "calib: " + freqTick[i] + "Hz : " + _analyzerParam.micGainDB[i]);
+//            KLog.Companion.i("calib: " + freqTick[i] + "Hz : " + _analyzerParam.micGainDB[i]);
 //        }
     }// Popup menu click listener
 
@@ -384,7 +384,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
         if (!isLockViewRange) {
             viewRangeArray = analyzerViews.getAgv().getViewPhysicalRange();
             // if range is align at boundary, extend the range.
-            GLog.i(TAG, "set sampling rate:a " + viewRangeArray[0] + " ==? " + viewRangeArray[6]);
+            KLog.Companion.i("set sampling rate:a " + viewRangeArray[0] + " ==? " + viewRangeArray[6]);
             if (viewRangeArray[0] == viewRangeArray[6]) {
                 viewRangeArray[0] = 0;
             }
@@ -395,11 +395,11 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
             case R.id.btnAnalyzerSampleRate:
                 analyzerViews.getPopupMenuSampleRate().dismiss();
                 if (!isLockViewRange) {
-                    GLog.i(TAG, "set sampling rate:b " + viewRangeArray[1] + " ==? " + viewRangeArray[6 + 1]);
+                    KLog.Companion.i("set sampling rate:b " + viewRangeArray[1] + " ==? " + viewRangeArray[6 + 1]);
                     if (viewRangeArray[1] == viewRangeArray[6 + 1]) {
                         viewRangeArray[1] = Integer.parseInt(selectedItemTag) / 2;
                     }
-                    GLog.i(TAG, "onItemClick(): viewRangeArray saved. " + viewRangeArray[0] + " ~ " + viewRangeArray[1]);
+                    KLog.Companion.i("onItemClick(): viewRangeArray saved. " + viewRangeArray[0] + " ~ " + viewRangeArray[1]);
                 }
                 params.setSampleRate(Integer.parseInt(selectedItemTag));
                 b_need_restart_audio = true;
@@ -407,23 +407,23 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
                 break;
             case R.id.btnAnalyzerFFTLength:
                 analyzerViews.getPopupMenuFFTLen().dismiss();
-                params.setFFTLength(Integer.parseInt(selectedItemTag));
-                params.setHopLength((int) (params.getFFTLength() * (1 - params.getOverlapPercent() / 100) + 0.5));
+                params.setFftLength(Integer.parseInt(selectedItemTag));
+                params.setHopLength((int) (params.getFftLength() * (1 - params.getOverlapPercent() / 100) + 0.5));
                 b_need_restart_audio = true;
-                editor.putInt("button_fftlen", params.getFFTLength());
+                editor.putInt("button_fftlen", params.getFftLength());
                 fillFftCalibration(params, calibLoad);
                 break;
             case R.id.btnAnalyzerAverage:
                 analyzerViews.getPopupMenuFFTAverage().dismiss();
-                params.setNFFTAverage(Integer.parseInt(selectedItemTag));
+                params.setNFftAverage(Integer.parseInt(selectedItemTag));
                 if (analyzerViews.getAgv() != null) {
-                    analyzerViews.getAgv().setTimeMultiplier(params.getNFFTAverage());
+                    analyzerViews.getAgv().setTimeMultiplier(params.getNFftAverage());
                 }
                 b_need_restart_audio = false;
-                editor.putInt("button_average", params.getNFFTAverage());
+                editor.putInt("button_average", params.getNFftAverage());
                 break;
             default:
-                GLog.w(TAG, "onItemClick(): no this button");
+                KLog.Companion.w("onItemClick(): no this button");
                 b_need_restart_audio = false;
         }
 
@@ -441,8 +441,8 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
         // list-buttons
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         params.setSampleRate(sharedPref.getInt("button_sample_rate", 8000));
-        params.setFFTLength(sharedPref.getInt("button_fftlen", 1024));
-        params.setNFFTAverage(sharedPref.getInt("button_average", 1));
+        params.setFftLength(sharedPref.getInt("button_fftlen", 1024));
+        params.setNFftAverage(sharedPref.getInt("button_average", 1));
         // toggle-buttons
         params.setDBAWeighting(sharedPref.getBoolean("dbA", false));
         if (params.isDBAWeighting()) {
@@ -456,13 +456,13 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
         SelectorText st = (SelectorText) rootView.findViewById(R.id.tvAnalyzerLinearLogNote);
         st.setValue(axisMode);
 
-        GLog.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + ":" +
+        KLog.Companion.i(Thread.currentThread().getStackTrace()[2].getMethodName() + ":" +
                 "\n  sampleRate  = " + params.getSampleRate() +
-                "\n  fFTLength      = " + params.getFFTLength() +
-                "\n  nFFTAverage = " + params.getNFFTAverage());
+                "\n  fFTLength      = " + params.getFftLength() +
+                "\n  nFFTAverage = " + params.getNFftAverage());
         ((Button) rootView.findViewById(R.id.btnAnalyzerSampleRate)).setText(Integer.toString(params.getSampleRate()));
-        ((Button) rootView.findViewById(R.id.btnAnalyzerFFTLength)).setText(Integer.toString(params.getFFTLength()));
-        ((Button) rootView.findViewById(R.id.btnAnalyzerAverage)).setText(Integer.toString(params.getNFFTAverage()));
+        ((Button) rootView.findViewById(R.id.btnAnalyzerFFTLength)).setText(Integer.toString(params.getFftLength()));
+        ((Button) rootView.findViewById(R.id.btnAnalyzerAverage)).setText(Integer.toString(params.getNFftAverage()));
     }
 
     private void LoadPreferences() {
@@ -476,11 +476,11 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
 
-        params.setAudioSourceId(Integer.parseInt(sharedPref.getString("audioSource", Integer.toString(AnalyzerParams.RECORDER_AGC_OFF))));
+        params.setAudioSourceId(Integer.parseInt(sharedPref.getString("audioSource", Integer.toString(AnalyzerParams.Companion.getRECORDER_AGC_OFF()))));
         params.setWindowFunctionName(sharedPref.getString("windowFunction", "Hanning"));
         params.setSpectrogramDuration(Double.parseDouble(sharedPref.getString("spectrogramDuration", Double.toString(6.0))));
         params.setOverlapPercent(Double.parseDouble(sharedPref.getString("fft_overlap_percent", "50.0")));
-        params.setHopLength((int) (params.getFFTLength() * (1 - params.getOverlapPercent() / 100) + 0.5));
+        params.setHopLength((int) (params.getFftLength() * (1 - params.getOverlapPercent() / 100) + 0.5));
 
         // Settings of graph view
         // spectrum
@@ -515,13 +515,13 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
         // Get view range setting
         boolean isLock = sharedPref.getBoolean("view_range_lock", false);
         if (isLock) {
-            GLog.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + ": isLocked");
+            KLog.Companion.i(Thread.currentThread().getStackTrace()[2].getMethodName() + ": isLocked");
             // Set view range and stick to measure mode
             double[] rr = new double[AnalyzerGraphicView.VIEW_RANGE_DATA_LENGTH];
             for (int i = 0; i < rr.length; i++) {
                 rr[i] = AnalyzerUtil.getDouble(sharedPref, "view_range_rr_" + i, 0.0 / 0.0);
                 if (Double.isNaN(rr[i])) {  // not properly initialized
-                    GLog.w(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + ": rr is not properly initialized");
+                    KLog.Companion.w(Thread.currentThread().getStackTrace()[2].getMethodName() + ": rr is not properly initialized");
                     rr = null;
                     break;
                 }
@@ -653,7 +653,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
                 shiftingVelocity = shiftingVelocityNew;
                 if (shiftingVelocity > 0f
                         && SystemClock.uptimeMillis() - timeFlingStart < 10000) {
-                    // GLog.i(TAG, "  fly pixels x=" + shiftingPixelX + " y=" + shiftingPixelY);
+                    // KLog.Companion.i("  fly pixels x=" + shiftingPixelX + " y=" + shiftingPixelY);
                     AnalyzerGraphicView graphView = analyzerViews.getAgv();
                     graphView.setXShift(graphView.getXShift() - shiftingComponentX * shiftingPixel / graphView.getCanvasWidth() / graphView.getXZoom());
                     graphView.setYShift(graphView.getYShift() - shiftingComponentY * shiftingPixel / graphView.getCanvasHeight() / graphView.getYZoom());
@@ -703,10 +703,10 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
             xShift0 = INIT;
             yShift0 = INIT;
             isPinching = false;
-            // GLog.i(TAG, "scaleEvent(): Skip event " + event.getAction());
+            // KLog.Companion.i("scaleEvent(): Skip event " + event.getAction());
             return;
         }
-        // GLog.i(TAG, "scaleEvent(): switch " + event.getAction());
+        // KLog.Companion.i("scaleEvent(): switch " + event.getAction());
         AnalyzerGraphicView graphView = analyzerViews.getAgv();
         switch (event.getPointerCount()) {
             case 2:
@@ -721,7 +721,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
                 float x = event.getX(0);
                 float y = event.getY(0);
                 graphView.getLocationInWindow(windowLocation);
-                // GLog.i(TAG, "scaleEvent(): xy=" + x + " " + y + "  wc = " + wc[0] + " " + wc[1]);
+                // KLog.Companion.i("scaleEvent(): xy=" + x + " " + y + "  wc = " + wc[0] + " " + wc[1]);
                 if (isPinching || xShift0 == INIT) {
                     xShift0 = graphView.getXShift();
                     x0 = x;
@@ -741,7 +741,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
                 isPinching = false;
                 break;
             default:
-                GLog.i(TAG, "Invalid touch count");
+                KLog.Companion.i("Invalid touch count");
                 break;
         }
     }
@@ -749,7 +749,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
     @Override
     public boolean onLongClick(View view) {
         vibrate(300);
-        GLog.i(TAG, "long click: " + view.toString());
+        KLog.Companion.i("long click: " + view.toString());
         return true;
     }
 
@@ -783,7 +783,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
         if (viewRangeArray != null) {
             analyzerViews.getAgv().setupAxes(this.params);
             double[] rangeDefault = analyzerViews.getAgv().getViewPhysicalRange();
-            GLog.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + ": setViewRange: " + viewRangeArray[0] + " ~ " + viewRangeArray[1]);
+            KLog.Companion.i(Thread.currentThread().getStackTrace()[2].getMethodName() + ": setViewRange: " + viewRangeArray[0] + " ~ " + viewRangeArray[1]);
             analyzerViews.getAgv().setViewRange(viewRangeArray, rangeDefault);
             if (!isLockViewRange) viewRangeArray = null;  // do not conserve
         }
@@ -822,14 +822,14 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
     private boolean checkAndRequestPermissions() {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
-            GLog.w(TAG, "Permission RECORD_AUDIO denied. Trying  to request...");
+            KLog.Companion.w("Permission RECORD_AUDIO denied. Trying  to request...");
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.RECORD_AUDIO) &&
                     count_permission_explanation < 1) {
-                GLog.w(TAG, "  Show explanation here....");
+                KLog.Companion.w("  Show explanation here....");
                 analyzerViews.showPermissionExplanation(R.string.permission_explanation_recorder);
                 count_permission_explanation++;
             } else {
-                GLog.w(TAG, "  Requesting...");
+                KLog.Companion.w("  Requesting...");
                 if (count_permission_request < 3) {
                     ActivityCompat.requestPermissions(getActivity(),
                             new String[]{Manifest.permission.RECORD_AUDIO},
@@ -853,7 +853,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
         if (saveWav &&
                 ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
-            GLog.w(TAG, "Permission WRITE_EXTERNAL_STORAGE denied. Trying  to request...");
+            KLog.Companion.w("Permission WRITE_EXTERNAL_STORAGE denied. Trying  to request...");
             ((SelectorText) rootView.findViewById(R.id.tvAnalyzerMonitorRecord)).nextValue();
             saveWav = false;
             analyzerViews.enableSaveWavView(saveWav);
@@ -874,17 +874,17 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_RECORD_AUDIO: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    GLog.w(TAG, "RECORD_AUDIO Permission granted by user.");
+                    KLog.Companion.w("RECORD_AUDIO Permission granted by user.");
                 } else {
-                    GLog.w(TAG, "RECORD_AUDIO Permission denied by user.");
+                    KLog.Companion.w("RECORD_AUDIO Permission denied by user.");
                 }
                 break;
             }
             case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    GLog.w(TAG, "WRITE_EXTERNAL_STORAGE Permission granted by user.");
+                    KLog.Companion.w("WRITE_EXTERNAL_STORAGE Permission granted by user.");
                     if (!saveWav) {
-                        GLog.w(TAG, "... saveWav == true");
+                        KLog.Companion.w("... saveWav == true");
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -894,10 +894,10 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
                             }
                         });
                     } else {
-                        GLog.w(TAG, "... saveWav == false");
+                        KLog.Companion.w("... saveWav == false");
                     }
                 } else {
-                    GLog.w(TAG, "WRITE_EXTERNAL_STORAGE Permission denied by user.");
+                    KLog.Companion.w("WRITE_EXTERNAL_STORAGE Permission denied by user.");
                 }
                 break;
             }
@@ -940,7 +940,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
                 analyzerViews.getAgv().getSpectrogramPlot().setPause(pause);
                 return false;
             case R.id.tvAnalyzerLinearLogNote: {
-                GLog.d(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + " freq_scaling_mode = " + value);
+                KLog.Companion.d(Thread.currentThread().getStackTrace()[2].getMethodName() + " freq_scaling_mode = " + value);
                 analyzerViews.getAgv().setAxisModeLinear(value);
                 editor.putString("freq_scaling_mode", value);
                 editor.apply();
@@ -1010,7 +1010,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
      */
     @Override
     public void ready() {
-        GLog.d(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
+        KLog.Companion.d(Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
         analyzerViews.invalidateGraphView();
     }
 

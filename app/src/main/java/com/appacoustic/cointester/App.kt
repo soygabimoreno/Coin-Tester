@@ -1,8 +1,8 @@
 package com.appacoustic.cointester
 
 import android.support.multidex.MultiDexApplication
+import com.appacoustic.cointester.framework.KLog
 import com.crashlytics.android.Crashlytics
-import com.gabrielmorenoibarra.g.GLog
 import io.fabric.sdk.android.Fabric
 
 class App : MultiDexApplication() {
@@ -15,7 +15,7 @@ class App : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-        GLog.init(BuildConfig.DEBUG)
+        KLog.launch(BuildConfig.DEBUG)
         AppResources.getInstance().init(this)
 
         if (BuildConfig.BUG_TRACKERS_ENABLED) {
