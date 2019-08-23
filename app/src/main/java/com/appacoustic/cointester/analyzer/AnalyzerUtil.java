@@ -8,7 +8,7 @@ import android.media.MediaRecorder;
 import android.os.Build;
 
 import com.appacoustic.cointester.R;
-import com.appacoustic.cointester.framework.KLog;
+import com.gabrielmorenoibarra.k.util.KLog;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

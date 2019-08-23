@@ -19,7 +19,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.appacoustic.cointester.domain.Coin;
-import com.appacoustic.cointester.framework.KLog;
+import com.gabrielmorenoibarra.k.util.KLog;
 import com.appacoustic.cointester.utils.DataManager;
 import com.appacoustic.cointester.view.CustomViewPager;
 import com.crashlytics.android.Crashlytics;

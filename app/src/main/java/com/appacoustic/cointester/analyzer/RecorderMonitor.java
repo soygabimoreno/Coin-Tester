@@ -2,7 +2,7 @@ package com.appacoustic.cointester.analyzer;
 
 import android.os.SystemClock;
 
-import com.appacoustic.cointester.framework.KLog;
+import com.gabrielmorenoibarra.k.util.KLog;
 
 /**
  * Monitor for recording.

@@ -1,7 +1,7 @@
 package com.appacoustic.cointester.analyzer.model
 
 import android.media.MediaRecorder
-import com.appacoustic.cointester.framework.KLog
+import com.gabrielmorenoibarra.k.util.KLog
 
 class AnalyzerParams(val audioSourceNames: Array<String>,
                      val audioSourceIds: IntArray,

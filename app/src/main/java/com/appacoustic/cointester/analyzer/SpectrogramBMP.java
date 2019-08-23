@@ -5,7 +5,7 @@ import android.graphics.Paint;
 
 import com.appacoustic.cointester.analyzer.view.AnalyzerGraphicView;
 import com.appacoustic.cointester.analyzer.view.SpectrogramPlot;
-import com.appacoustic.cointester.framework.KLog;
+import com.gabrielmorenoibarra.k.util.KLog;
 
 import java.util.Arrays;
 

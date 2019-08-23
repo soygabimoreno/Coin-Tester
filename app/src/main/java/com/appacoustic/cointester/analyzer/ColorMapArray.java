@@ -1,6 +1,6 @@
 package com.appacoustic.cointester.analyzer;
 
-import com.appacoustic.cointester.framework.KLog;
+import com.gabrielmorenoibarra.k.util.KLog;
 
 /**
  * Colors for Spectrogram.

@@ -10,7 +10,7 @@ import android.graphics.Typeface;
 import com.appacoustic.cointester.analyzer.AxisTickLabels;
 import com.appacoustic.cointester.analyzer.GridLabel;
 import com.appacoustic.cointester.analyzer.ScreenPhysicalMapping;
-import com.appacoustic.cointester.framework.KLog;
+import com.gabrielmorenoibarra.k.util.KLog;
 
 import static java.lang.Math.ceil;
 import static java.lang.Math.floor;

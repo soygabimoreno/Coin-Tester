@@ -67,6 +67,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
     implementation 'com.mukesh:permissions:1.0.4'
     implementation 'com.gabrielmorenoibarra.g:g:0.9.0'
+    implementation "com.gabrielmorenoibarra.k:k:0.1.0"
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.android.volley:volley:1.1.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

@@ -10,7 +10,7 @@ import com.appacoustic.cointester.analyzer.SineGenerator;
 import com.appacoustic.cointester.analyzer.WavWriter;
 import com.appacoustic.cointester.analyzer.processing.STFT;
 import com.appacoustic.cointester.analyzer.view.AnalyzerViews;
-import com.appacoustic.cointester.framework.KLog;
+import com.gabrielmorenoibarra.k.util.KLog;
 import com.appacoustic.cointester.utils.Tools;
 
 import java.util.Arrays;

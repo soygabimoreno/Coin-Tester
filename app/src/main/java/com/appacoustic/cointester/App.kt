@@ -1,8 +1,8 @@
 package com.appacoustic.cointester
 
 import android.support.multidex.MultiDexApplication
-import com.appacoustic.cointester.framework.KLog
 import com.crashlytics.android.Crashlytics
+import com.gabrielmorenoibarra.k.util.KLog
 import io.fabric.sdk.android.Fabric
 
 class App : MultiDexApplication() {

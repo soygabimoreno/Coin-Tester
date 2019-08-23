@@ -18,7 +18,7 @@ package com.appacoustic.cointester.analyzer.processing;
 import com.appacoustic.cointester.analyzer.BesselCal;
 import com.appacoustic.cointester.analyzer.model.AnalyzerParams;
 import com.appacoustic.cointester.fft.RealDoubleFFT;
-import com.appacoustic.cointester.framework.KLog;
+import com.gabrielmorenoibarra.k.util.KLog;
 
 import java.util.Arrays;
 

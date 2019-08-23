@@ -45,7 +45,7 @@ import com.appacoustic.cointester.analyzer.view.AnalyzerGraphicView;
 import com.appacoustic.cointester.analyzer.view.AnalyzerViews;
 import com.appacoustic.cointester.analyzer.view.SelectorText;
 import com.appacoustic.cointester.domain.Coin;
-import com.appacoustic.cointester.framework.KLog;
+import com.gabrielmorenoibarra.k.util.KLog;
 
 import butterknife.BindArray;
 import butterknife.BindColor;
@@ -61,22 +61,35 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
 
     public static final String TAG = AnalyzerFragment.class.getSimpleName();
 
-    @BindView(R.id.tvAnalyzerCheckerCoinName) TextView tvCoinName;
-    @BindView(R.id.tvAnalyzerCheckerCoinPlace) TextView tvCoinPlace;
-    @BindView(R.id.fabAnalyzerChecker) FloatingActionButton fab;
+    @BindView(R.id.tvAnalyzerCheckerCoinName)
+    TextView tvCoinName;
+    @BindView(R.id.tvAnalyzerCheckerCoinPlace)
+    TextView tvCoinPlace;
+    @BindView(R.id.fabAnalyzerChecker)
+    FloatingActionButton fab;
 
-    @BindView(R.id.rlAnalyzerSpectrum) RelativeLayout rlSpectrum;
-    @BindView(R.id.tvAnalyzerRunStop) SelectorText tvRun;
-    @BindView(R.id.btnAnalyzerSampleRate) Button btnSampleRate;
-    @BindView(R.id.btnAnalyzerFFTLength) Button btnFFTLength;
-    @BindView(R.id.btnAnalyzerAverage) Button btnAverage;
+    @BindView(R.id.rlAnalyzerSpectrum)
+    RelativeLayout rlSpectrum;
+    @BindView(R.id.tvAnalyzerRunStop)
+    SelectorText tvRun;
+    @BindView(R.id.btnAnalyzerSampleRate)
+    Button btnSampleRate;
+    @BindView(R.id.btnAnalyzerFFTLength)
+    Button btnFFTLength;
+    @BindView(R.id.btnAnalyzerAverage)
+    Button btnAverage;
 
-    @BindColor(R.color.cadet) int cadet;
-    @BindColor(R.color.cadet_1) int cadet1;
+    @BindColor(R.color.cadet)
+    int cadet;
+    @BindColor(R.color.cadet_1)
+    int cadet1;
 
-    @BindArray(R.array.audio_sources_entries) String[] audioSourcesEntries;
-    @BindArray(R.array.audio_sources) String[] audioSourcesString;
-    @BindArray(R.array.window_functions) String[] windowFunctions;
+    @BindArray(R.array.audio_sources_entries)
+    String[] audioSourcesEntries;
+    @BindArray(R.array.audio_sources)
+    String[] audioSourcesString;
+    @BindArray(R.array.window_functions)
+    String[] windowFunctions;
 
     private int magnitudeTextSize;
 
@@ -589,6 +602,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
     /**
      * Gesture Listener for graphView (and possibly other views)
      * How to attach these events to the graphView?
+     *
      * @author xyy
      */
     private class AnalyzerGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -907,6 +921,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
 
     /**
      * Process a click on one of our selectors.
+     *
      * @param v The view that was clicked
      * @return true if we need to update the graph
      */
@@ -974,8 +989,9 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
 
     /**
      * Visit all subviews of this view group and run command
-     * @param group The parent view group
-     * @param cmd The command to run for each view
+     *
+     * @param group  The parent view group
+     * @param cmd    The command to run for each view
      * @param select The tag value that must match. Null implies all views
      */
 
