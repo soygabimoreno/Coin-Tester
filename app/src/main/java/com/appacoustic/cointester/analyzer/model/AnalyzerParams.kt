@@ -8,14 +8,14 @@ class AnalyzerParams(val audioSourceNames: Array<String>,
                      val windowFunctionNames: Array<String>) {
 
     companion object {
-        val RECORDER_AGC_OFF = MediaRecorder.AudioSource.DEFAULT
-        val BYTES_PER_SAMPLE = 2
-        val SAMPLE_VALUE_MAX = 32767.0
+        const val RECORDER_AGC_OFF = MediaRecorder.AudioSource.DEFAULT
+        const val BYTES_PER_SAMPLE = 2
+        const val SAMPLE_VALUE_MAX = 32767.0
+        const val N_MIC_SOURCES = 7
 
-        val N_MIC_SOURCES = 7
-        var ID_TEST_SIGNAL_1: Int = 0
-        var ID_TEST_SIGNAL_2: Int = 0
-        var ID_TEST_SIGNAL_WHITE_NOISE: Int = 0
+        var idTestSignal1 = 0
+        var idTestSignal2 = 0
+        var idTestSignalWhiteNoise = 0
     }
 
     var sampleRate = 16000
@@ -24,9 +24,9 @@ class AnalyzerParams(val audioSourceNames: Array<String>,
     var overlapPercent = ((1 - hopLength / fftLength) * 100).toDouble()
     var windowFunctionName: String? = null
     var nFftAverage = 2
-    var isDBAWeighting = false
+    var dBAWeighting = false
     var spectrogramDuration = 4.0
-    var micGainDB: DoubleArray? = null // Should have fFTLength/2 elements
+    var micGainDB: DoubleArray? = null // Should have (fftLength / 2) elements
     var audioSourceId = RECORDER_AGC_OFF
 
     val audioSourceName: String
@@ -38,7 +38,7 @@ class AnalyzerParams(val audioSourceNames: Array<String>,
                 return audioSourceNames[i]
             }
         }
-        KLog.Companion.e("getAudioSourceNameFromId(): non-standard entry")
+        KLog.Companion.e("Non-standard entry")
         return id.toString()
     }
 }

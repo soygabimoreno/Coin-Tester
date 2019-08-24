@@ -56,8 +56,8 @@ public class SamplingLoop extends Thread {
     public SamplingLoop(AnalyzerFragment analyzerFragment, AnalyzerParams params) {
         this.analyzerFragment = analyzerFragment;
         this.params = params;
-        bytesPerSample = AnalyzerParams.Companion.getBYTES_PER_SAMPLE();
-        sampleValueMax = AnalyzerParams.Companion.getSAMPLE_VALUE_MAX();
+        bytesPerSample = AnalyzerParams.BYTES_PER_SAMPLE;
+        sampleValueMax = AnalyzerParams.SAMPLE_VALUE_MAX;
         audioSourceId = params.getAudioSourceId();
         sampleRate = params.getSampleRate();
         fFTLength = params.getFftLength();
@@ -68,7 +68,7 @@ public class SamplingLoop extends Thread {
         double amp0 = Tools.dBToLinear(TEST_SIGNAL_1_DB_1);
         double amp1 = Tools.dBToLinear(TEST_SIGNAL_2_DB_1);
         double amp2 = Tools.dBToLinear(TEST_SIGNAL_2_DB_2);
-        if (audioSourceId == AnalyzerParams.Companion.getID_TEST_SIGNAL_1()) {
+        if (audioSourceId == AnalyzerParams.Companion.getIdTestSignal1()) {
             sineGenerator0 = new SineGenerator(TEST_SIGNAL_1_FREQ_1, sampleRate, sampleValueMax * amp0);
         } else {
             sineGenerator0 = new SineGenerator(TEST_SIGNAL_2_FREQ_1, sampleRate, sampleValueMax * amp1);
@@ -116,11 +116,11 @@ public class SamplingLoop extends Thread {
         // The buffer size here seems not relate to the delay.
         // So choose a larger size (~1sec) so that overrun is unlikely.
         try {
-            if (audioSourceId < AnalyzerParams.Companion.getID_TEST_SIGNAL_1()) {
+            if (audioSourceId < AnalyzerParams.Companion.getIdTestSignal1()) {
                 record = new AudioRecord(audioSourceId, sampleRate, AudioFormat.CHANNEL_IN_MONO,
                         AudioFormat.ENCODING_PCM_16BIT, bytesPerSample * bufferSampleSize);
             } else {
-                record = new AudioRecord(AnalyzerParams.Companion.getRECORDER_AGC_OFF(), sampleRate, AudioFormat.CHANNEL_IN_MONO,
+                record = new AudioRecord(AnalyzerParams.RECORDER_AGC_OFF, sampleRate, AudioFormat.CHANNEL_IN_MONO,
                         AudioFormat.ENCODING_PCM_16BIT, bytesPerSample * bufferSampleSize);
             }
         } catch (IllegalArgumentException e) {
@@ -180,7 +180,7 @@ public class SamplingLoop extends Thread {
         // related to recorder: e.g. audioSourceId, sampleRate, bufferSampleSize
         // TODO: allow change of FFT length on the fly
         while (running) {
-            if (audioSourceId >= AnalyzerParams.Companion.getID_TEST_SIGNAL_1()) {
+            if (audioSourceId >= AnalyzerParams.Companion.getIdTestSignal1()) {
                 numOfReadShort = readTestData(audioSamples, 0, readChunkSize, audioSourceId);
             } else {
                 numOfReadShort = record.read(audioSamples, 0, readChunkSize);   // COMMENT: read
@@ -237,7 +237,7 @@ public class SamplingLoop extends Thread {
             data = new double[sizeInShorts];
         }
         Arrays.fill(data, 0.0);
-        switch (id - AnalyzerParams.Companion.getID_TEST_SIGNAL_1()) {
+        switch (id - AnalyzerParams.Companion.getIdTestSignal1()) {
             case 1:
                 sineGenerator1.getSamples(data);
                 // No break, so values of data added

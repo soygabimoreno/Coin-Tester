@@ -146,10 +146,10 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
         for (int i = 0; i < audioSourcesString.length; i++) {
             audioSources[i] = Integer.parseInt(audioSourcesString[i]);
         }
-        int sourcesCounter = AnalyzerParams.Companion.getN_MIC_SOURCES();
-        AnalyzerParams.Companion.setID_TEST_SIGNAL_1(audioSources[sourcesCounter]);
-        AnalyzerParams.Companion.setID_TEST_SIGNAL_2(audioSources[sourcesCounter + 1]);
-        AnalyzerParams.Companion.setID_TEST_SIGNAL_WHITE_NOISE(audioSources[sourcesCounter + 2]);
+        int sourcesCounter = AnalyzerParams.N_MIC_SOURCES;
+        AnalyzerParams.Companion.setIdTestSignal1(audioSources[sourcesCounter]);
+        AnalyzerParams.Companion.setIdTestSignal2(audioSources[sourcesCounter + 1]);
+        AnalyzerParams.Companion.setIdTestSignalWhiteNoise(audioSources[sourcesCounter + 2]);
 
         params = new AnalyzerParams(audioSourcesEntries, audioSources, windowFunctions);
 
@@ -458,7 +458,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
         params.setNFftAverage(sharedPref.getInt("button_average", 1));
         // toggle-buttons
         params.setDBAWeighting(sharedPref.getBoolean("dbA", false));
-        if (params.isDBAWeighting()) {
+        if (params.getDBAWeighting()) {
             ((SelectorText) rootView.findViewById(R.id.tvAnalyzerDBDBA)).nextValue();
         }
         boolean isSpam = sharedPref.getBoolean("spectrum_spectrogram_mode", true);
@@ -489,7 +489,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
 
-        params.setAudioSourceId(Integer.parseInt(sharedPref.getString("audioSource", Integer.toString(AnalyzerParams.Companion.getRECORDER_AGC_OFF()))));
+        params.setAudioSourceId(Integer.parseInt(sharedPref.getString("audioSource", Integer.toString(AnalyzerParams.RECORDER_AGC_OFF))));
         params.setWindowFunctionName(sharedPref.getString("windowFunction", "Hanning"));
         params.setSpectrogramDuration(Double.parseDouble(sharedPref.getString("spectrogramDuration", Double.toString(6.0))));
         params.setOverlapPercent(Double.parseDouble(sharedPref.getString("fft_overlap_percent", "50.0")));
@@ -964,9 +964,9 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
             case R.id.tvAnalyzerDBDBA:
                 params.setDBAWeighting(!value.equals("dB"));
                 if (samplingThread != null) {
-                    samplingThread.setAWeighting(params.isDBAWeighting());
+                    samplingThread.setAWeighting(params.getDBAWeighting());
                 }
-                editor.putBoolean("dbA", params.isDBAWeighting());
+                editor.putBoolean("dbA", params.getDBAWeighting());
                 editor.commit();
                 return false;
             case R.id.tvAnalyzerSpectrumSpectrogramMode:
