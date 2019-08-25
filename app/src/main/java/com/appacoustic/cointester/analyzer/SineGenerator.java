@@ -19,7 +19,7 @@ public class SineGenerator {
      * @param a Amplitude
      */
 
-    public SineGenerator(double f, double fs, double a) {
+    public SineGenerator(double f, int fs, double a) {
         this.fs = fs;
         double w = 2.0 * Math.PI * f / fs;
         this.n0 = 0d;

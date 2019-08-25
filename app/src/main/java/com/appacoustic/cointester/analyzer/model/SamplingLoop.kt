@@ -61,11 +61,11 @@ class SamplingLoop(private val analyzerFragment: AnalyzerFragment,
         val amp1 = Tools.dBToLinear(TEST_SIGNAL_2_DB_1)
         val amp2 = Tools.dBToLinear(TEST_SIGNAL_2_DB_2)
         sineGenerator0 = if (audioSourceId == AnalyzerParams.idTestSignal1) {
-            SineGenerator(TEST_SIGNAL_1_FREQ_1, sampleRate.toDouble(), sampleValueMax * amp0)
+            SineGenerator(TEST_SIGNAL_1_FREQ_1, sampleRate, sampleValueMax * amp0)
         } else {
-            SineGenerator(TEST_SIGNAL_2_FREQ_1, sampleRate.toDouble(), sampleValueMax * amp1)
+            SineGenerator(TEST_SIGNAL_2_FREQ_1, sampleRate, sampleValueMax * amp1)
         }
-        sineGenerator1 = SineGenerator(TEST_SIGNAL_2_FREQ_2, sampleRate.toDouble(), sampleValueMax * amp2)
+        sineGenerator1 = SineGenerator(TEST_SIGNAL_2_FREQ_2, sampleRate, sampleValueMax * amp2)
     }
 
     override fun run() {
