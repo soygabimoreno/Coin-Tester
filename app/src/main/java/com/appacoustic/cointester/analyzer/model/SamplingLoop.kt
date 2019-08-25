@@ -16,7 +16,8 @@ import java.util.*
  * Read a snapshot of audio data at a regular interval and compute the FFT.
  */
 class SamplingLoop(private val analyzerFragment: AnalyzerFragment,
-                   private val params: AnalyzerParams)
+                   private val params: AnalyzerParams,
+                   private val listener: Listener)
     : Thread() {
 
     companion object {
@@ -26,6 +27,10 @@ class SamplingLoop(private val analyzerFragment: AnalyzerFragment,
         private const val TEST_SIGNAL_2_DB_1 = -6.0
         private const val TEST_SIGNAL_2_FREQ_2 = 1875.0
         private const val TEST_SIGNAL_2_DB_2 = -12.0
+    }
+
+    interface Listener {
+        fun onInitGraphs()
     }
 
     @Volatile
@@ -69,20 +74,15 @@ class SamplingLoop(private val analyzerFragment: AnalyzerFragment,
     }
 
     override fun run() {
-        val METHOD_NAME = Thread.currentThread().stackTrace[2].methodName
         val record: AudioRecord
         val timeStart = SystemClock.uptimeMillis()
-        try {
-            analyzerFragment.graphInit.join()  // TODO: Seems not working as intended
-        } catch (e: InterruptedException) {
-            KLog.w("$METHOD_NAME: analyzerFragment.graphInit.join() failed")
-        }
+        listener.onInitGraphs()
 
         val timeEnd = SystemClock.uptimeMillis()
         val time = timeEnd - timeStart
         if (time < 500) {
             val timeWaiting = 500 - time
-            KLog.i(METHOD_NAME + "Wait " + timeWaiting + " ms more...")
+            KLog.i("Wait $timeWaiting ms more...")
             try {
                 sleep(timeWaiting)
             } catch (e: InterruptedException) {
@@ -96,7 +96,7 @@ class SamplingLoop(private val analyzerFragment: AnalyzerFragment,
                 AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT)
         if (minBufferSize == AudioRecord.ERROR_BAD_VALUE) {
-            KLog.e("$METHOD_NAME: Invalid AudioRecord parameters")
+            KLog.e("Invalid AudioRecord parameters")
             return
         }
 
@@ -117,12 +117,12 @@ class SamplingLoop(private val analyzerFragment: AnalyzerFragment,
                         AudioFormat.ENCODING_PCM_16BIT, bytesPerSample * bufferSampleSize)
             }
         } catch (e: IllegalArgumentException) {
-            KLog.e(METHOD_NAME + "Fail to initialize recorder")
+            e.printStackTrace()
             analyzerViews.notifyToast("Illegal recorder argument: change source")
             return
         }
 
-        KLog.i(METHOD_NAME + ": Starting recorder... \n" +
+        KLog.i("Starting recorder... \n" +
                 "Source: " + params.audioSourceName + "\n" +
                 String.format("Sample rate: %d Hz (requested %d Hz)\n", record.sampleRate, sampleRate) +
                 String.format("Min buffer size: %d samples, %d bytes\n", minBufferSize / bytesPerSample, minBufferSize) +
@@ -133,7 +133,7 @@ class SamplingLoop(private val analyzerFragment: AnalyzerFragment,
         params.sampleRate = record.sampleRate
 
         if (record.state == AudioRecord.STATE_UNINITIALIZED) {
-            KLog.e("$METHOD_NAME: Fail initializing the AudioRecord")
+            KLog.e("Fail initializing the AudioRecord")
             analyzerViews.notifyToast("Fail initializing the recorder.")
             return
         }
@@ -157,15 +157,15 @@ class SamplingLoop(private val analyzerFragment: AnalyzerFragment,
             wavWriter.start()
             wavSecondsRemain = wavWriter.secondsLeft()
             wavSeconds = 0.0
-            KLog.i(METHOD_NAME + "PCM write to file '" + wavWriter.path + "'")
+            KLog.i("PCM write to file '" + wavWriter.path + "'")
         }
 
         try {
             record.startRecording()
         } catch (e: IllegalStateException) {
             val error = "Fail start recording"
-            KLog.e("$METHOD_NAME: $error")
             analyzerViews.notifyToast(error)
+            e.printStackTrace()
             return
         }
 
@@ -215,12 +215,12 @@ class SamplingLoop(private val analyzerFragment: AnalyzerFragment,
                 analyzerFragment.dtRMSFromFT = stft.rmsFromFT
             }
         }
-        KLog.i(METHOD_NAME + ": Actual sample rate: " + recorderMonitor.sampleRate)
-        KLog.i("$METHOD_NAME: Stopping and releasing recorder.")
+        KLog.i("Actual sample rate: " + recorderMonitor.sampleRate)
+        KLog.i("Stopping and releasing recorder.")
         record.stop()
         record.release()
         if (saveWav) {
-            KLog.i("$METHOD_NAME: Ending saved wav.")
+            KLog.i("Ending saved wav.")
             wavWriter.stop()
             analyzerViews.notifyWAVSaved(wavWriter.relativeDir)
         }

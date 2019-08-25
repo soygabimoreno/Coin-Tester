@@ -818,7 +818,17 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
             return;
 
         // Start sampling
-        samplingThread = new SamplingLoop(this, params);
+        samplingThread = new SamplingLoop(this, params,
+                new SamplingLoop.Listener() {
+                    @Override
+                    public void onInitGraphs() {
+                        try {
+                            graphInit.join(); // TODO: Seems not working as intended
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
         samplingThread.start();
     }
 
