@@ -3,6 +3,7 @@ package com.appacoustic.cointester.analyzer.model
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.os.SystemClock
+import com.appacoustic.cointester.R
 import com.appacoustic.cointester.analyzer.RecorderMonitor
 import com.appacoustic.cointester.analyzer.SineGenerator
 import com.appacoustic.cointester.analyzer.WavWriter
@@ -11,6 +12,9 @@ import com.appacoustic.cointester.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.utils.Tools
 import com.gabrielmorenoibarra.k.util.KLog
 import java.util.*
+import kotlin.math.ceil
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Read a snapshot of audio data at a regular interval and compute the FFT.
@@ -74,15 +78,14 @@ class SamplingLoopThread(private val params: AnalyzerParams,
     }
 
     override fun run() {
-        val record: AudioRecord
         val timeStart = SystemClock.uptimeMillis()
         listener.onInitGraphs()
-
         val timeEnd = SystemClock.uptimeMillis()
         val time = timeEnd - timeStart
-        if (time < 500) {
-            val timeWaiting = 500 - time
-            KLog.i("Wait $timeWaiting ms more...")
+        val timeMin = 500
+        if (time < timeMin) {
+            val timeWaiting = timeMin - time
+            KLog.i("Waiting $timeWaiting ms more...")
             try {
                 sleep(timeWaiting)
             } catch (e: InterruptedException) {
@@ -95,25 +98,34 @@ class SamplingLoopThread(private val params: AnalyzerParams,
                 AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT)
         if (minBufferSize == AudioRecord.ERROR_BAD_VALUE) {
-            KLog.e("Invalid AudioRecord parameters")
+            analyzerViews.notifyToast(R.string.invalid_audio_record_parameters)
             return
         }
 
         var readChunkSize = params.hopLength // Every hopLength one fft result (overlapped analyze window)
-        readChunkSize = Math.min(readChunkSize, 2048) // Smaller chunk, smaller delay
-        var bufferSampleSize = Math.max(minBufferSize / bytesPerSample, fftLength / 2) * 2
-        bufferSampleSize = Math.ceil(1.0 * sampleRate / bufferSampleSize).toInt() * bufferSampleSize // Tolerate up to about 1 sec
+        readChunkSize = min(readChunkSize, 2048) // Smaller chunk, smaller delay
+        var bufferSampleSize = max(minBufferSize / bytesPerSample, fftLength / 2) * 2
+        bufferSampleSize *= ceil(1.0 * sampleRate / bufferSampleSize).toInt() // Tolerate up to about 1 sec
 
         // Use the mic with AGC (Automatic Gain Control) turned off
         // The buffer size here seems not relate to the delay.
         // So choose a larger size (~1sec) so that overrun is unlikely.
-        try {
+        val record = try {
             if (audioSourceId < AnalyzerParams.idTestSignal1) {
-                record = AudioRecord(audioSourceId, sampleRate, AudioFormat.CHANNEL_IN_MONO,
-                        AudioFormat.ENCODING_PCM_16BIT, bytesPerSample * bufferSampleSize)
+                AudioRecord(
+                        audioSourceId,
+                        sampleRate,
+                        AudioFormat.CHANNEL_IN_MONO,
+                        AudioFormat.ENCODING_PCM_16BIT,
+                        bytesPerSample * bufferSampleSize)
             } else {
-                record = AudioRecord(AnalyzerParams.RECORDER_AGC_OFF, sampleRate, AudioFormat.CHANNEL_IN_MONO,
-                        AudioFormat.ENCODING_PCM_16BIT, bytesPerSample * bufferSampleSize)
+                AudioRecord(
+                        AnalyzerParams.RECORDER_AGC_OFF,
+                        sampleRate,
+                        AudioFormat.CHANNEL_IN_MONO,
+                        AudioFormat.ENCODING_PCM_16BIT,
+                        bytesPerSample * bufferSampleSize
+                )
             }
         } catch (e: IllegalArgumentException) {
             e.printStackTrace()

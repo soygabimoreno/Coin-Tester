@@ -1,0 +1,3 @@
+<resources>
+    <string name="invalid_audio_record_parameters">Invalid AudioRecord parameters</string>
+</resources>

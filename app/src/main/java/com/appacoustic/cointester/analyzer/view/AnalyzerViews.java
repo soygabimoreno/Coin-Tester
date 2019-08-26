@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -187,12 +188,24 @@ public class AnalyzerViews {
         notifyToast(text);
     }
 
+    @Deprecated
     public void notifyToast(final String s) {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Context context = activity.getApplicationContext();
                 Toast toast = Toast.makeText(context, s, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
+    }
+
+    public void notifyToast(@StringRes final int resId) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Context context = activity.getApplicationContext();
+                Toast toast = Toast.makeText(context, resId, Toast.LENGTH_SHORT);
                 toast.show();
             }
         });
