@@ -275,7 +275,7 @@ public class SpectrogramPlot {
         isPaused = p;
     }
 
-    // Will be called in another thread (SamplingLoop)
+    // Will be called in another thread (SamplingLoopThread)
     // db.length == 2^n + 1
     public void saveRowSpectrumAsColor(final double[] db) {
         // For time compensate in shifting mode

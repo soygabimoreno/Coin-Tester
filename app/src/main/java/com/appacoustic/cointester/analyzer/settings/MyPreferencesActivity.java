@@ -72,7 +72,7 @@ public class MyPreferencesActivity extends PreferenceActivity {
 
         int nExtraSources = 0;
         for (int id : asid) {
-            // See SamplingLoop::run() for the magic number 1000
+            // See SamplingLoopThread::run() for the magic number 1000
             if (id >= 1000) nExtraSources++;
         }
 
@@ -93,7 +93,7 @@ public class MyPreferencesActivity extends PreferenceActivity {
             audioSources[j] = String.valueOf(audioSourcesId[j]);
         }
         for (int i = 0; i < asid.length; i++) {
-            // See SamplingLoop::run() for the magic number 1000
+            // See SamplingLoopThread::run() for the magic number 1000
             if (asid[i] >= 1000) {
                 audioSources[j] = String.valueOf(asid[i]);
                 audioSourcesName[j] = as[i];

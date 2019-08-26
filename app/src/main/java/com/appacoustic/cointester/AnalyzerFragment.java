@@ -37,7 +37,7 @@ import android.widget.Toast;
 import com.appacoustic.cointester.analyzer.AnalyzerUtil;
 import com.appacoustic.cointester.analyzer.RangeViewDialogC;
 import com.appacoustic.cointester.analyzer.model.AnalyzerParams;
-import com.appacoustic.cointester.analyzer.model.SamplingLoop;
+import com.appacoustic.cointester.analyzer.model.SamplingLoopThread;
 import com.appacoustic.cointester.analyzer.settings.AudioSourcesCheckerActivity;
 import com.appacoustic.cointester.analyzer.settings.CalibrationLoad;
 import com.appacoustic.cointester.analyzer.settings.MyPreferencesActivity;
@@ -98,7 +98,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
     public final static String MY_PREFERENCES_MSG_SOURCE_NAME = TAG + ".SOURCE_NAME";
 
     private AnalyzerViews analyzerViews;
-    private SamplingLoop samplingThread = null;
+    private SamplingLoopThread samplingThread = null;
     private RangeViewDialogC rangeViewDialogC;
     private GestureDetectorCompat mDetector;
 
@@ -107,7 +107,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
     public double dtRMS = 0;
     private double dtRMSFromFT = 0;
     private double maxAmpDB;
-    private double maxAmpFreq;
+    private double maxAmplitudeFreq;
     public double[] viewRangeArray = null;
 
     private boolean isMeasure = false;
@@ -259,7 +259,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
         savedInstanceState.putDouble("dtRMS", dtRMS);
         savedInstanceState.putDouble("dtRMSFromFT", dtRMSFromFT);
         savedInstanceState.putDouble("maxAmpDB", maxAmpDB);
-        savedInstanceState.putDouble("maxAmpFreq", maxAmpFreq);
+        savedInstanceState.putDouble("maxAmplitudeFreq", maxAmplitudeFreq);
 
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -272,7 +272,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
             dtRMS = savedInstanceState.getDouble("dtRMS");
             dtRMSFromFT = savedInstanceState.getDouble("dtRMSFromFT");
             maxAmpDB = savedInstanceState.getDouble("maxAmpDB");
-            maxAmpFreq = savedInstanceState.getDouble("maxAmpFreq");
+            maxAmplitudeFreq = savedInstanceState.getDouble("maxAmplitudeFreq");
         }
     }
 
@@ -448,7 +448,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
     }
 
     // Load preferences for Views
-    // When this function is called, the SamplingLoop must not running in the meanwhile.
+    // When this function is called, the SamplingLoopThread must not running in the meanwhile.
     private void loadPreferenceForView() {
         // load preferences for buttons
         // list-buttons
@@ -583,19 +583,19 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
         this.maxAmpDB = maxAmpDB;
     }
 
-    public double getMaxAmpFreq() {
-        return maxAmpFreq;
+    public double getMaxAmplitudeFreq() {
+        return maxAmplitudeFreq;
     }
 
-    public void setMaxAmpFreq(double maxAmpFreq) {
-        this.maxAmpFreq = maxAmpFreq;
+    public void setMaxAmplitudeFreq(double maxAmplitudeFreq) {
+        this.maxAmplitudeFreq = maxAmplitudeFreq;
     }
 
-    public SamplingLoop getSamplingThread() {
+    public SamplingLoopThread getSamplingThread() {
         return samplingThread;
     }
 
-    public void setSamplingThread(SamplingLoop samplingThread) {
+    public void setSamplingThread(SamplingLoopThread samplingThread) {
         this.samplingThread = samplingThread;
     }
 
@@ -818,8 +818,12 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
             return;
 
         // Start sampling
-        samplingThread = new SamplingLoop(this, params,
-                new SamplingLoop.Listener() {
+        samplingThread = new SamplingLoopThread(
+                params,
+                analyzerViews,
+                tvRun.getValue().equals("stop"),
+                saveWav,
+                new SamplingLoopThread.Listener() {
                     @Override
                     public void onInitGraphs() {
                         try {
@@ -827,6 +831,18 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+                    }
+
+                    @Override
+                    public void onUpdateAmplitude(double maxAmplitudeFreq, double maxAmplitudeDB) {
+                        AnalyzerFragment.this.maxAmplitudeFreq = maxAmplitudeFreq;
+                        maxAmpDB = maxAmplitudeDB;
+                    }
+
+                    @Override
+                    public void onUpdateRms(double rms, double rmsFromFT) {
+                        dtRMS = rms;
+                        dtRMSFromFT = rmsFromFT;
                     }
                 });
         samplingThread.start();
@@ -952,15 +968,15 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
                 //  if (saveWav && ! st.getText().toString().equals("stop")) {
                 //    st.nextValue();
                 //    if (samplingThread != null) {
-                //      samplingThread.setPause(true);
+                //      samplingThread.setPaused(true);
                 //    }
                 //  }
                 analyzerViews.enableSaveWavView(saveWav);
                 return true;
             case R.id.tvAnalyzerRunStop:
                 boolean pause = value.equals("stop");
-                if (samplingThread != null && samplingThread.getPause() != pause) {
-                    samplingThread.setPause(pause);
+                if (samplingThread != null && samplingThread.getPaused() != pause) {
+                    samplingThread.setPaused(pause);
                 }
                 analyzerViews.getAgv().getSpectrogramPlot().setPause(pause);
                 return false;

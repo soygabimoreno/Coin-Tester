@@ -151,7 +151,7 @@ public class AnalyzerViews {
         agv.setupPlot(params);
     }
 
-    // Will be called by SamplingLoop (in another thread)
+    // Will be called by SamplingLoopThread (in another thread)
     public void update(final double[] spectrumDBcopy) {
         agv.saveSpectrum(spectrumDBcopy);
         activity.runOnUiThread(new Runnable() {
@@ -481,7 +481,7 @@ public class AnalyzerViews {
                 refreshRMSLabel(analyzerFragment.getDtRMSFromFT());
             // peak frequency
             if ((viewMask & VIEW_MASK_textview_peak) != 0)
-                refreshPeakLabel(analyzerFragment.getMaxAmpFreq(), analyzerFragment.getMaxAmpDB());
+                refreshPeakLabel(analyzerFragment.getMaxAmplitudeFreq(), analyzerFragment.getMaxAmpDB());
             if ((viewMask & VIEW_MASK_MarkerLabel) != 0)
                 refreshMarkerLabel();
             if ((viewMask & VIEW_MASK_RecTimeLable) != 0 && analyzerFragment.getSamplingThread() != null)

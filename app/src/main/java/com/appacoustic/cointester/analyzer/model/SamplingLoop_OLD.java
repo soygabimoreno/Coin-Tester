@@ -20,7 +20,7 @@ import java.util.Arrays;
  */
 public class SamplingLoop_OLD extends Thread {
 
-    public static final String TAG = SamplingLoop.class.getSimpleName();
+    public static final String TAG = SamplingLoopThread.class.getSimpleName();
 
     private static final double TEST_SIGNAL_1_FREQ_1 = 440.0;
     private static final double TEST_SIGNAL_1_DB_1 = -6.0;
@@ -35,7 +35,7 @@ public class SamplingLoop_OLD extends Thread {
 
     private SineGenerator sineGenerator0;
     private SineGenerator sineGenerator1;
-    private double[] spectrumDBCopy; // Transfer data from SamplingLoop to AnalyzerGraphic
+    private double[] spectrumDBCopy; // Transfer data from SamplingLoopThread to AnalyzerGraphic
 
     private final AnalyzerFragment analyzerFragment;
     private final AnalyzerParams params;
@@ -155,7 +155,7 @@ public class SamplingLoop_OLD extends Thread {
         RecorderMonitor recorderMonitor = new RecorderMonitor(sampleRate, bufferSampleSize, TAG + "::run()");
         recorderMonitor.start();
 
-//      FPSCounter fpsCounter = new FPSCounter("SamplingLoop::run()"); // ERASE ???
+//      FPSCounter fpsCounter = new FPSCounter("SamplingLoopThread::run()"); // ERASE ???
 
         WavWriter wavWriter = new WavWriter(sampleRate);
         boolean saveWav = analyzerFragment.saveWav; // Change of saveWav during loop will only affect next enter
@@ -213,7 +213,7 @@ public class SamplingLoop_OLD extends Thread {
 //          fpsCounter.increment();
 
                 sTFT.calculatePeak();
-                analyzerFragment.setMaxAmpFreq(sTFT.getMaxAmplitudeFreq());
+                analyzerFragment.setMaxAmplitudeFreq(sTFT.getMaxAmplitudeFreq());
                 analyzerFragment.setMaxAmpDB(sTFT.getMaxAmplitudeDB());
 
                 // get RMS
