@@ -88,7 +88,7 @@ public class AnalyzerViews {
     private PopupWindow popupMenuFFTLen;
     private PopupWindow popupMenuFFTAverage;
 
-    private boolean bWarnOverrun = true;
+    private boolean warnOverrun = true;
 
     public AnalyzerViews(final Activity activity, AnalyzerFragment analyzerFragment, View rootView) {
         ButterKnife.bind(this, rootView);
@@ -213,18 +213,17 @@ public class AnalyzerViews {
     private long lastTimeNotifyOverrun = 0;
 
     public void notifyOverrun() {
-        if (!bWarnOverrun) {
+        if (!warnOverrun) {
             return;
         }
-        long t = SystemClock.uptimeMillis();
-        if (t - lastTimeNotifyOverrun > 6000) {
-            lastTimeNotifyOverrun = t;
+        long time = SystemClock.uptimeMillis();
+        if (time - lastTimeNotifyOverrun > 6000) {
+            lastTimeNotifyOverrun = time;
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Context context = activity.getApplicationContext();
-                    String text = "Recorder buffer overrun!\nYour cell phone is too slow.\nTry lower sampling rate or higher average number.";
-                    Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(context, R.string.error_recorder_buffer_overrun, Toast.LENGTH_LONG);
                     toast.show();
                 }
             });
@@ -557,11 +556,11 @@ public class AnalyzerViews {
         this.popupMenuFFTAverage = popupMenuFFTAverage;
     }
 
-    public boolean isbWarnOverrun() {
-        return bWarnOverrun;
+    public boolean isWarnOverrun() {
+        return warnOverrun;
     }
 
-    public void setbWarnOverrun(boolean bWarnOverrun) {
-        this.bWarnOverrun = bWarnOverrun;
+    public void setWarnOverrun(boolean warnOverrun) {
+        this.warnOverrun = warnOverrun;
     }
 }

@@ -207,7 +207,7 @@ public class SamplingLoop_OLD extends Thread {
             // If there is new spectrum data, do plot
             if (sTFT.nElemSpectrumAmp() >= nFFTAverage) {
                 // Update spectrum or spectrogram
-                final double[] spectrumDB = sTFT.getSpectrumAmpDB();
+                final double[] spectrumDB = sTFT.getSpectrumAmplitudeDB();
                 System.arraycopy(spectrumDB, 0, spectrumDBCopy, 0, spectrumDB.length);
                 analyzerViews.update(spectrumDBCopy); // COMMENT: update
 //          fpsCounter.increment();

@@ -48,7 +48,7 @@ class SamplingLoopThread(private val params: AnalyzerParams,
 
     private var sineGenerator0: SineGenerator
     private val sineGenerator1: SineGenerator
-    private var spectrumDBCopy: DoubleArray? = null // Transfer data from SamplingLoopThread to AnalyzerGraphic
+    private var spectrumAmplitudeDBCopy: DoubleArray? = null // Transfer data from SamplingLoopThread to AnalyzerGraphic
 
     private val bytesPerSample = AnalyzerParams.BYTES_PER_SAMPLE
     private val sampleValueMax = AnalyzerParams.SAMPLE_VALUE_MAX
@@ -78,9 +78,6 @@ class SamplingLoopThread(private val params: AnalyzerParams,
     }
 
     override fun run() {
-
-        analyzerViews.notifyWAVSaved("patata")
-
         val timeStart = SystemClock.uptimeMillis()
         listener.onInitGraphs()
         val timeEnd = SystemClock.uptimeMillis()
@@ -107,8 +104,8 @@ class SamplingLoopThread(private val params: AnalyzerParams,
 
         var readChunkSize = params.hopLength // Every hopLength one fft result (overlapped analyze window)
         readChunkSize = min(readChunkSize, 2048) // Smaller chunk, smaller delay
-        var bufferSampleSize = max(minBufferSize / bytesPerSample, fftLength / 2) * 2
-        bufferSampleSize *= ceil(1.0 * sampleRate / bufferSampleSize).toInt() // Tolerate up to about 1 sec
+        var bufferSize = max(minBufferSize / bytesPerSample, fftLength / 2) * 2
+        bufferSize *= ceil(1.0 * sampleRate / bufferSize).toInt() // Tolerate up to about 1 sec
 
         // Use the mic with AGC (Automatic Gain Control) turned off
         // The buffer size here seems not relate to the delay.
@@ -120,14 +117,14 @@ class SamplingLoopThread(private val params: AnalyzerParams,
                         sampleRate,
                         AudioFormat.CHANNEL_IN_MONO,
                         AudioFormat.ENCODING_PCM_16BIT,
-                        bytesPerSample * bufferSampleSize)
+                        bytesPerSample * bufferSize)
             } else {
                 AudioRecord(
                         AnalyzerParams.RECORDER_AGC_OFF,
                         sampleRate,
                         AudioFormat.CHANNEL_IN_MONO,
                         AudioFormat.ENCODING_PCM_16BIT,
-                        bytesPerSample * bufferSampleSize
+                        bytesPerSample * bufferSize
                 )
             }
         } catch (e: IllegalArgumentException) {
@@ -140,7 +137,7 @@ class SamplingLoopThread(private val params: AnalyzerParams,
                 "Source: " + params.audioSourceName + "\n" +
                 String.format("Sample rate: %d Hz (requested %d Hz)\n", record.sampleRate, sampleRate) +
                 String.format("Min buffer size: %d samples, %d bytes\n", minBufferSize / bytesPerSample, minBufferSize) +
-                String.format("Buffer size: %d samples, %d bytes\n", bufferSampleSize, bytesPerSample * bufferSampleSize) +
+                String.format("Buffer size: %d samples, %d bytes\n", bufferSize, bytesPerSample * bufferSize) +
                 String.format("Read chunk size: %d samples, %d bytes\n", readChunkSize, bytesPerSample * readChunkSize) +
                 String.format("FFT length: %d\n", fftLength) +
                 String.format("N FFT average: %d\n", nFftAverage))
@@ -153,17 +150,15 @@ class SamplingLoopThread(private val params: AnalyzerParams,
         }
 
         val audioSamples = ShortArray(readChunkSize)
-        var numOfReadShort: Int
+
 
         stft = STFT(params)
-        if (spectrumDBCopy == null || spectrumDBCopy!!.size != fftLength / 2 + 1) {
-            spectrumDBCopy = DoubleArray(fftLength / 2 + 1)
+        if (spectrumAmplitudeDBCopy == null || spectrumAmplitudeDBCopy!!.size != fftLength / 2 + 1) {
+            spectrumAmplitudeDBCopy = DoubleArray(fftLength / 2 + 1)
         }
 
-        val recorderMonitor = RecorderMonitor(sampleRate, bufferSampleSize, "SamplingLoopThread::run()")
+        val recorderMonitor = RecorderMonitor(sampleRate, bufferSize, "SamplingLoopThread::run()")
         recorderMonitor.start()
-
-        //      FPSCounter fpsCounter = new FPSCounter("SamplingLoopThread::run()"); // ERASE ???
 
         val wavWriter = WavWriter(sampleRate)
         if (saveWav) {
@@ -181,29 +176,35 @@ class SamplingLoopThread(private val params: AnalyzerParams,
             return
         }
 
-        // COMMENT: Main loop
-        // When running in this loop (including when paused), you can not change properties
+        // When running in this loop (including when paused), you cannot change properties
         // related to recorder: e.g. audioSourceId, sampleRate, bufferSampleSize
-        // TODO: allow change of FFT length on the fly
         while (running) {
-            if (audioSourceId >= AnalyzerParams.idTestSignal1) {
-                numOfReadShort = readTestData(audioSamples, 0, readChunkSize, audioSourceId)
+            val numOfReadShort = if (audioSourceId >= AnalyzerParams.idTestSignal1) {
+                readTestData(
+                        audioSamples,
+                        0,
+                        readChunkSize,
+                        audioSourceId)
             } else {
-                numOfReadShort = record.read(audioSamples, 0, readChunkSize)   // Read
+                record.read(
+                        audioSamples,
+                        0,
+                        readChunkSize)
             }
-            if (recorderMonitor.updateState(numOfReadShort)) {  // performed a check
-                if (recorderMonitor.lastCheckOverrun)
+            if (recorderMonitor.updateState(numOfReadShort)) {
+                if (recorderMonitor.lastCheckOverrun) {
                     analyzerViews.notifyOverrun()
-                if (saveWav)
+                }
+                if (saveWav) {
                     wavSecondsRemain = wavWriter.secondsLeft()
+                }
             }
             if (saveWav) {
-                wavWriter.pushAudioShort(audioSamples, numOfReadShort)  // Maybe move this to another thread?
+                wavWriter.pushAudioShort(audioSamples, numOfReadShort)
                 wavSeconds = wavWriter.secondsWritten()
                 analyzerViews.updateRec(wavSeconds)
             }
             if (paused) {
-                //          fpsCounter.increment();
                 // keep reading data, for overrun checker and for write wav data
                 continue
             }
@@ -212,11 +213,9 @@ class SamplingLoopThread(private val params: AnalyzerParams,
 
             // If there is new spectrum data, do plot
             if (stft.nElemSpectrumAmp() >= nFftAverage) {
-                // Update spectrum or spectrogram
-                val spectrumDB = stft.spectrumAmpDB
-                System.arraycopy(spectrumDB, 0, spectrumDBCopy, 0, spectrumDB.size)
-                analyzerViews.update(spectrumDBCopy) // Update
-                //          fpsCounter.increment();
+                val spectrumAmplitudeDB = stft.spectrumAmplitudeDB
+                System.arraycopy(spectrumAmplitudeDB, 0, spectrumAmplitudeDBCopy, 0, spectrumAmplitudeDB.size)
+                analyzerViews.update(spectrumAmplitudeDBCopy) // Update
 
                 stft.calculatePeak()
                 val maxAmplitudeFreq = stft.maxAmplitudeFreq
@@ -229,17 +228,17 @@ class SamplingLoopThread(private val params: AnalyzerParams,
             }
         }
         KLog.i("Actual sample rate: " + recorderMonitor.sampleRate)
-        KLog.i("Stopping and releasing recorder.")
+        KLog.i("Stopping and releasing recorder...")
         record.stop()
         record.release()
         if (saveWav) {
-            KLog.i("Ending saved wav.")
+            KLog.i("Ending saved wav")
             wavWriter.stop()
             analyzerViews.notifyWAVSaved(wavWriter.relativeDir)
         }
     }
 
-    private fun readTestData(a: ShortArray, offsetInShorts: Int, sizeInShorts: Int, id: Int): Int {
+    private fun readTestData(shorts: ShortArray, offsetInShorts: Int, sizeInShorts: Int, id: Int): Int {
         if (data == null || data!!.size != sizeInShorts) {
             data = DoubleArray(sizeInShorts)
         }
@@ -249,18 +248,18 @@ class SamplingLoopThread(private val params: AnalyzerParams,
                 sineGenerator1.getSamples(data)
                 sineGenerator0.addSamples(data)
                 for (i in 0 until sizeInShorts) {
-                    a[offsetInShorts + i] = Math.round(data!![i]).toShort()
+                    shorts[offsetInShorts + i] = Math.round(data!![i]).toShort()
                 }
             }
             // No break, so values of data added
             0 -> {
                 sineGenerator0.addSamples(data)
                 for (i in 0 until sizeInShorts) {
-                    a[offsetInShorts + i] = Math.round(data!![i]).toShort()
+                    shorts[offsetInShorts + i] = Math.round(data!![i]).toShort()
                 }
             }
             2 -> for (i in 0 until sizeInShorts) {
-                a[i] = (sampleValueMax * (2.0 * Math.random() - 1)).toShort()
+                shorts[i] = (sampleValueMax * (2.0 * Math.random() - 1)).toShort()
             }
             else -> KLog.w(Thread.currentThread().stackTrace[2].methodName + ": this id has no source: " + audioSourceId)
         }

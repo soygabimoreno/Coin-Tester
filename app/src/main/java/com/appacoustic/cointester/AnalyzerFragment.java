@@ -513,7 +513,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
         analyzerViews.getAgv().setSpectrogramDBLowerBound(Float.parseFloat(sharedPref.getString("spectrogramRange", Double.toString(analyzerViews.getAgv().getSpectrogramPlot().getSpectrogramBMP().getdBLowerBound()))));
         analyzerViews.getAgv().setLogAxisMode(sharedPref.getBoolean("spectrogramLogPlotMethod", true));
 
-        analyzerViews.setbWarnOverrun(sharedPref.getBoolean("warnOverrun", false));
+        analyzerViews.setWarnOverrun(sharedPref.getBoolean("warnOverrun", false));
         analyzerViews.setFpsLimit(Double.parseDouble(
                 sharedPref.getString("spectrogramFPS", getString(R.string.spectrogram_fps_default))));
 

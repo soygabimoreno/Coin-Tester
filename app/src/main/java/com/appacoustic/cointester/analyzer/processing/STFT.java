@@ -283,7 +283,7 @@ public class STFT {
     }
 
     public double getRMSFromFT() {
-        getSpectrumAmpDB();
+        getSpectrumAmplitudeDB();
         double s = 0;
         for (int i = 1; i < spectrumAmplitudeOut.length; i++) {
             s += spectrumAmplitudeOut[i];
@@ -291,12 +291,12 @@ public class STFT {
         return sqrt(s * windowEnergyFactor);
     }
 
-    public final double[] getSpectrumAmpDB() {
-        getSpectrumAmp();
+    public final double[] getSpectrumAmplitudeDB() {
+        getSpectrumAmplitude();
         return spectrumAmplitudeOutDB;
     }
 
-    final double[] getSpectrumAmp() {
+    final double[] getSpectrumAmplitude() {
         if (nAnalysed != 0) { // No new result
             int outLen = spectrumAmplitudeOut.length;
             double[] sAOC = spectrumAmplitudeOutCumulative;
@@ -324,7 +324,7 @@ public class STFT {
     }
 
     public void calculatePeak() {
-        getSpectrumAmpDB();
+        getSpectrumAmplitudeDB();
         // Find and show peak amplitude
         maxAmplitudeDB = 20 * log10(0.125 / 32768);
         maxAmplitudeFreq = 0;
