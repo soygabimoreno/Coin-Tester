@@ -78,6 +78,9 @@ class SamplingLoopThread(private val params: AnalyzerParams,
     }
 
     override fun run() {
+
+        analyzerViews.notifyWAVSaved("patata")
+
         val timeStart = SystemClock.uptimeMillis()
         listener.onInitGraphs()
         val timeEnd = SystemClock.uptimeMillis()
@@ -98,7 +101,7 @@ class SamplingLoopThread(private val params: AnalyzerParams,
                 AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT)
         if (minBufferSize == AudioRecord.ERROR_BAD_VALUE) {
-            analyzerViews.notifyToast(R.string.invalid_audio_record_parameters)
+            analyzerViews.notifyToast(R.string.error_invalid_audio_record_parameters)
             return
         }
 
@@ -128,8 +131,8 @@ class SamplingLoopThread(private val params: AnalyzerParams,
                 )
             }
         } catch (e: IllegalArgumentException) {
+            analyzerViews.notifyToast(R.string.error_illegal_recorder_argument)
             e.printStackTrace()
-            analyzerViews.notifyToast("Illegal recorder argument: change source")
             return
         }
 
@@ -145,7 +148,7 @@ class SamplingLoopThread(private val params: AnalyzerParams,
 
         if (record.state == AudioRecord.STATE_UNINITIALIZED) {
             KLog.e("Fail initializing the AudioRecord")
-            analyzerViews.notifyToast("Fail initializing the recorder.")
+            analyzerViews.notifyToast(R.string.error_initializing_recorder)
             return
         }
 
@@ -173,8 +176,7 @@ class SamplingLoopThread(private val params: AnalyzerParams,
         try {
             record.startRecording()
         } catch (e: IllegalStateException) {
-            val error = "Fail start recording"
-            analyzerViews.notifyToast(error)
+            analyzerViews.notifyToast(R.string.error_start_recording)
             e.printStackTrace()
             return
         }

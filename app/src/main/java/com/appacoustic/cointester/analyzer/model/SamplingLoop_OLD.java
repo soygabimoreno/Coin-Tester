@@ -125,7 +125,7 @@ public class SamplingLoop_OLD extends Thread {
             }
         } catch (IllegalArgumentException e) {
             KLog.Companion.e(METHOD_NAME + "Fail to initialize recorder");
-            analyzerViews.notifyToast("Illegal recorder argument: change source");
+//            analyzerViews.notifyToast("Illegal recorder argument: change source");
             return;
         }
         KLog.Companion.i(METHOD_NAME + ": Starting recorder... \n" +

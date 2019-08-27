@@ -184,11 +184,10 @@ public class AnalyzerViews {
     }
 
     public void notifyWAVSaved(final String path) {
-        String text = "WAV saved to " + path;
-        notifyToast(text);
+        String s = String.format(activity.getString(R.string.audio_saved_to_x), "'" + path + "'");
+        notifyToast(s);
     }
 
-    @Deprecated
     public void notifyToast(final String s) {
         activity.runOnUiThread(new Runnable() {
             @Override
