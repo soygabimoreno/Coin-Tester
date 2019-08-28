@@ -1,12 +1,10 @@
-package com.appacoustic.cointester.analyzer.model
+package com.appacoustic.cointester.analyzer
 
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.os.SystemClock
 import com.appacoustic.cointester.R
-import com.appacoustic.cointester.analyzer.RecorderMonitor
-import com.appacoustic.cointester.analyzer.SineGenerator
-import com.appacoustic.cointester.analyzer.WavWriter
+import com.appacoustic.cointester.analyzer.model.AnalyzerParams
 import com.appacoustic.cointester.analyzer.processing.STFT
 import com.appacoustic.cointester.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.utils.Tools
@@ -15,6 +13,7 @@ import java.util.*
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.round
 
 /**
  * Read a snapshot of audio data at a regular interval and compute the FFT.
@@ -153,8 +152,9 @@ class SamplingLoopThread(private val params: AnalyzerParams,
 
 
         stft = STFT(params)
-        if (spectrumAmplitudeDBCopy == null || spectrumAmplitudeDBCopy!!.size != fftLength / 2 + 1) {
-            spectrumAmplitudeDBCopy = DoubleArray(fftLength / 2 + 1)
+        val arraySize = fftLength / 2 + 1
+        if (spectrumAmplitudeDBCopy == null || spectrumAmplitudeDBCopy?.size != arraySize) {
+            spectrumAmplitudeDBCopy = DoubleArray(arraySize)
         }
 
         val recorderMonitor = RecorderMonitor(sampleRate, bufferSize, "SamplingLoopThread::run()")
@@ -239,7 +239,7 @@ class SamplingLoopThread(private val params: AnalyzerParams,
     }
 
     private fun readTestData(shorts: ShortArray, offsetInShorts: Int, sizeInShorts: Int, id: Int): Int {
-        if (data == null || data!!.size != sizeInShorts) {
+        if (data == null || data?.size != sizeInShorts) {
             data = DoubleArray(sizeInShorts)
         }
         Arrays.fill(data, 0.0)
@@ -247,24 +247,26 @@ class SamplingLoopThread(private val params: AnalyzerParams,
             1 -> {
                 sineGenerator1.getSamples(data)
                 sineGenerator0.addSamples(data)
-                for (i in 0 until sizeInShorts) {
-                    shorts[offsetInShorts + i] = Math.round(data!![i]).toShort()
-                }
+                loopShorts(shorts, sizeInShorts, offsetInShorts)
             }
             // No break, so values of data added
             0 -> {
                 sineGenerator0.addSamples(data)
-                for (i in 0 until sizeInShorts) {
-                    shorts[offsetInShorts + i] = Math.round(data!![i]).toShort()
-                }
+                loopShorts(shorts, sizeInShorts, offsetInShorts)
             }
             2 -> for (i in 0 until sizeInShorts) {
                 shorts[i] = (sampleValueMax * (2.0 * Math.random() - 1)).toShort()
             }
-            else -> KLog.w(Thread.currentThread().stackTrace[2].methodName + ": this id has no source: " + audioSourceId)
+            else -> KLog.w("This id has no source: $audioSourceId")
         }
         limitFrameRate(1000.0 * sizeInShorts / sampleRate) // Block this thread, so that behave as if read from real device
         return sizeInShorts
+    }
+
+    private fun loopShorts(shorts: ShortArray, sizeInShorts: Int, offsetInShorts: Int) {
+        for (i in 0 until sizeInShorts) {
+            shorts[offsetInShorts + i] = round(data!![i]).toShort()
+        }
     }
 
     /**
@@ -285,8 +287,8 @@ class SamplingLoopThread(private val params: AnalyzerParams,
         }
     }
 
-    fun setAWeighting(isAWeighting: Boolean) {
-        stft.setDBAWeighting(isAWeighting)
+    fun setDBAWeighting(dBAWeighting: Boolean) {
+        stft.setDBAWeighting(dBAWeighting)
     }
 
     fun finish() {

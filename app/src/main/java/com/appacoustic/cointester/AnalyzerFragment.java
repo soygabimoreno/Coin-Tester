@@ -37,7 +37,7 @@ import android.widget.Toast;
 import com.appacoustic.cointester.analyzer.AnalyzerUtil;
 import com.appacoustic.cointester.analyzer.RangeViewDialogC;
 import com.appacoustic.cointester.analyzer.model.AnalyzerParams;
-import com.appacoustic.cointester.analyzer.model.SamplingLoopThread;
+import com.appacoustic.cointester.analyzer.SamplingLoopThread;
 import com.appacoustic.cointester.analyzer.settings.AudioSourcesCheckerActivity;
 import com.appacoustic.cointester.analyzer.settings.CalibrationLoad;
 import com.appacoustic.cointester.analyzer.settings.MyPreferencesActivity;
@@ -990,7 +990,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
             case R.id.tvAnalyzerDBDBA:
                 params.setDBAWeighting(!value.equals("dB"));
                 if (samplingThread != null) {
-                    samplingThread.setAWeighting(params.getDBAWeighting());
+                    samplingThread.setDBAWeighting(params.getDBAWeighting());
                 }
                 editor.putBoolean("dbA", params.getDBAWeighting());
                 editor.commit();
