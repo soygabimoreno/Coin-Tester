@@ -38,8 +38,6 @@ import static java.lang.Math.sqrt;
  */
 public class STFT {
 
-    public static final String TAG = STFT.class.getSimpleName();
-
     private double[] spectrumAmplitudeOutCumulative;
     private double[] spectrumAmplitudeOutTemp;
     private double[] spectrumAmplitudeOut;
@@ -78,10 +76,10 @@ public class STFT {
         this.windowFunctionNames = params.getWindowFunctionNames();
 
         if (params.getNFftAverage() <= 0) {
-            throw new IllegalArgumentException(TAG + "::init(): nFFTAverage <= 0");
+            throw new IllegalArgumentException("nFftAverage <= 0");
         }
         if (((-fFTLength) & fFTLength) != fFTLength) {
-            throw new IllegalArgumentException(TAG + "::init(): FFT length is not a power of 2");
+            throw new IllegalArgumentException("FFT length is not a power of 2");
         }
 
         spectrumAmplitudeOutCumulative = new double[fFTLength / 2 + 1];
@@ -280,7 +278,7 @@ public class STFT {
             rMSCount = 0;
         }
         return rMSOut;
-    }
+    }    
 
     public double getRMSFromFT() {
         getSpectrumAmplitudeDB();
