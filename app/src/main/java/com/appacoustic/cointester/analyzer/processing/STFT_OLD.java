@@ -36,7 +36,7 @@ import static java.lang.Math.sqrt;
 /**
  * Short Time Fourier Transform.
  */
-public class STFT {
+public class STFT_OLD {
 
     private double[] spectrumAmplitudeOutCumulative;
     private double[] spectrumAmplitudeOutTemp;
@@ -68,7 +68,7 @@ public class STFT {
     private double maxAmplitudeFreq = Double.NaN;
     private double maxAmplitudeDB = Double.NaN;
 
-    public STFT(AnalyzerParams params) {
+    public STFT_OLD(AnalyzerParams params) {
         this.sampleRate = params.getSampleRate();
         this.fFTLength = params.getFftLength();
         this.hopLength = params.getHopLength(); // 50% overlap by default
