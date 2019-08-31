@@ -11,7 +11,7 @@ import android.preference.PreferenceActivity;
 import com.appacoustic.cointester.AnalyzerFragment;
 import com.appacoustic.cointester.R;
 import com.appacoustic.cointester.analyzer.AnalyzerUtil;
-import com.gabrielmorenoibarra.g.GLog;
+import com.gabrielmorenoibarra.k.util.KLog;
 
 @SuppressWarnings("deprecation")
 public class MyPreferencesActivity extends PreferenceActivity {
@@ -27,7 +27,7 @@ public class MyPreferencesActivity extends PreferenceActivity {
                 return audioSourcesName[i];
             }
         }
-        GLog.e(TAG, "getAudioSourceName(): no this entry.");
+        KLog.Companion.e("getAudioSourceName(): no this entry.");
         return "";
     }
 
@@ -43,7 +43,7 @@ public class MyPreferencesActivity extends PreferenceActivity {
     private SharedPreferences.OnSharedPreferenceChangeListener prefListener =
             new SharedPreferences.OnSharedPreferenceChangeListener() {
                 public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                    GLog.i(TAG, key + "=" + prefs);
+                    KLog.Companion.i(key + "=" + prefs);
                     if (key == null || key.equals("windowFunction")) {
                         Preference connectionPref = findPreference(key);
                         connectionPref.setSummary(prefs.getString(key, ""));
@@ -72,15 +72,15 @@ public class MyPreferencesActivity extends PreferenceActivity {
 
         int nExtraSources = 0;
         for (int id : asid) {
-            // See SamplingLoop::run() for the magic number 1000
+            // See SamplingLoopThread::run() for the magic number 1000
             if (id >= 1000) nExtraSources++;
         }
 
         // Get list of supported sources
         AnalyzerUtil au = new AnalyzerUtil(this);
         final int[] audioSourcesId = au.GetAllAudioSource(4);
-        GLog.i(TAG, " n_as = " + audioSourcesId.length);
-        GLog.i(TAG, " n_ex = " + nExtraSources);
+        KLog.Companion.i(" n_as = " + audioSourcesId.length);
+        KLog.Companion.i(" n_ex = " + nExtraSources);
         audioSourcesName = new String[audioSourcesId.length + nExtraSources];
         for (int i = 0; i < audioSourcesId.length; i++) {
             audioSourcesName[i] = au.getAudioSourceName(audioSourcesId[i]);
@@ -93,7 +93,7 @@ public class MyPreferencesActivity extends PreferenceActivity {
             audioSources[j] = String.valueOf(audioSourcesId[j]);
         }
         for (int i = 0; i < asid.length; i++) {
-            // See SamplingLoop::run() for the magic number 1000
+            // See SamplingLoopThread::run() for the magic number 1000
             if (asid[i] >= 1000) {
                 audioSources[j] = String.valueOf(asid[i]);
                 audioSourcesName[j] = as[i];

@@ -13,13 +13,13 @@
  *limitations under the License.
  *
  * Derived from jffpack, by suhler@google.com.
- * 
+ *
  * jfftpack is a Java version of fftpack. jfftpack is based
  * on Paul N. Swarztraubre's Fortran code and Pekka Janhuen's
  * C code. It is developed as part of my official duties as
  * lead software engineer for SCUBA-2 FTS projects
  * (www.roe.ac.uk/ukatc/projects/scubatwo/)
- * 
+ *
  * The original fftpack was public domain, so jfftpack is public domain too.
  * @author Baoshe Zhang
  * @author Astronomical Instrument Group of University of Lethbridge.
@@ -503,7 +503,7 @@ class RealDoubleFFT_Mixed {
     void rfftf(int n, double r[], double wtable[], double[] ch) {
         if (n == 1) return;
         rfftf1(n, r, wtable, 0, ch);
-    } 	/*rfftf*/
+    }    /*rfftf*/
 
     /*---------------------------------------------------------
    rffti1: further initialization of Real FFT

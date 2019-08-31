@@ -14,7 +14,7 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.RotateAnimation;
 
 import com.appacoustic.cointester.R;
-import com.gabrielmorenoibarra.g.GLog;
+import com.gabrielmorenoibarra.k.util.KLog;
 
 /**
  * TextView that toggles through a set of values.
@@ -153,7 +153,7 @@ public class SelectorText extends AppCompatTextView {
         if (values.length == valuesDisplay.length) {
             this.valuesDisplay = valuesDisplay;
         } else {
-            GLog.w(TAG, "values.length != valuesDisplay.length");
+            KLog.Companion.w("values.length != valuesDisplay.length");
             this.valuesDisplay = values;
         }
         adjustWidth();

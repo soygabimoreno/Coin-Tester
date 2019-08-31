@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -32,9 +33,9 @@ import android.widget.Toast;
 import com.appacoustic.cointester.AnalyzerFragment;
 import com.appacoustic.cointester.MainActivity;
 import com.appacoustic.cointester.R;
+import com.appacoustic.cointester.analyzer.AnalyzerUtil;
 import com.appacoustic.cointester.analyzer.SBNumFormat;
 import com.appacoustic.cointester.analyzer.model.AnalyzerParams;
-import com.appacoustic.cointester.analyzer.AnalyzerUtil;
 
 import butterknife.BindArray;
 import butterknife.BindDimen;
@@ -87,7 +88,7 @@ public class AnalyzerViews {
     private PopupWindow popupMenuFFTLen;
     private PopupWindow popupMenuFFTAverage;
 
-    private boolean bWarnOverrun = true;
+    private boolean warnOverrun = true;
 
     public AnalyzerViews(final Activity activity, AnalyzerFragment analyzerFragment, View rootView) {
         ButterKnife.bind(this, rootView);
@@ -151,7 +152,7 @@ public class AnalyzerViews {
         agv.setupPlot(params);
     }
 
-    // Will be called by SamplingLoop (in another thread)
+    // Will be called by SamplingLoopThread (in another thread)
     public void update(final double[] spectrumDBcopy) {
         agv.saveSpectrum(spectrumDBcopy);
         activity.runOnUiThread(new Runnable() {
@@ -183,8 +184,8 @@ public class AnalyzerViews {
     }
 
     public void notifyWAVSaved(final String path) {
-        String text = "WAV saved to " + path;
-        notifyToast(text);
+        String s = String.format(activity.getString(R.string.audio_saved_to_x), "'" + path + "'");
+        notifyToast(s);
     }
 
     public void notifyToast(final String s) {
@@ -198,21 +199,31 @@ public class AnalyzerViews {
         });
     }
 
+    public void notifyToast(@StringRes final int resId) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Context context = activity.getApplicationContext();
+                Toast toast = Toast.makeText(context, resId, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
+    }
+
     private long lastTimeNotifyOverrun = 0;
 
     public void notifyOverrun() {
-        if (!bWarnOverrun) {
+        if (!warnOverrun) {
             return;
         }
-        long t = SystemClock.uptimeMillis();
-        if (t - lastTimeNotifyOverrun > 6000) {
-            lastTimeNotifyOverrun = t;
+        long time = SystemClock.uptimeMillis();
+        if (time - lastTimeNotifyOverrun > 6000) {
+            lastTimeNotifyOverrun = time;
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Context context = activity.getApplicationContext();
-                    String text = "Recorder buffer overrun!\nYour cell phone is too slow.\nTry lower sampling rate or higher average number.";
-                    Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(context, R.string.error_recorder_buffer_overrun, Toast.LENGTH_LONG);
                     toast.show();
                 }
             });
@@ -481,7 +492,7 @@ public class AnalyzerViews {
                 refreshRMSLabel(analyzerFragment.getDtRMSFromFT());
             // peak frequency
             if ((viewMask & VIEW_MASK_textview_peak) != 0)
-                refreshPeakLabel(analyzerFragment.getMaxAmpFreq(), analyzerFragment.getMaxAmpDB());
+                refreshPeakLabel(analyzerFragment.getMaxAmplitudeFreq(), analyzerFragment.getMaxAmpDB());
             if ((viewMask & VIEW_MASK_MarkerLabel) != 0)
                 refreshMarkerLabel();
             if ((viewMask & VIEW_MASK_RecTimeLable) != 0 && analyzerFragment.getSamplingThread() != null)
@@ -545,11 +556,11 @@ public class AnalyzerViews {
         this.popupMenuFFTAverage = popupMenuFFTAverage;
     }
 
-    public boolean isbWarnOverrun() {
-        return bWarnOverrun;
+    public boolean isWarnOverrun() {
+        return warnOverrun;
     }
 
-    public void setbWarnOverrun(boolean bWarnOverrun) {
-        this.bWarnOverrun = bWarnOverrun;
+    public void setWarnOverrun(boolean warnOverrun) {
+        this.warnOverrun = warnOverrun;
     }
 }

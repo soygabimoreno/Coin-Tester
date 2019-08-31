@@ -5,7 +5,7 @@ import android.graphics.Paint;
 
 import com.appacoustic.cointester.analyzer.view.AnalyzerGraphicView;
 import com.appacoustic.cointester.analyzer.view.SpectrogramPlot;
-import com.gabrielmorenoibarra.g.GLog;
+import com.gabrielmorenoibarra.k.util.KLog;
 
 import java.util.Arrays;
 
@@ -281,7 +281,7 @@ public class SpectrogramBMP {
 
         void fill(double[] db) {
             if (db.length - 1 != nFreq) {
-                GLog.e(TAG, "fill(): WTF");
+                KLog.Companion.e("fill(): WTF");
                 return;
             }
             int p0 = (nFreq + 1) * iTimePointer;
@@ -345,8 +345,8 @@ public class SpectrogramBMP {
             }
             if (!bNeedClean && iTimePointer >= _nTime) {
                 final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
-                GLog.w(TAG, METHOD_NAME + ": Should not happen!!");
-                GLog.i(TAG, METHOD_NAME + ": iTimePointer=" + iTimePointer + "  nFreqPoints=" + _nFreq + "  nTimePoints=" + _nTime);
+                KLog.Companion.w(METHOD_NAME + ": Should not happen!!");
+                KLog.Companion.i(METHOD_NAME + ": iTimePointer=" + iTimePointer + "  nFreqPoints=" + _nFreq + "  nTimePoints=" + _nTime);
                 bNeedClean = true;
             }
             if (bNeedClean) {
@@ -363,7 +363,7 @@ public class SpectrogramBMP {
 
         void fill(double[] db) {
             if (db.length - 1 != nFreq) {
-                GLog.e(TAG, "fill(): WTF");
+                KLog.Companion.e("fill(): WTF");
                 return;
             }
             int pRef = iTimePointer * nFreq - 1;
@@ -438,7 +438,7 @@ public class SpectrogramBMP {
                 bmShiftCache = new int[bm.length];
             }
             if (mapFreqToPixL.length != _nFreq + 1) {
-                GLog.d(TAG, METHOD_NAME + ": New");
+                KLog.Companion.d(METHOD_NAME + ": New");
                 mapFreqToPixL = new int[_nFreq + 1];
                 mapFreqToPixH = new int[_nFreq + 1];
             }
@@ -449,7 +449,7 @@ public class SpectrogramBMP {
             nFreq = _nFreq;
             nTime = _nTime;
             if (_axis == null) {
-                GLog.e(TAG, METHOD_NAME + ": damn: axis == null");
+                KLog.Companion.e(METHOD_NAME + ": damn: axis == null");
                 return;
             }
             if (axis != _axis) {  // not itself
@@ -477,7 +477,7 @@ public class SpectrogramBMP {
 
         void fill(double[] db) {
             if (db.length - 1 != nFreq) {
-                GLog.e(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + ": WTF");
+                KLog.Companion.e(Thread.currentThread().getStackTrace()[2].getMethodName() + ": WTF");
                 return;
             }
             int bmP0 = bmPt * bmpWidth;
@@ -503,7 +503,7 @@ public class SpectrogramBMP {
 
         private void fill(short[] dbLevel) {
             if (dbLevel.length - 1 != nFreq) {
-                GLog.e(TAG, "fill(): WTF");
+                KLog.Companion.e("fill(): WTF");
                 return;
             }
             int bmP0 = bmPt * bmpWidth;
@@ -602,14 +602,14 @@ public class SpectrogramBMP {
             double dFreq = maxFreq / nFreq;
 
             int nSegment = (int) (Math.log((maxFreq + 0.1) / minFreq) / Math.log(incFactor)) + 1;
-            GLog.d(TAG, "nFreq = " + nFreq + "  dFreq = " + dFreq + "  nSegment = " + nSegment + "  bmpWidth = " + bmpWidth);
+            KLog.Companion.d("nFreq = " + nFreq + "  dFreq = " + dFreq + "  nSegment = " + nSegment + "  bmpWidth = " + bmpWidth);
 
             pixelAbscissa = new double[nSegment + 1];
             freqAbscissa = new double[nSegment + 1];
             pixelAbscissa[0] = 0;
             freqAbscissa[0] = minFreq;  // should be minFreq
-            //GLog.d(TAG, "pixelAbscissa[" + 0 + "] = " + pixelAbscissa[0] + "  freqAbscissa[i] = " + freqAbscissa[0]);
-            GLog.d(TAG, "pixelAbscissa[" + 0 + "] = " + pixelAbscissa[0]);
+            //KLog.Companion.d("pixelAbscissa[" + 0 + "] = " + pixelAbscissa[0] + "  freqAbscissa[i] = " + freqAbscissa[0]);
+            KLog.Companion.d("pixelAbscissa[" + 0 + "] = " + pixelAbscissa[0]);
             for (int i = 1; i <= nSegment; i++) {
                 /**  Mapping [0, 1] -> [fmin, fmax]
                  *   /  fmax  \ x
@@ -620,7 +620,7 @@ public class SpectrogramBMP {
                 pixelAbscissa[i] = (pow(maxFreq / minFreq, (double) i / nSegment) * minFreq - minFreq) / (maxFreq - minFreq);
                 pixelAbscissa[i] = Math.floor(pixelAbscissa[i] * bmpWidth);   // align to pixel boundary
                 freqAbscissa[i] = pixelAbscissa[i] / bmpWidth * (maxFreq - minFreq) + minFreq;
-                GLog.d(TAG, "pixelAbscissa[" + i + "] = " + pixelAbscissa[i] + "  freqAbscissa[i] = " + freqAbscissa[i]);
+                KLog.Companion.d("pixelAbscissa[" + i + "] = " + pixelAbscissa[i] + "  freqAbscissa[i] = " + freqAbscissa[i]);
             }
 
             // Map between [pixelAbscissa[i-1]..pixelAbscissa[i]] and [freqAbscissa[i-1]..freqAbscissa[i]]
@@ -632,11 +632,11 @@ public class SpectrogramBMP {
             for (int i = 1; i <= nSegment; i++) {
                 axisSeg.setNCanvasPx(Math.round(pixelAbscissa[i] - pixelAbscissa[i - 1]));  // should work without round()
                 axisSeg.setBounds(freqAbscissa[i - 1], freqAbscissa[i]);
-                GLog.d(TAG, "axisSeg[" + i + "] .nC = " + axisSeg.getNCanvasPx() + "  .vL = " + axisSeg.getLowerBound() + "  .vU = " + axisSeg.getUpperBound());
+                KLog.Companion.d("axisSeg[" + i + "] .nC = " + axisSeg.getNCanvasPx() + "  .vL = " + axisSeg.getLowerBound() + "  .vU = " + axisSeg.getUpperBound());
                 while ((iF + 0.5) * dFreq <= freqAbscissa[i] + eps) {
                     // upper bound of the pixel position of frequency point iF
                     iFreqToPix[iF] = axisSeg.pxFromValue((iF + 0.5) * dFreq) + pixelAbscissa[i - 1];
-//                    GLog.d(TAG, "seg = " + i + "  iFreqToPix[" + iF + "] = " + iFreqToPix[iF]);
+//                    KLog.Companion.d("seg = " + i + "  iFreqToPix[" + iF + "] = " + iFreqToPix[iF]);
                     iF++;
                 }
             }
@@ -654,7 +654,7 @@ public class SpectrogramBMP {
 
         void fill(double[] db) {
             if (db.length - 1 != nFreq) {
-                GLog.e(TAG, "full(): db.length - 1 != nFreq");
+                KLog.Companion.e("full(): db.length - 1 != nFreq");
                 return;
             }
             if (dbPixelMix.length != bmpWidth) {
@@ -717,15 +717,15 @@ public class SpectrogramBMP {
 
         void draw(Canvas c, SpectrogramPlot.TimeAxisMode showModeSpectrogram, ScreenPhysicalMapping axisFreq, Paint smoothBmpPaint) {
             if (bm.length == 0 || axisFreq.getNCanvasPx() == 0) {
-                GLog.d(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + ": bm.length == 0 || axisFreq.getNCanvasPx() == 0");
+                KLog.Companion.d(Thread.currentThread().getStackTrace()[2].getMethodName() + ": bm.length == 0 || axisFreq.getNCanvasPx() == 0");
                 return;
             }
             int i1 = pixelAbscissa.length - 1;
             String st1 = "draw():  pixelAbscissa[" + (i1 - 1) + "]=" + pixelAbscissa[i1 - 1] + "  pixelAbscissa[" + i1 + "]=" + pixelAbscissa[i1] + "  bmpWidth=" + bmpWidth;
             String st2 = "draw():  axis.vL=" + axisFreq.getLowerBound() + "  axis.vU=" + axisFreq.getUpperBound() + "  axisFreq.nC=" + axisFreq.getNCanvasPx() + "  nTime=" + nTime;
             if (!st1.equals(st1old)) {
-                GLog.d(TAG, st1);
-                GLog.d(TAG, st2);
+                KLog.Companion.d(st1);
+                KLog.Companion.d(st2);
                 st1old = st1;
                 st2old = st2;
             }
@@ -746,7 +746,7 @@ public class SpectrogramBMP {
                     p2 = axisFreq.getNCanvasPx() - p2;
                 }
                 double widthFactor = (p2 - p1) / (pixelAbscissa[i] - pixelAbscissa[i - 1]) * (bmpWidth / axisFreq.getNCanvasPx());
-                // GLog.d(TAG, "draw():  f1=" + f1 + "  f2=" + f2 + "  p1=" + p1 + "  p2=" + p2 + "  widthFactor=" + widthFactor + "  modeInt=" + axisFreq.mapType);
+                // KLog.Companion.d("draw():  f1=" + f1 + "  f2=" + f2 + "  p1=" + p1 + "  p2=" + p2 + "  widthFactor=" + widthFactor + "  modeInt=" + axisFreq.mapType);
                 c.scale((float) widthFactor, 1);
                 c.drawBitmap(bmTmp, (int) pixelAbscissa[i - 1], bmpWidth, (float) (p1 / axisFreq.getNCanvasPx() * bmpWidth / widthFactor), 0.0f,
                         (int) (pixelAbscissa[i] - pixelAbscissa[i - 1]), nTime, false, smoothBmpPaint);

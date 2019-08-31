@@ -18,7 +18,7 @@ package com.appacoustic.cointester.analyzer.processing;
 import com.appacoustic.cointester.analyzer.BesselCal;
 import com.appacoustic.cointester.analyzer.model.AnalyzerParams;
 import com.appacoustic.cointester.fft.RealDoubleFFT;
-import com.gabrielmorenoibarra.g.GLog;
+import com.gabrielmorenoibarra.k.util.KLog;
 
 import java.util.Arrays;
 
@@ -36,9 +36,7 @@ import static java.lang.Math.sqrt;
 /**
  * Short Time Fourier Transform.
  */
-public class STFT {
-
-    public static final String TAG = STFT.class.getSimpleName();
+public class STFT_OLD {
 
     private double[] spectrumAmplitudeOutCumulative;
     private double[] spectrumAmplitudeOutTemp;
@@ -70,18 +68,18 @@ public class STFT {
     private double maxAmplitudeFreq = Double.NaN;
     private double maxAmplitudeDB = Double.NaN;
 
-    public STFT(AnalyzerParams params) {
+    public STFT_OLD(AnalyzerParams params) {
         this.sampleRate = params.getSampleRate();
-        this.fFTLength = params.getFFTLength();
+        this.fFTLength = params.getFftLength();
         this.hopLength = params.getHopLength(); // 50% overlap by default
         this.windowFunctionName = params.getWindowFunctionName();
         this.windowFunctionNames = params.getWindowFunctionNames();
 
-        if (params.getNFFTAverage() <= 0) {
-            throw new IllegalArgumentException(TAG + "::init(): nFFTAverage <= 0");
+        if (params.getNFftAverage() <= 0) {
+            throw new IllegalArgumentException("nFftAverage <= 0");
         }
         if (((-fFTLength) & fFTLength) != fFTLength) {
-            throw new IllegalArgumentException(TAG + "::init(): FFT length is not a power of 2");
+            throw new IllegalArgumentException("FFT length is not a power of 2");
         }
 
         spectrumAmplitudeOutCumulative = new double[fFTLength / 2 + 1];
@@ -98,14 +96,14 @@ public class STFT {
 
         micGain = params.getMicGainDB();
         if (micGain != null) {
-            GLog.i(TAG, "Calibration load");
+            KLog.Companion.i("Calibration load");
             for (int i = 0; i < micGain.length; i++) {
                 micGain[i] = pow(10, micGain[i] / 10.0); // COMMENT: dB --> Linear No sería dividir entre 20 en vez de 10 ???
             }
         } else {
-            GLog.w(TAG, "No calibration");
+            KLog.Companion.w("No calibration");
         }
-        setDBAWeighting(params.isDBAWeighting());
+        setDBAWeighting(params.getDBAWeighting());
     }
 
     private void initWindowFunction() {
@@ -222,7 +220,7 @@ public class STFT {
 
     public void feedData(short[] data, int length) {
         if (length > data.length) {
-            GLog.w(TAG, "Trying to read more samples than there are in the buffer");
+            KLog.Companion.w("Trying to read more samples than there are in the buffer");
             length = data.length;
         }
         int inLength = spectrumAmplitudeIn.length;
@@ -280,10 +278,10 @@ public class STFT {
             rMSCount = 0;
         }
         return rMSOut;
-    }
+    }    
 
     public double getRMSFromFT() {
-        getSpectrumAmpDB();
+        getSpectrumAmplitudeDB();
         double s = 0;
         for (int i = 1; i < spectrumAmplitudeOut.length; i++) {
             s += spectrumAmplitudeOut[i];
@@ -291,12 +289,12 @@ public class STFT {
         return sqrt(s * windowEnergyFactor);
     }
 
-    public final double[] getSpectrumAmpDB() {
-        getSpectrumAmp();
+    public final double[] getSpectrumAmplitudeDB() {
+        getSpectrumAmplitude();
         return spectrumAmplitudeOutDB;
     }
 
-    final double[] getSpectrumAmp() {
+    final double[] getSpectrumAmplitude() {
         if (nAnalysed != 0) { // No new result
             int outLen = spectrumAmplitudeOut.length;
             double[] sAOC = spectrumAmplitudeOutCumulative;
@@ -324,7 +322,7 @@ public class STFT {
     }
 
     public void calculatePeak() {
-        getSpectrumAmpDB();
+        getSpectrumAmplitudeDB();
         // Find and show peak amplitude
         maxAmplitudeDB = 20 * log10(0.125 / 32768);
         maxAmplitudeFreq = 0;

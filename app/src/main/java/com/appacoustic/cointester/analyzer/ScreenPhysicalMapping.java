@@ -1,6 +1,6 @@
 package com.appacoustic.cointester.analyzer;
 
-import com.gabrielmorenoibarra.g.GLog;
+import com.gabrielmorenoibarra.k.util.KLog;
 
 import static java.lang.Math.exp;
 import static java.lang.Math.log;
@@ -170,7 +170,7 @@ public class ScreenPhysicalMapping {
         // Only support non-negative bounds
         if (mapType == Type.LOG) {
             if (lowerViewBound < 0 || upperViewBound < 0) {
-                GLog.e(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + ": negative bounds.");
+                KLog.Companion.e(Thread.currentThread().getStackTrace()[2].getMethodName() + ": negative bounds.");
                 return;
             }
             if (lowerViewBound < freqLowerBoundForLog) lowerViewBound = freqLowerBoundForLog;

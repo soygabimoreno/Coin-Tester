@@ -8,7 +8,7 @@ import android.media.MediaRecorder;
 import android.os.Build;
 
 import com.appacoustic.cointester.R;
-import com.gabrielmorenoibarra.g.GLog;
+import com.gabrielmorenoibarra.k.util.KLog;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class AnalyzerUtil {
         final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
         // test
         if (cmpDB == null || cmpDB.length != data.length) {
-            GLog.i(TAG, METHOD_NAME + ": new");
+            KLog.Companion.i(METHOD_NAME + ": new");
             cmpDB = new double[data.length];
         } else {
             boolean same = true;
@@ -90,7 +90,7 @@ public class AnalyzerUtil {
                 }
             }
             if (same) {
-                GLog.i(TAG, METHOD_NAME + ": same data row!!");
+                KLog.Companion.i(METHOD_NAME + ": same data row!!");
             }
             System.arraycopy(data, 0, cmpDB, 0, data.length);
         }
@@ -190,7 +190,7 @@ public class AnalyzerUtil {
                 try {
                     int id = (int) f.get(null);
                     iList.add(id);
-                    GLog.i("Sources id:", "" + id);
+                    KLog.Companion.i("Sources id: " + id);
                 } catch (IllegalAccessException e) {
                 }
             }
@@ -270,7 +270,7 @@ public class AnalyzerUtil {
             return new double[0];
         }
         if (xFixed.length != yFixed.length) {
-            GLog.e(TAG, "Input data length mismatch");
+            KLog.Companion.e("Input data length mismatch");
         }
 
 //        if (!isSorted(xFixed)) {

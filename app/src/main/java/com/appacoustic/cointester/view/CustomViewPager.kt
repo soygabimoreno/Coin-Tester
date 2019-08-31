@@ -9,9 +9,10 @@ import android.view.MotionEvent
  * Custom ViewPager with paging enable / disable perform.
  * Created by Gabriel Moreno on 2017-10-15.
  */
-class CustomViewPager(context: Context,
-                      attrs: AttributeSet)
-    : ViewPager(context, attrs) {
+class CustomViewPager(
+    context: Context,
+    attrs: AttributeSet
+) : ViewPager(context, attrs) {
 
     var stuck = false
 
