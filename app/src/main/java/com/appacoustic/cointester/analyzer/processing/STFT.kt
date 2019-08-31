@@ -82,17 +82,17 @@ class STFT(params: AnalyzerParams) {
             return spectrumAmplitudeOutDB
         }
 
-    internal// No new result
-    // No correction to phase or DC
-    val spectrumAmplitude: DoubleArray
+
+    // TODO: Change name of the method
+    private val spectrumAmplitude: DoubleArray
         get() {
-            if (nAnalysed != 0) {
+            if (nAnalysed != 0) { // No new result
                 val outLen = spectrumAmplitudeOut.size
                 val sAOC = spectrumAmplitudeOutCumulative
                 for (j in 0 until outLen) {
                     sAOC[j] /= nAnalysed.toDouble()
                 }
-                if (micGain != null && micGain.size + 1 == sAOC.size) {
+                if (micGain != null && micGain.size + 1 == sAOC.size) { // No correction to phase or DC
                     for (j in 1 until outLen) {
                         sAOC[j] /= micGain[j - 1]
                     }
