@@ -29,37 +29,37 @@ class STFT(params: AnalyzerParams) {
     private val spectrumAmplitudeOutDB: DoubleArray
     private val spectrumAmplitudeIn: DoubleArray
     private val spectrumAmplitudeInTemp: DoubleArray
-    private var spectrumAmplitudeCount: Int = 0
+    private var spectrumAmplitudeCount = 0
     private val spectrumAmplitudeFFT: RealDoubleFFT
 
     private lateinit var window: DoubleArray
-    private val windowFunctionName: String?
-    private val windowFunctionNames: Array<String>
+    private val windowFunctionName = params.windowFunctionName
+    private val windowFunctionNames = params.windowFunctionNames
     private var windowEnergyFactor = 1.0 // Used to keep energy invariant under different window
 
-    private val sampleRate: Int
-    private val fFTLength: Int
-    private val hopLength: Int
-    private var nAnalysed: Int = 0
-    private var dBAWeighting: Boolean = false
+    private val sampleRate = params.sampleRate
+    private val fFTLength = params.fftLength
+    private val hopLength = params.hopLength
+    private var nAnalysed = 0
+    private var dBAWeighting = false
 
-    private var rMSCumulative: Double = 0.toDouble()
-    private var rMSCount: Int = 0
-    private var rMSOut: Double = 0.toDouble()
+    private var rMSCumulative = 0.0
+    private var rMSCount = 0
+    private var rMSOut = 0.0
 
     private lateinit var dBAFactor: DoubleArray // Multiply to power spectrum to get A-weighting
     private val micGain: DoubleArray?
 
-    var maxAmplitudeFreq = java.lang.Double.NaN
+    var maxAmplitudeFreq = Double.NaN
         private set
-    var maxAmplitudeDB = java.lang.Double.NaN
+    var maxAmplitudeDB = Double.NaN
         private set
 
-    // Per 2 to normalize to sine wave.
+    // Per 2 to normalize to sine wave
     val rms: Double
         get() {
             if (rMSCount > 8000 / 30) {
-                rMSOut = sqrt(rMSCumulative / rMSCount * 2.0)
+                rMSOut = kotlin.math.sqrt(rMSCumulative / rMSCount * 2.0)
                 rMSCumulative = 0.0
                 rMSCount = 0
             }
@@ -73,7 +73,7 @@ class STFT(params: AnalyzerParams) {
             for (i in 1 until spectrumAmplitudeOut.size) {
                 s += spectrumAmplitudeOut[i]
             }
-            return sqrt(s * windowEnergyFactor)
+            return kotlin.math.sqrt(s * windowEnergyFactor)
         }
 
     val spectrumAmplitudeDB: DoubleArray
@@ -113,11 +113,7 @@ class STFT(params: AnalyzerParams) {
         }
 
     init {
-        this.sampleRate = params.sampleRate
-        this.fFTLength = params.fftLength
-        this.hopLength = params.hopLength // 50% overlap by default
-        this.windowFunctionName = params.windowFunctionName
-        this.windowFunctionNames = params.windowFunctionNames
+        // 50% overlap by default
 
         require(params.nFftAverage > 0) { "nFftAverage <= 0" }
         require(-fFTLength and fFTLength == fFTLength) { "FFT length is not a power of 2" }
