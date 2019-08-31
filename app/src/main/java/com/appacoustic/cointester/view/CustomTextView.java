@@ -1,4 +1,4 @@
-package com.appacoustic.cointester.views;
+package com.appacoustic.cointester.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;

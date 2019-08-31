@@ -19,7 +19,7 @@
 
     <!-- Main UI -->
     <string name="tv_rms_text">RMS:dB \n-XXX.X</string>
-    <string name="tv_marker_text" >Marker:XXXXX.XHz(AX#+XX) -XXX.XdB</string>
+    <string name="tv_marker_text">Marker:XXXXX.XHz(AX#+XX) -XXX.XdB</string>
     <string name="tv_marker_text_empty">Marker:</string>
     <string name="tv_peak_text">Peak&#160;&#160;:XXXXX.XHz(AX#+XX) -XXX.XdB</string>
     <string name="tv_peak_text_empty">Peak&#160;&#160;:</string>

@@ -142,7 +142,7 @@
                 android:layout_marginStart="10dp"
                 android:orientation="vertical">
 
-                <com.appacoustic.cointester.views.CustomTextView
+                <com.appacoustic.cointester.view.CustomTextView
                     android:id="@+id/tvAnalyzerCheckerCoinName"
                     style="@style/Tv"
                     android:textColor="@color/cadet"
@@ -150,7 +150,7 @@
                     app:ttf_name="titillium_web_semi_bold"
                     tools:text="Euro"/>
 
-                <com.appacoustic.cointester.views.CustomTextView
+                <com.appacoustic.cointester.view.CustomTextView
                     android:id="@+id/tvAnalyzerCheckerCoinPlace"
                     style="@style/Tv"
                     android:textColor="@color/cadet_1"

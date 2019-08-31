@@ -22,7 +22,7 @@
         android:layout_toEndOf="@+id/ivItemCoin"
         android:orientation="vertical">
 
-        <com.appacoustic.cointester.views.CustomTextView
+        <com.appacoustic.cointester.view.CustomTextView
             android:id="@+id/tvItemCoinName"
             style="@style/Tv"
             android:textColor="@color/cadet"
@@ -30,7 +30,7 @@
             app:ttf_name="titillium_web_semi_bold"
             tools:text="Euro"/>
 
-        <com.appacoustic.cointester.views.CustomTextView
+        <com.appacoustic.cointester.view.CustomTextView
             android:id="@+id/tvItemCoinPlace"
             style="@style/Tv"
             android:textColor="@color/cadet_1"
@@ -45,7 +45,7 @@
         android:background="@color/cadet_1">
     </View>
 
-    <com.appacoustic.cointester.views.CustomButton
+    <com.appacoustic.cointester.view.CustomButton
         android:id="@+id/btnItemCoin"
         android:layout_width="100dp"
         android:layout_height="33dp"

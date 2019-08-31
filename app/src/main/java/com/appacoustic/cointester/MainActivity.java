@@ -10,7 +10,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,12 +18,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.appacoustic.cointester.domain.Coin;
+import com.gabrielmorenoibarra.k.util.KLog;
 import com.appacoustic.cointester.utils.DataManager;
-import com.appacoustic.cointester.views.CustomViewPager;
+import com.appacoustic.cointester.view.CustomViewPager;
 import com.crashlytics.android.Crashlytics;
 import com.gabrielmorenoibarra.g.G;
 import com.gabrielmorenoibarra.g.GGraphics;
-import com.gabrielmorenoibarra.g.GLog;
 
 import butterknife.BindDrawable;
 import butterknife.BindString;
@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements CoinsFragment.OnL
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         setSupportActionBar(toolbar);
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
 
@@ -186,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements CoinsFragment.OnL
     }
 
     public void updateActivityOnUiThread() {
-        GLog.d(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
+        KLog.Companion.d(Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

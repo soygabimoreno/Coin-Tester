@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.appacoustic.cointester.domain.Coin;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +43,6 @@ public class CoinsFragment extends Fragment {
         recyclerView.setAdapter(new CoinsAdapter(list, listener));
         return rootView;
     }
-
 
     @Override
     public void onAttach(Context context) {

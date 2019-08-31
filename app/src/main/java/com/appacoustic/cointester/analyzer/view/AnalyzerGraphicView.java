@@ -14,7 +14,7 @@ import com.appacoustic.cointester.analyzer.GridLabel;
 import com.appacoustic.cointester.analyzer.ScreenPhysicalMapping;
 import com.appacoustic.cointester.analyzer.SpectrogramBMP;
 import com.appacoustic.cointester.analyzer.model.AnalyzerParams;
-import com.gabrielmorenoibarra.g.GLog;
+import com.gabrielmorenoibarra.k.util.KLog;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -120,7 +120,7 @@ public class AnalyzerGraphicView extends View {
 
     @Override
     protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
-        GLog.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() +
+        KLog.Companion.i(Thread.currentThread().getStackTrace()[2].getMethodName() +
                 ": canvas (" + oldWidth + "," + oldHeight + ") -> (" + width + "," + height + ")");
         this.canvasWidth = width;
         this.canvasHeight = height;
@@ -133,7 +133,7 @@ public class AnalyzerGraphicView extends View {
 
     @Override
     protected Parcelable onSaveInstanceState() {
-        GLog.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() +
+        KLog.Companion.i(Thread.currentThread().getStackTrace()[2].getMethodName() +
                 ": xShift = " + xShift + "  xZoom = " + xZoom + "  yShift = " + yShift + "  yZoom = " + yZoom);
         Parcelable parentState = super.onSaveInstanceState();
         SavedState savedState = new SavedState(parentState);
@@ -232,9 +232,9 @@ public class AnalyzerGraphicView extends View {
                 spectrogramBMP.rebuildLinearBMP();
             }
 
-            GLog.i(TAG, METHOD_NAME + ": xShift = " + xShift + "  xZoom = " + xZoom + "  yShift = " + yShift + "  yZoom = " + yZoom);
+            KLog.Companion.i(METHOD_NAME + ": xShift = " + xShift + "  xZoom = " + xZoom + "  yShift = " + yShift + "  yZoom = " + yZoom);
         } else {
-            GLog.i(TAG, METHOD_NAME + ": not SavedState?!");
+            KLog.Companion.i(METHOD_NAME + ": not SavedState?!");
             super.onRestoreInstanceState(state);
         }
     }
@@ -249,7 +249,7 @@ public class AnalyzerGraphicView extends View {
 
     public void setupAxes(AnalyzerParams params) {
         int sampleRate = params.getSampleRate();
-        freqLowerBoundForLog = (double) sampleRate / params.getFFTLength();
+        freqLowerBoundForLog = (double) sampleRate / params.getFftLength();
         double freqLowerBoundLocal = 0;
         if (spectrumPlot.getAxisX().getMapType() == ScreenPhysicalMapping.Type.LOG) {
             freqLowerBoundLocal = freqLowerBoundForLog;
@@ -264,7 +264,7 @@ public class AnalyzerGraphicView extends View {
         if (spectrogramPlot.getAxisFreq().getMapType() == ScreenPhysicalMapping.Type.LOG) {
             freqLowerBoundLocal = freqLowerBoundForLog;
         }
-        int nFFTAverage = params.getNFFTAverage();
+        int nFFTAverage = params.getNFftAverage();
         double spectrogramDuration = params.getSpectrogramDuration();
         if (spectrogramPlot.isShowFreqAlongX()) {
             axisBounds = new double[]{freqLowerBoundLocal, 0.0, sampleRate / 2.0, spectrogramDuration * nFFTAverage};
@@ -335,7 +335,7 @@ public class AnalyzerGraphicView extends View {
     }
 
     public void switch2Spectrogram() {
-        GLog.d(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
+        KLog.Companion.d(Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
         if (showMode == PlotMode.SPECTRUM && canvasHeight > 0) { // canvasHeight==0 means the program is just start
             if (spectrogramPlot.isShowFreqAlongX()) {
                 // No need to change x scaling
@@ -359,7 +359,7 @@ public class AnalyzerGraphicView extends View {
     public double[] setViewRange(double[] ranges, double[] rangesDefault) {
         final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
         if (ranges.length < VIEW_RANGE_DATA_LENGTH) {
-            GLog.w(TAG, METHOD_NAME + ": invalid input: ranges.length < VIEW_RANGE_DATA_LENGTH");
+            KLog.Companion.w(METHOD_NAME + ": invalid input: ranges.length < VIEW_RANGE_DATA_LENGTH");
             return null;
         }
 
@@ -368,7 +368,7 @@ public class AnalyzerGraphicView extends View {
 
         if (rangesDefault != null) {
             if (rangesDefault.length != 2 * VIEW_RANGE_DATA_LENGTH) {
-                GLog.w(TAG, METHOD_NAME + ": invalid input: rangesDefault.length != 2 * VIEW_RANGE_DATA_LENGTH");
+                KLog.Companion.w(METHOD_NAME + ": invalid input: rangesDefault.length != 2 * VIEW_RANGE_DATA_LENGTH");
                 return null;
             }
             for (int i = 0; i < 6; i += 2) {

@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.appacoustic.cointester.CoinsFragment.OnListFragmentInteractionListener;
+import com.appacoustic.cointester.domain.Coin;
 import com.gabrielmorenoibarra.g.G;
 
 import java.util.List;
@@ -83,7 +84,6 @@ public class CoinsAdapter extends RecyclerView.Adapter<CoinsAdapter.Holder> {
     }
 
     static class Holder extends RecyclerView.ViewHolder {
-
         @BindView(R.id.rlItemCoinParent) RelativeLayout rlParent;
         @BindView(R.id.ivItemCoin) ImageView iv;
         @BindView(R.id.tvItemCoinName) TextView tvName;

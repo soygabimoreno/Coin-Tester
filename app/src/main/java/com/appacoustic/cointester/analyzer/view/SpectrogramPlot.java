@@ -12,7 +12,7 @@ import com.appacoustic.cointester.analyzer.GridLabel;
 import com.appacoustic.cointester.analyzer.ScreenPhysicalMapping;
 import com.appacoustic.cointester.analyzer.SpectrogramBMP;
 import com.appacoustic.cointester.analyzer.model.AnalyzerParams;
-import com.gabrielmorenoibarra.g.GLog;
+import com.gabrielmorenoibarra.k.util.KLog;
 
 /**
  * The spectrogram plot part of AnalyzerGraphic.
@@ -103,15 +103,15 @@ public class SpectrogramPlot {
         axisFreq = new ScreenPhysicalMapping(0, 0, 0, ScreenPhysicalMapping.Type.LINEAR);
         axisTime = new ScreenPhysicalMapping(0, 0, 0, ScreenPhysicalMapping.Type.LINEAR);
 
-        GLog.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + ": initialized!");
+        KLog.Companion.i(Thread.currentThread().getStackTrace()[2].getMethodName() + ": initialized!");
     }
 
     // Before calling this, axes should be initialized.
     public void setupSpectrogram(AnalyzerParams params) {
         int sampleRate = params.getSampleRate();
-        int fftLen = params.getFFTLength();
+        int fftLen = params.getFftLength();
         int hopLen = params.getHopLength();
-        int nAve = params.getNFFTAverage();
+        int nAve = params.getNFftAverage();
         double timeDurationE = params.getSpectrogramDuration();
 
         timeWatch = timeDurationE;
@@ -120,7 +120,7 @@ public class SpectrogramPlot {
         nFreqPoints = fftLen / 2;           // no direct current term
         nTimePoints = (int) Math.ceil(timeWatch / timeInc);
         spectrogramBMP.init(nFreqPoints, nTimePoints, axisFreq);
-        GLog.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + ": done" +
+        KLog.Companion.i(Thread.currentThread().getStackTrace()[2].getMethodName() + ": done" +
                 "\n  sampleRate    = " + sampleRate +
                 "\n  fFTLength        = " + fftLen +
                 "\n  timeDurationE = " + timeDurationE + " * " + nAve + "  (" + nTimePoints + " points)" +
@@ -128,7 +128,7 @@ public class SpectrogramPlot {
     }
 
     public void setCanvas(int _canvasWidth, int _canvasHeight, double[] axisBounds) {
-        GLog.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + ": " + _canvasWidth + " x " + _canvasHeight);
+        KLog.Companion.i(Thread.currentThread().getStackTrace()[2].getMethodName() + ": " + _canvasWidth + " x " + _canvasHeight);
         canvasWidth = _canvasWidth;
         canvasHeight = _canvasHeight;
         if (canvasHeight > 1 && canvasWidth > 1) {
@@ -155,7 +155,7 @@ public class SpectrogramPlot {
     }
 
     public void setZooms(double xZoom, double xShift, double yZoom, double yShift) {
-        //GLog.i(TAG, "setZooms():  xZoom=" + xZoom + "  xShift=" + xShift + "  yZoom=" + yZoom + "  yShift=" + yShift);
+        //KLog.Companion.i("setZooms():  xZoom=" + xZoom + "  xShift=" + xShift + "  yZoom=" + yZoom + "  yShift=" + yShift);
         if (showFreqAlongX) {
             axisFreq.setZoomShift(xZoom, xShift);
             axisTime.setZoomShift(yZoom, yShift);
@@ -168,7 +168,7 @@ public class SpectrogramPlot {
 
     // Linear or Logarithmic frequency axis
     public void setFreqAxisMode(ScreenPhysicalMapping.Type mapType, double freq_lower_bound_for_log, GridLabel.Type gridType) {
-        GLog.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + ": set to mode " + mapType);
+        KLog.Companion.i(Thread.currentThread().getStackTrace()[2].getMethodName() + ": set to mode " + mapType);
         axisFreq.setMappingType(mapType, freq_lower_bound_for_log);
         fqGridLabel.setGridType(gridType);
         spectrogramBMP.updateAxis(axisFreq);
@@ -275,7 +275,7 @@ public class SpectrogramPlot {
         isPaused = p;
     }
 
-    // Will be called in another thread (SamplingLoop)
+    // Will be called in another thread (SamplingLoopThread)
     // db.length == 2^n + 1
     public void saveRowSpectrumAsColor(final double[] db) {
         // For time compensate in shifting mode
@@ -429,7 +429,7 @@ public class SpectrogramPlot {
             double timeCurrent = System.currentTimeMillis() / 1000.0;
             pixelTimeCompensate = (timeLastSample - timeCurrent) / (timeInc * timeMultiplier * nTimePoints) * nTimePoints;
             updateTimeDiff = false;
-//            GLog.i(TAG, " time diff = " + (timeLastSample - timeCurrent));
+//            KLog.Companion.i(" time diff = " + (timeLastSample - timeCurrent));
         }
         if (showModeSpectrogram == TimeAxisMode.SHIFT) {
             c.translate(0.0f, (float) pixelTimeCompensate);

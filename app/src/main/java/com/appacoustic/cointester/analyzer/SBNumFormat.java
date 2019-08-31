@@ -1,6 +1,6 @@
 package com.appacoustic.cointester.analyzer;
 
-import com.gabrielmorenoibarra.g.GLog;
+import com.gabrielmorenoibarra.k.util.KLog;
 
 /**
  * String Builder Number Format.
@@ -17,7 +17,7 @@ public class SBNumFormat {
             for (int i = 0; i < nInt + nFrac + (nFrac > 0 ? 1 : 0); i++) {
                 sb.append(padChar);
             }
-            GLog.w(TAG, "fillInNumFixedWidthPositive: negative number");
+            KLog.Companion.w("fillInNumFixedWidthPositive: negative number");
             return;
         }
         if (d >= Math.pow(10, nInt)) {
