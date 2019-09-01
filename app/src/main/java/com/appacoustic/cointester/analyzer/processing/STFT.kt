@@ -4,19 +4,8 @@ import com.appacoustic.cointester.analyzer.BesselCal
 import com.appacoustic.cointester.analyzer.model.AnalyzerParams
 import com.appacoustic.cointester.fft.RealDoubleFFT
 import com.gabrielmorenoibarra.k.util.KLog
-
-import java.util.Arrays
-
-import java.lang.Math.PI
-import java.lang.Math.abs
-import java.lang.Math.asin
-import java.lang.Math.cos
-import java.lang.Math.exp
-import java.lang.Math.log10
-import java.lang.Math.pow
-import java.lang.Math.round
-import java.lang.Math.sin
-import java.lang.Math.sqrt
+import java.util.*
+import kotlin.math.*
 
 /**
  * Short Time Fourier Transform.
@@ -39,7 +28,7 @@ class STFT(params: AnalyzerParams) {
 
     private val sampleRate = params.sampleRate
     private val fFTLength = params.fftLength
-    private val hopLength = params.hopLength
+    private val hopLength = params.hopLength // 50% overlap by default
     private var nAnalysed = 0
     private var dBAWeighting = false
 
@@ -55,66 +44,57 @@ class STFT(params: AnalyzerParams) {
     var maxAmplitudeDB = Double.NaN
         private set
 
-    // Per 2 to normalize to sine wave
-    val rms: Double
-        get() {
-            if (rMSCount > 8000 / 30) {
-                rMSOut = kotlin.math.sqrt(rMSCumulative / rMSCount * 2.0)
-                rMSCumulative = 0.0
-                rMSCount = 0
+    fun calculateRms(): Double {
+        if (rMSCount > 8000 / 30) {
+            rMSOut = sqrt(rMSCumulative / rMSCount * 2.0) // Per 2 to normalize to sine wave
+            rMSCumulative = 0.0
+            rMSCount = 0
+        }
+        return rMSOut
+    }
+
+    fun calculateRmsFromFT(): Double {
+        calculateSpectrumAmplitudeDB()
+        var s = 0.0
+        for (i in 1 until spectrumAmplitudeOut.size) {
+            s += spectrumAmplitudeOut[i]
+        }
+        return sqrt(s * windowEnergyFactor)
+    }
+
+    fun calculateSpectrumAmplitudeDB(): DoubleArray {
+        calculateSpectrumAmplitude()
+        return spectrumAmplitudeOutDB
+    }
+
+    private fun calculateSpectrumAmplitude(): DoubleArray {
+        if (nAnalysed != 0) { // If no new result
+            val outLength = spectrumAmplitudeOut.size
+            val spectrumAmplitudeOutCumulative = spectrumAmplitudeOutCumulative
+            for (j in 0 until outLength) {
+                spectrumAmplitudeOutCumulative[j] /= nAnalysed.toDouble()
             }
-            return rMSOut
-        }
-
-    val rmsFromFT: Double
-        get() {
-            spectrumAmplitudeDB
-            var s = 0.0
-            for (i in 1 until spectrumAmplitudeOut.size) {
-                s += spectrumAmplitudeOut[i]
-            }
-            return kotlin.math.sqrt(s * windowEnergyFactor)
-        }
-
-    val spectrumAmplitudeDB: DoubleArray
-        get() {
-            spectrumAmplitude
-            return spectrumAmplitudeOutDB
-        }
-
-
-    // TODO: Change name of the method
-    private val spectrumAmplitude: DoubleArray
-        get() {
-            if (nAnalysed != 0) { // No new result
-                val outLen = spectrumAmplitudeOut.size
-                val sAOC = spectrumAmplitudeOutCumulative
-                for (j in 0 until outLen) {
-                    sAOC[j] /= nAnalysed.toDouble()
-                }
-                if (micGain != null && micGain.size + 1 == sAOC.size) { // No correction to phase or DC
-                    for (j in 1 until outLen) {
-                        sAOC[j] /= micGain[j - 1]
-                    }
-                }
-                if (dBAWeighting) {
-                    for (j in 0 until outLen) {
-                        sAOC[j] *= dBAFactor!![j]
-                    }
-                }
-                System.arraycopy(sAOC, 0, spectrumAmplitudeOut, 0, outLen)
-                Arrays.fill(sAOC, 0.0)
-                nAnalysed = 0
-                for (i in 0 until outLen) {
-                    spectrumAmplitudeOutDB[i] = 10.0 * log10(spectrumAmplitudeOut[i])
+            if (micGain != null && micGain.size + 1 == spectrumAmplitudeOutCumulative.size) { // No correction to phase or DC
+                for (j in 1 until outLength) {
+                    spectrumAmplitudeOutCumulative[j] /= micGain[j - 1]
                 }
             }
-            return spectrumAmplitudeOut
+            if (dBAWeighting) {
+                for (j in 0 until outLength) {
+                    spectrumAmplitudeOutCumulative[j] *= dBAFactor[j]
+                }
+            }
+            System.arraycopy(spectrumAmplitudeOutCumulative, 0, spectrumAmplitudeOut, 0, outLength)
+            Arrays.fill(spectrumAmplitudeOutCumulative, 0.0)
+            nAnalysed = 0
+            for (i in 0 until outLength) {
+                spectrumAmplitudeOutDB[i] = 10.0 * log10(spectrumAmplitudeOut[i])
+            }
         }
+        return spectrumAmplitudeOut
+    }
 
     init {
-        // 50% overlap by default
-
         require(params.nFftAverage > 0) { "nFftAverage <= 0" }
         require(-fFTLength and fFTLength == fFTLength) { "FFT length is not a power of 2" }
 
@@ -134,7 +114,7 @@ class STFT(params: AnalyzerParams) {
         if (micGain != null) {
             KLog.i("Calibration load")
             for (i in micGain.indices) {
-                micGain[i] = pow(10.0, micGain[i] / 10.0) // COMMENT: dB --> Linear No sería dividir entre 20 en vez de 10 ???
+                micGain[i] = 10.0.pow(micGain[i] / 10.0) // COMMENT: dB --> Linear No sería dividir entre 20 en vez de 10 ???
             }
         } else {
             KLog.w("No calibration")
@@ -144,7 +124,7 @@ class STFT(params: AnalyzerParams) {
 
     private fun initWindowFunction() {
         window = DoubleArray(fFTLength)
-        val length = window!!.size
+        val length = window.size
         if (windowFunctionName == windowFunctionNames[1]) { // Bartlett
             for (i in 0 until length) {
                 window[i] = asin(sin(PI * i / length)) / PI * 2
@@ -200,14 +180,14 @@ class STFT(params: AnalyzerParams) {
         }
 
         var normalizeFactor = 0.0
-        for (aWindow in window!!) {
+        for (aWindow in window) {
             normalizeFactor += aWindow
         }
         normalizeFactor = length / normalizeFactor
         windowEnergyFactor = 0.0
         for (i in 0 until length) {
             window[i] *= normalizeFactor
-            windowEnergyFactor += window!![i] * window!![i]
+            windowEnergyFactor += window[i] * window[i]
         }
         windowEnergyFactor = length / windowEnergyFactor
     }
@@ -278,7 +258,7 @@ class STFT(params: AnalyzerParams) {
             }
             if (spectrumAmplitudeCount == inLength) { // Enough data for one FFT
                 for (j in 0 until inLength) {
-                    spectrumAmplitudeInTemp[j] = spectrumAmplitudeIn[j] * window!![j]
+                    spectrumAmplitudeInTemp[j] = spectrumAmplitudeIn[j] * window[j]
                 }
                 spectrumAmplitudeFFT.ft(spectrumAmplitudeInTemp)
                 fFTToAmplitude(spectrumAmplitudeOutTemp, spectrumAmplitudeInTemp)
@@ -312,7 +292,7 @@ class STFT(params: AnalyzerParams) {
     }
 
     fun calculatePeak() {
-        spectrumAmplitudeDB
+        calculateSpectrumAmplitudeDB()
         // Find and show peak amplitude
         maxAmplitudeDB = 20 * log10(0.125 / 32768)
         maxAmplitudeFreq = 0.0
