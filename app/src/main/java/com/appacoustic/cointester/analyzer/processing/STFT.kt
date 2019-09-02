@@ -98,18 +98,23 @@ class STFT(params: AnalyzerParams) {
         require(params.nFftAverage > 0) { "nFftAverage <= 0" }
         require(-fFTLength and fFTLength == fFTLength) { "FFT length is not a power of 2" }
 
-        spectrumAmplitudeOutCumulative = DoubleArray(fFTLength / 2 + 1)
-        spectrumAmplitudeOutTemp = DoubleArray(fFTLength / 2 + 1)
-        spectrumAmplitudeOut = DoubleArray(fFTLength / 2 + 1)
-        spectrumAmplitudeOutDB = DoubleArray(fFTLength / 2 + 1)
-        spectrumAmplitudeIn = DoubleArray(fFTLength)
-        spectrumAmplitudeInTemp = DoubleArray(fFTLength)
+        val outSize = fFTLength / 2 + 1
+        spectrumAmplitudeOutCumulative = DoubleArray(outSize)
+        spectrumAmplitudeOutTemp = DoubleArray(outSize)
+        spectrumAmplitudeOut = DoubleArray(outSize)
+        spectrumAmplitudeOutDB = DoubleArray(outSize)
+
+        val inSize = fFTLength
+        spectrumAmplitudeIn = DoubleArray(inSize)
+        spectrumAmplitudeInTemp = DoubleArray(inSize)
         spectrumAmplitudeFFT = RealDoubleFFT(spectrumAmplitudeIn.size)
 
         initWindowFunction()
         initDBAFactor()
         clear()
 
+
+        // TODO: Encapsulate this:
         micGain = params.micGainDB
         if (micGain != null) {
             KLog.i("Calibration load")
