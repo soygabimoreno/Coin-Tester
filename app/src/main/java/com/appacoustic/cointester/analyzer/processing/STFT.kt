@@ -37,62 +37,12 @@ class STFT(params: AnalyzerParams) {
     private var rMSOut = 0.0
 
     private lateinit var dBAFactor: DoubleArray // Multiply to power spectrum to get A-weighting
-    private val micGain: DoubleArray?
+    private lateinit var micGain: DoubleArray
 
     var maxAmplitudeFreq = Double.NaN
         private set
     var maxAmplitudeDB = Double.NaN
         private set
-
-    fun calculateRms(): Double {
-        if (rMSCount > 8000 / 30) {
-            rMSOut = sqrt(rMSCumulative / rMSCount * 2.0) // Per 2 to normalize to sine wave
-            rMSCumulative = 0.0
-            rMSCount = 0
-        }
-        return rMSOut
-    }
-
-    fun calculateRmsFromFT(): Double {
-        calculateSpectrumAmplitudeDB()
-        var s = 0.0
-        for (i in 1 until spectrumAmplitudeOut.size) {
-            s += spectrumAmplitudeOut[i]
-        }
-        return sqrt(s * windowEnergyFactor)
-    }
-
-    fun calculateSpectrumAmplitudeDB(): DoubleArray {
-        calculateSpectrumAmplitude()
-        return spectrumAmplitudeOutDB
-    }
-
-    private fun calculateSpectrumAmplitude(): DoubleArray {
-        if (nAnalysed != 0) { // If no new result
-            val outLength = spectrumAmplitudeOut.size
-            val spectrumAmplitudeOutCumulative = spectrumAmplitudeOutCumulative
-            for (j in 0 until outLength) {
-                spectrumAmplitudeOutCumulative[j] /= nAnalysed.toDouble()
-            }
-            if (micGain != null && micGain.size + 1 == spectrumAmplitudeOutCumulative.size) { // No correction to phase or DC
-                for (j in 1 until outLength) {
-                    spectrumAmplitudeOutCumulative[j] /= micGain[j - 1]
-                }
-            }
-            if (dBAWeighting) {
-                for (j in 0 until outLength) {
-                    spectrumAmplitudeOutCumulative[j] *= dBAFactor[j]
-                }
-            }
-            System.arraycopy(spectrumAmplitudeOutCumulative, 0, spectrumAmplitudeOut, 0, outLength)
-            Arrays.fill(spectrumAmplitudeOutCumulative, 0.0)
-            nAnalysed = 0
-            for (i in 0 until outLength) {
-                spectrumAmplitudeOutDB[i] = 10.0 * log10(spectrumAmplitudeOut[i])
-            }
-        }
-        return spectrumAmplitudeOut
-    }
 
     init {
         require(params.nFftAverage > 0) { "nFftAverage <= 0" }
@@ -113,17 +63,7 @@ class STFT(params: AnalyzerParams) {
         initDBAFactor()
         clear()
 
-
-        // TODO: Encapsulate this:
-        micGain = params.micGainDB
-        if (micGain != null) {
-            KLog.i("Calibration load")
-            for (i in micGain.indices) {
-                micGain[i] = 10.0.pow(micGain[i] / 10.0) // COMMENT: dB --> Linear No sería dividir entre 20 en vez de 10 ???
-            }
-        } else {
-            KLog.w("No calibration")
-        }
+        initMicGain(params.micGainDB)
         setDBAWeighting(params.dBAWeighting)
     }
 
@@ -181,7 +121,6 @@ class STFT(params: AnalyzerParams) {
             for (i in 0 until length) { // Default: Rectangular
                 window[i] = 1.0
             }
-
         }
 
         var normalizeFactor = 0.0
@@ -229,6 +168,68 @@ class STFT(params: AnalyzerParams) {
         Arrays.fill(spectrumAmplitudeOut, 0.0)
         Arrays.fill(spectrumAmplitudeOutDB, log10(0.0))
         Arrays.fill(spectrumAmplitudeOutCumulative, 0.0)
+    }
+
+    private fun initMicGain(micGainDB: DoubleArray?) {
+        if (micGainDB != null) {
+            micGain = micGainDB
+            KLog.i("Calibration load")
+            for (i in micGain.indices) {
+                micGain[i] = 10.0.pow(micGain[i] / 10.0) // COMMENT: (dB --> Linear) It wouldn't be divide per 20 instead of 10 ???
+            }
+        } else {
+            KLog.w("No calibration")
+        }
+    }
+
+    fun calculateRms(): Double {
+        if (rMSCount > 8000 / 30) {
+            rMSOut = sqrt(rMSCumulative / rMSCount * 2.0) // Per 2 to normalize to sine wave
+            rMSCumulative = 0.0
+            rMSCount = 0
+        }
+        return rMSOut
+    }
+
+    fun calculateRmsFromFT(): Double {
+        calculateSpectrumAmplitudeDB()
+        var s = 0.0
+        for (i in 1 until spectrumAmplitudeOut.size) {
+            s += spectrumAmplitudeOut[i]
+        }
+        return sqrt(s * windowEnergyFactor)
+    }
+
+    fun calculateSpectrumAmplitudeDB(): DoubleArray {
+        calculateSpectrumAmplitude()
+        return spectrumAmplitudeOutDB
+    }
+
+    private fun calculateSpectrumAmplitude(): DoubleArray {
+        if (nAnalysed != 0) { // If no new result
+            val outLength = spectrumAmplitudeOut.size
+            val spectrumAmplitudeOutCumulative = spectrumAmplitudeOutCumulative
+            for (j in 0 until outLength) {
+                spectrumAmplitudeOutCumulative[j] /= nAnalysed.toDouble()
+            }
+            if (::micGain.isInitialized && micGain.size + 1 == spectrumAmplitudeOutCumulative.size) { // No correction to phase or DC
+                for (j in 1 until outLength) {
+                    spectrumAmplitudeOutCumulative[j] /= micGain[j - 1]
+                }
+            }
+            if (dBAWeighting) {
+                for (j in 0 until outLength) {
+                    spectrumAmplitudeOutCumulative[j] *= dBAFactor[j]
+                }
+            }
+            System.arraycopy(spectrumAmplitudeOutCumulative, 0, spectrumAmplitudeOut, 0, outLength)
+            Arrays.fill(spectrumAmplitudeOutCumulative, 0.0)
+            nAnalysed = 0
+            for (i in 0 until outLength) {
+                spectrumAmplitudeOutDB[i] = 10.0 * log10(spectrumAmplitudeOut[i])
+            }
+        }
+        return spectrumAmplitudeOut
     }
 
     /**
