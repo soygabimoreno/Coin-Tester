@@ -287,8 +287,8 @@ class SamplingLoopThread(private val params: AnalyzerParams,
         }
     }
 
-    fun setDBAWeighting(dBAWeighting: Boolean) {
-        stft.setDBAWeighting(dBAWeighting)
+    fun setDbaWeighting(dbaWeighting: Boolean) {
+        stft.setDbaWeighting(dbaWeighting)
     }
 
     fun finish() {
