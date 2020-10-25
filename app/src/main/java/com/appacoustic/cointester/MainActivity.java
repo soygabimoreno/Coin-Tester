@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import com.appacoustic.cointester.domain.Coin;
 import com.appacoustic.cointester.utils.DataManager;
 import com.appacoustic.cointester.view.CustomViewPager;
-import com.crashlytics.android.Crashlytics;
 import com.gabrielmorenoibarra.g.G;
 import com.gabrielmorenoibarra.g.GGraphics;
 import com.gabrielmorenoibarra.k.util.KLog;
@@ -30,7 +29,6 @@ import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity implements CoinsFragment.OnListFragmentInteractionListener {
 
@@ -67,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements CoinsFragment.OnL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
