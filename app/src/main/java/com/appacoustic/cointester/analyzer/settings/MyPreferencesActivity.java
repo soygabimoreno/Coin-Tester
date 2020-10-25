@@ -13,7 +13,6 @@ import com.appacoustic.cointester.R;
 import com.appacoustic.cointester.analyzer.AnalyzerUtil;
 import com.gabrielmorenoibarra.k.util.KLog;
 
-@SuppressWarnings("deprecation")
 public class MyPreferencesActivity extends PreferenceActivity {
 
     private static final String TAG = MyPreferencesActivity.class.getSimpleName();
