@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/rlItemCoinParent"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rlItemCoinParent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
 
     <ImageView
         android:id="@+id/ivItemCoin"
@@ -42,20 +43,19 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:alpha="0.2"
-        android:background="@color/cadet_1">
-    </View>
+        android:background="@color/cadet_1"></View>
 
     <com.appacoustic.cointester.view.CustomButton
         android:id="@+id/btnItemCoin"
         android:layout_width="100dp"
         android:layout_height="33dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
         android:layout_marginEnd="25dp"
         android:background="@drawable/bg_datasheet"
         android:gravity="center"
         android:text="@string/datasheet"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true"/>
+        android:textSize="16sp"/>
 </RelativeLayout>

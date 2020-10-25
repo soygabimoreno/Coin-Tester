@@ -3,9 +3,11 @@ package com.appacoustic.cointester.analyzer.model
 import android.media.MediaRecorder
 import com.gabrielmorenoibarra.k.util.KLog
 
-class AnalyzerParams(val audioSourceNames: Array<String>,
-                     val audioSourceIds: IntArray,
-                     val windowFunctionNames: Array<String>) {
+class AnalyzerParams(
+    val audioSourceNames: Array<String>,
+    val audioSourceIds: IntArray,
+    val windowFunctionNames: Array<String>
+) {
 
     companion object {
         const val RECORDER_AGC_OFF = MediaRecorder.AudioSource.DEFAULT

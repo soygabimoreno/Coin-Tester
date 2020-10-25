@@ -84,14 +84,24 @@ class STFT(params: AnalyzerParams) {
             }
         } else if (windowFunctionName == windowFunctionNames[4]) { // Blackman_Harris, hw=3
             for (i in 0 until length) {
-                window[i] = (0.35875 - 0.48829 * cos(2.0 * PI * i.toDouble() / (length - 1)) + 0.14128 * cos(4.0 * PI * i.toDouble() / (length - 1)) - 0.01168 * cos(6.0 * PI * i.toDouble() / (length - 1))) * 2
+                window[i] =
+                    (0.35875 - 0.48829 * cos(2.0 * PI * i.toDouble() / (length - 1)) + 0.14128 * cos(4.0 * PI * i.toDouble() / (length - 1)) - 0.01168 * cos(6.0 * PI * i.toDouble() / (length - 1))) * 2
             }
         } else if (windowFunctionName == windowFunctionNames[5]) { // Kaiser, a=2.0
-            kaisser(2.0, length)
+            kaisser(
+                2.0,
+                length
+            )
         } else if (windowFunctionName == windowFunctionNames[6]) { // Kaiser, a=3.0
-            kaisser(3.0, length)
+            kaisser(
+                3.0,
+                length
+            )
         } else if (windowFunctionName == windowFunctionNames[7]) { // Kaiser, a=4.0
-            kaisser(4.0, length)
+            kaisser(
+                4.0,
+                length
+            )
             // 7 more window functions (by james34602, https://github.com/bewantbe/audio-analyzer-for-android/issues/14 )
         } else if (windowFunctionName == windowFunctionNames[8]) { // Flat-top
             for (i in 0 until length) {
@@ -108,15 +118,30 @@ class STFT(params: AnalyzerParams) {
                 window[i] = a0 - a1 * cos(2.0 * scale) + a2 * cos(4.0 * scale) - a3 * cos(6.0 * scale)
             }
         } else if (windowFunctionName == windowFunctionNames[10]) { // Gaussian, b=3.0
-            gaussian(3.0, length)
+            gaussian(
+                3.0,
+                length
+            )
         } else if (windowFunctionName == windowFunctionNames[11]) { // Gaussian, b=5.0
-            gaussian(5.0, length)
+            gaussian(
+                5.0,
+                length
+            )
         } else if (windowFunctionName == windowFunctionNames[12]) { // Gaussian, b=6.0
-            gaussian(6.0, length)
+            gaussian(
+                6.0,
+                length
+            )
         } else if (windowFunctionName == windowFunctionNames[13]) { // Gaussian, b=7.0
-            gaussian(7.0, length)
+            gaussian(
+                7.0,
+                length
+            )
         } else if (windowFunctionName == windowFunctionNames[14]) { // Gaussian, b=8.0
-            gaussian(8.0, length)
+            gaussian(
+                8.0,
+                length
+            )
         } else {
             for (i in 0 until length) { // Default: Rectangular
                 window[i] = 1.0
@@ -136,14 +161,20 @@ class STFT(params: AnalyzerParams) {
         windowEnergyFactor = length / windowEnergyFactor
     }
 
-    private fun kaisser(a: Double, length: Int) {
+    private fun kaisser(
+        a: Double,
+        length: Int
+    ) {
         val dn = BesselCal.i0(PI * a)
         for (i in 0 until length) {
             window[i] = BesselCal.i0(PI * a * sqrt(1 - (2.0 * i / (length - 1) - 1.0) * (2.0 * i / (length - 1) - 1.0))) / dn
         }
     }
 
-    private fun gaussian(beta: Double, length: Int) {
+    private fun gaussian(
+        beta: Double,
+        length: Int
+    ) {
         var arg: Double
         for (i in 0 until length) {
             arg = beta * (1.0 - i.toDouble() / length.toDouble() * 2.0)
@@ -165,9 +196,18 @@ class STFT(params: AnalyzerParams) {
 
     private fun clear() {
         spectrumAmplitudeCount = 0
-        Arrays.fill(spectrumAmplitudeOut, 0.0)
-        Arrays.fill(spectrumAmplitudeOutDB, log10(0.0))
-        Arrays.fill(spectrumAmplitudeOutCumulative, 0.0)
+        Arrays.fill(
+            spectrumAmplitudeOut,
+            0.0
+        )
+        Arrays.fill(
+            spectrumAmplitudeOutDB,
+            log10(0.0)
+        )
+        Arrays.fill(
+            spectrumAmplitudeOutCumulative,
+            0.0
+        )
     }
 
     private fun initMicGain(micGainDB: DoubleArray?) {
@@ -222,8 +262,17 @@ class STFT(params: AnalyzerParams) {
                     spectrumAmplitudeOutCumulative[j] *= dbaFactor[j]
                 }
             }
-            System.arraycopy(spectrumAmplitudeOutCumulative, 0, spectrumAmplitudeOut, 0, outLength)
-            Arrays.fill(spectrumAmplitudeOutCumulative, 0.0)
+            System.arraycopy(
+                spectrumAmplitudeOutCumulative,
+                0,
+                spectrumAmplitudeOut,
+                0,
+                outLength
+            )
+            Arrays.fill(
+                spectrumAmplitudeOutCumulative,
+                0.0
+            )
             nAnalysed = 0
             for (i in 0 until outLength) {
                 spectrumAmplitudeOutDB[i] = 10.0 * log10(spectrumAmplitudeOut[i])
@@ -240,7 +289,10 @@ class STFT(params: AnalyzerParams) {
         return x * x
     }
 
-    fun feedData(data: ShortArray, length: Int) {
+    fun feedData(
+        data: ShortArray,
+        length: Int
+    ) {
         var length = length
         if (length > data.size) {
             KLog.w("Trying to read more samples than there are in the buffer")
@@ -267,13 +319,22 @@ class STFT(params: AnalyzerParams) {
                     spectrumAmplitudeInTemp[j] = spectrumAmplitudeIn[j] * window[j]
                 }
                 spectrumAmplitudeFFT.ft(spectrumAmplitudeInTemp)
-                fFTToAmplitude(spectrumAmplitudeOutTemp, spectrumAmplitudeInTemp)
+                fFTToAmplitude(
+                    spectrumAmplitudeOutTemp,
+                    spectrumAmplitudeInTemp
+                )
                 for (j in 0 until outLength) {
                     spectrumAmplitudeOutCumulative[j] += spectrumAmplitudeOutTemp[j]
                 }
                 nAnalysed++
                 if (hopLength < fftLength) {
-                    System.arraycopy(spectrumAmplitudeIn, hopLength, spectrumAmplitudeIn, 0, fftLength - hopLength)
+                    System.arraycopy(
+                        spectrumAmplitudeIn,
+                        hopLength,
+                        spectrumAmplitudeIn,
+                        0,
+                        fftLength - hopLength
+                    )
                 }
                 spectrumAmplitudeCount = fftLength - hopLength // Can be positive and negative
             }
@@ -283,7 +344,10 @@ class STFT(params: AnalyzerParams) {
     /**
      * Convert complex amplitudes to absolute amplitudes.
      */
-    private fun fFTToAmplitude(dataOut: DoubleArray, data: DoubleArray) {
+    private fun fFTToAmplitude(
+        dataOut: DoubleArray,
+        data: DoubleArray
+    ) {
         val length = data.size // It should be a even number
         val scaler = 2.0 * 2.0 / (length * length) // Per 2 due to there are positive and negative frequency part
         dataOut[0] = data[0] * data[0] * scaler / 4.0

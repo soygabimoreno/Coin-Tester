@@ -20,7 +20,7 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/gradient" />
+            android:background="@drawable/gradient"/>
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -28,12 +28,11 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@drawable/gradient"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
-        </android.support.v7.widget.Toolbar>
+            app:popupTheme="@style/AppTheme.PopupOverlay"></android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
     <com.appacoustic.cointester.view.CustomViewPager
         android:id="@+id/viewPager"
         style="@style/MatchParent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 </android.support.design.widget.CoordinatorLayout>

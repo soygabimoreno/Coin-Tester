@@ -76,7 +76,8 @@ public class SelectorText extends AppCompatTextView {
 
     /**
      * Choose an arbitrary animation for the text view.
-     * @param start If true, animate the old value "out", otherwise animate the old value in
+     *
+     * @param start  If true, animate the old value "out", otherwise animate the old value in
      * @param millis Animation time for this step, ms
      */
 

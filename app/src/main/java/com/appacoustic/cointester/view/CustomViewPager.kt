@@ -12,13 +12,15 @@ import android.view.MotionEvent
 class CustomViewPager(
     context: Context,
     attrs: AttributeSet
-) : ViewPager(context, attrs) {
+) : ViewPager(
+    context,
+    attrs
+) {
 
     var stuck = false
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         return !stuck && super.onTouchEvent(event)
-
     }
 
     override fun onInterceptTouchEvent(event: MotionEvent): Boolean {

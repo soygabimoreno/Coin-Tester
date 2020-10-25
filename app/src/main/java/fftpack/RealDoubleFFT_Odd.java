@@ -2,6 +2,7 @@ package fftpack;
 
 /**
  * sine FFT transform of a real odd sequence.
+ *
  * @author Baoshe Zhang
  * @author Astronomical Instrument Group of University of Lethbridge.
  */
@@ -20,8 +21,9 @@ public class RealDoubleFFT_Odd extends RealDoubleFFT_Mixed {
      * The sequences with the same size can share a wavenumber table. The prime
      * factorization of <em>n</em> together with a tabulation of the trigonometric functions
      * are computed and stored.
+     *
      * @param n the size of a real data sequence. When (<em>n</em>+1) is a multiplication of small
-     * numbers (4, 2, 3, 5), this FFT transform is very efficient.
+     *          numbers (4, 2, 3, 5), this FFT transform is very efficient.
      */
     public RealDoubleFFT_Odd(int n) {
         ndim = n;
@@ -36,8 +38,9 @@ public class RealDoubleFFT_Odd extends RealDoubleFFT_Mixed {
     /**
      * Forward sine FFT transform. It computes the discrete sine transform of
      * an odd sequence.
+     *
      * @param x an array which contains the sequence to be transformed. After FFT,
-     * <em>x</em> contains the transform coeffients.
+     *          <em>x</em> contains the transform coeffients.
      */
     public void ft(double x[]) {
         sint(ndim, x, wavetable);
@@ -45,8 +48,9 @@ public class RealDoubleFFT_Odd extends RealDoubleFFT_Mixed {
 
     /**
      * Backward sine FFT transform. It is the unnormalized inverse transform of <em>ft</em>.
+     *
      * @param x an array which contains the sequence to be transformed. After FFT,
-     * <em>x</em> contains the transform coeffients.
+     *          <em>x</em> contains the transform coeffients.
      */
     public void bt(double x[]) {
         sint(ndim, x, wavetable);

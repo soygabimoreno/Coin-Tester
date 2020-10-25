@@ -36,8 +36,8 @@ import android.widget.Toast;
 
 import com.appacoustic.cointester.analyzer.AnalyzerUtil;
 import com.appacoustic.cointester.analyzer.RangeViewDialogC;
-import com.appacoustic.cointester.analyzer.model.AnalyzerParams;
 import com.appacoustic.cointester.analyzer.SamplingLoopThread;
+import com.appacoustic.cointester.analyzer.model.AnalyzerParams;
 import com.appacoustic.cointester.analyzer.settings.AudioSourcesCheckerActivity;
 import com.appacoustic.cointester.analyzer.settings.CalibrationLoad;
 import com.appacoustic.cointester.analyzer.settings.MyPreferencesActivity;

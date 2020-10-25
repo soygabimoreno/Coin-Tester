@@ -19,12 +19,12 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.appacoustic.cointester.domain.Coin;
-import com.gabrielmorenoibarra.k.util.KLog;
 import com.appacoustic.cointester.utils.DataManager;
 import com.appacoustic.cointester.view.CustomViewPager;
 import com.crashlytics.android.Crashlytics;
 import com.gabrielmorenoibarra.g.G;
 import com.gabrielmorenoibarra.g.GGraphics;
+import com.gabrielmorenoibarra.k.util.KLog;
 
 import butterknife.BindDrawable;
 import butterknife.BindString;
@@ -41,15 +41,22 @@ public class MainActivity extends AppCompatActivity implements CoinsFragment.OnL
     public static final int CHECKER_POS = 1;
     public static final int TUTORIAL_POS = 2;
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.viewPager) CustomViewPager vp;
-    @BindView(R.id.tabs) TabLayout tabLayout;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.viewPager)
+    CustomViewPager vp;
+    @BindView(R.id.tabs)
+    TabLayout tabLayout;
 
-    @BindString(R.string.select_email_sending_app) String selectEmailSendingApp;
-    @BindString(R.string.developed_by) String developedBy;
-    @BindString(R.string.visit_web) String visitWeb;
+    @BindString(R.string.select_email_sending_app)
+    String selectEmailSendingApp;
+    @BindString(R.string.developed_by)
+    String developedBy;
+    @BindString(R.string.visit_web)
+    String visitWeb;
 
-    @BindDrawable(R.drawable.ic_logo_planet_devices) Drawable logoPlanetDevices;
+    @BindDrawable(R.drawable.ic_logo_planet_devices)
+    Drawable logoPlanetDevices;
 
     @Override
     public void onListFragmentInteraction(Coin item) {

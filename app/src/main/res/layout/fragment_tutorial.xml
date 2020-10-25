@@ -1,10 +1,11 @@
-<ScrollView style="@style/MatchParent"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:padding="32dp"
-            android:background="@android:color/white"
-            tools:context="com.appacoustic.cointester.TutorialFragment"
-            xmlns:app="http://schemas.android.com/apk/res-auto">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/MatchParent"
+    android:background="@android:color/white"
+    android:padding="32dp"
+    tools:context="com.appacoustic.cointester.TutorialFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,13 +16,12 @@
             style="@style/Tv"
             android:layout_gravity="center"
             android:text="@string/tutorial"
-            app:ttf_name="titillium_web_semi_bold"
-            android:textSize="48sp"/>
+            android:textSize="48sp"
+            app:ttf_name="titillium_web_semi_bold"/>
 
         <com.appacoustic.cointester.view.CustomTextView
             style="@style/Tv"
             android:text="@string/hello_blank_fragment"/>
     </LinearLayout>
-
 
 </ScrollView>
