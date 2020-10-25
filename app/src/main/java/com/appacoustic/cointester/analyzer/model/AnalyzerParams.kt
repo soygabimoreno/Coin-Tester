@@ -26,7 +26,7 @@ class AnalyzerParams(
     var overlapPercent = ((1 - hopLength / fftLength) * 100).toDouble()
     var windowFunctionName: String? = null
     var nFftAverage = 2
-    var dBAWeighting = false
+    var dbaWeighting = false
     var spectrogramDuration = 4.0
     var micGainDB: DoubleArray? = null // Should have (fftLength / 2) elements
     var audioSourceId = RECORDER_AGC_OFF
