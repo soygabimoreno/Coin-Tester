@@ -42,16 +42,16 @@ android {
 
     buildTypes {
         debug {
-            debuggable true
+            applicationIdSuffix ".debug"
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "Boolean", "BUG_TRACKERS_ENABLED", "false"
+            splits.abi.enable = false
+            splits.density.enable = false
+            ext.enableCrashlytics = false
         }
         release {
-            debuggable false
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "Boolean", "BUG_TRACKERS_ENABLED", "true"
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
