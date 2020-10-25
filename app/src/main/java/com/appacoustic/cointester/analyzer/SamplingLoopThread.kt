@@ -278,7 +278,7 @@ class SamplingLoopThread(
 
             // If there is new spectrum data, do plot
             if (stft.nElemSpectrumAmp() >= nFftAverage) {
-                val spectrumAmplitudeDB = stft.spectrumAmplitudeDB
+                val spectrumAmplitudeDB = stft.calculateSpectrumAmplitudeDB()
                 System.arraycopy(
                     spectrumAmplitudeDB,
                     0,
@@ -296,8 +296,8 @@ class SamplingLoopThread(
                     maxAmplitudeDB
                 )
 
-                val rms = stft.rms
-                val rmsFromFT = stft.rmsFromFT
+                val rms = stft.calculateRms()
+                val rmsFromFT = stft.calculateRmsFromFT()
                 listener.onUpdateRms(
                     rms,
                     rmsFromFT
@@ -383,8 +383,8 @@ class SamplingLoopThread(
         }
     }
 
-    fun setDBAWeighting(dBAWeighting: Boolean) {
-        stft.setDBAWeighting(dBAWeighting)
+    fun setDbaWeighting(dbaWeighting: Boolean) {
+        stft.setDbaWeighting(dbaWeighting)
     }
 
     fun finish() {

@@ -457,8 +457,8 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
         params.setFftLength(sharedPref.getInt("button_fftlen", 1024));
         params.setNFftAverage(sharedPref.getInt("button_average", 1));
         // toggle-buttons
-        params.setDBAWeighting(sharedPref.getBoolean("dbA", false));
-        if (params.getDBAWeighting()) {
+        params.setDbaWeighting(sharedPref.getBoolean("dbA", false));
+        if (params.getDbaWeighting()) {
             ((SelectorText) rootView.findViewById(R.id.tvAnalyzerDBDBA)).nextValue();
         }
         boolean isSpam = sharedPref.getBoolean("spectrum_spectrogram_mode", true);
@@ -988,11 +988,11 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
                 return false;
             }
             case R.id.tvAnalyzerDBDBA:
-                params.setDBAWeighting(!value.equals("dB"));
+                params.setDbaWeighting(!value.equals("dB"));
                 if (samplingThread != null) {
-                    samplingThread.setDBAWeighting(params.getDBAWeighting());
+                    samplingThread.setDbaWeighting(params.getDbaWeighting());
                 }
-                editor.putBoolean("dbA", params.getDBAWeighting());
+                editor.putBoolean("dbA", params.getDbaWeighting());
                 editor.commit();
                 return false;
             case R.id.tvAnalyzerSpectrumSpectrogramMode:

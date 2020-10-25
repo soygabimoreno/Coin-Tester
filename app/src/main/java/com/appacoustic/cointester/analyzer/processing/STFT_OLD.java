@@ -103,7 +103,7 @@ public class STFT_OLD {
         } else {
             KLog.Companion.w("No calibration");
         }
-        setDBAWeighting(params.getDBAWeighting());
+        setDBAWeighting(params.getDbaWeighting());
     }
 
     private void initWindowFunction() {
