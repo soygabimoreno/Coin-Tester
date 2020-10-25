@@ -75,12 +75,15 @@ dependencies {
 
     implementation(KotlinDependency.KOTLIN)
 
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation(AndroidDependency.APP_COMPAT)
+    implementation(AndroidDependency.RECYCLER_VIEW)
+    implementation(AndroidDependency.CONSTRAINT_LAYOUT)
+
+    implementation(GoogleDependency.MATERIAL)
+
+    implementation(GoogleDependency.GSON)
+
+    testImplementation(TestDependency.J_UNIT)
 
     implementation 'com.jakewharton:butterknife:10.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
@@ -88,8 +91,4 @@ dependencies {
     implementation 'com.mukesh:permissions:1.0.4'
     implementation 'com.gabrielmorenoibarra.g:g:0.9.0'
     implementation "com.gabrielmorenoibarra.k:k:0.1.0"
-
-    implementation(GoogleDependency.GSON)
-
-    testImplementation(TestDependency.J_UNIT)
 }
