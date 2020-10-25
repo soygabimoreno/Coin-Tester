@@ -88,7 +88,8 @@ dependencies {
     implementation 'com.mukesh:permissions:1.0.4'
     implementation 'com.gabrielmorenoibarra.g:g:0.9.0'
     implementation "com.gabrielmorenoibarra.k:k:0.1.0"
-    implementation 'com.google.code.gson:gson:2.8.6'
 
-    testImplementation 'junit:junit:4.13'
+    implementation(GoogleDependency.GSON)
+
+    testImplementation(TestDependency.J_UNIT)
 }
