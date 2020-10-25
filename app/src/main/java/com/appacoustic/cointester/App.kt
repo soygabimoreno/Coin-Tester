@@ -1,9 +1,9 @@
 package com.appacoustic.cointester
 
-import android.support.multidex.MultiDexApplication
+import android.app.Application
 import com.gabrielmorenoibarra.k.util.KLog
 
-class App : MultiDexApplication() {
+class App : Application() {
 
     companion object {
         lateinit var instance: App
