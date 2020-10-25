@@ -1,4 +1,4 @@
-package com.appacoustic.cointester.domain
+package com.appacoustic.cointester.coredomain
 
 data class Coin(
     var name: String,

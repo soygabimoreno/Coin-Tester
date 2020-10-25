@@ -1,5 +1,5 @@
 include(
     ":app",
-    ":domain",
+    ":coreDomain",
     ":framework"
 )

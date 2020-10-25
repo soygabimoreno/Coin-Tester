@@ -44,7 +44,7 @@ import com.appacoustic.cointester.analyzer.settings.MyPreferencesActivity;
 import com.appacoustic.cointester.analyzer.view.AnalyzerGraphicView;
 import com.appacoustic.cointester.analyzer.view.AnalyzerViews;
 import com.appacoustic.cointester.analyzer.view.SelectorText;
-import com.appacoustic.cointester.domain.Coin;
+import com.appacoustic.cointester.coredomain.Coin;
 import com.gabrielmorenoibarra.k.util.KLog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

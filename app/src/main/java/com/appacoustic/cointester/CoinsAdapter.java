@@ -13,7 +13,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.appacoustic.cointester.CoinsFragment.OnListFragmentInteractionListener;
-import com.appacoustic.cointester.domain.Coin;
+import com.appacoustic.cointester.coredomain.Coin;
 import com.gabrielmorenoibarra.g.G;
 
 import java.util.List;
