@@ -6,7 +6,7 @@
     android:id="@+id/main_content"
     style="@style/MatchParent"
     android:fitsSystemWindows="true"
-    tools:context="com.appacoustic.cointester.MainActivity">
+    tools:context="com.appacoustic.cointester.presentation.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -31,7 +31,7 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"></androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.appacoustic.cointester.view.CustomViewPager
+    <com.appacoustic.cointester.aaa.view.CustomViewPager
         android:id="@+id/viewPager"
         style="@style/MatchParent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>

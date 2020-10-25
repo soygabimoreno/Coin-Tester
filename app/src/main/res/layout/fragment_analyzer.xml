@@ -28,7 +28,7 @@
                 style="@style/MatchParent"
                 android:orientation="vertical">
 
-                <com.appacoustic.cointester.analyzer.view.AnalyzerGraphicView
+                <com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView
                     android:id="@+id/agvAnalyzer"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -72,7 +72,7 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <com.appacoustic.cointester.analyzer.view.SelectorText
+                    <com.appacoustic.cointester.aaa.analyzer.view.SelectorText
                         android:id="@+id/tvAnalyzerMonitorRecord"
                         style="@style/SelectorText"
                         app:items="Mon Rec"
@@ -102,13 +102,13 @@
                     android:layout_height="wrap_content"
                     android:gravity="end">
 
-                    <com.appacoustic.cointester.analyzer.view.SelectorText
+                    <com.appacoustic.cointester.aaa.analyzer.view.SelectorText
                         android:id="@+id/tvAnalyzerSpectrumSpectrogramMode"
                         style="@style/SelectorText"
                         app:items="spum spam"
                         app:itemsDisplay="@string/tv_spectrum_spectrogram_mode"/>
 
-                    <com.appacoustic.cointester.analyzer.view.SelectorText
+                    <com.appacoustic.cointester.aaa.analyzer.view.SelectorText
                         android:id="@+id/tvAnalyzerDBDBA"
                         style="@style/SelectorText"
                         app:items="dB dBA"
@@ -120,13 +120,13 @@
                     android:layout_height="wrap_content"
                     android:gravity="end">
 
-                    <com.appacoustic.cointester.analyzer.view.SelectorText
+                    <com.appacoustic.cointester.aaa.analyzer.view.SelectorText
                         android:id="@+id/tvAnalyzerLinearLogNote"
                         style="@style/SelectorText"
                         app:items="linear log note"
                         app:itemsDisplay="@string/tv_linear_log_note"/>
 
-                    <com.appacoustic.cointester.analyzer.view.SelectorText
+                    <com.appacoustic.cointester.aaa.analyzer.view.SelectorText
                         android:id="@+id/tvAnalyzerRunStop"
                         style="@style/SelectorText"
                         app:items="run stop"
@@ -142,7 +142,7 @@
                 android:layout_marginBottom="10dp"
                 android:orientation="vertical">
 
-                <com.appacoustic.cointester.view.CustomTextView
+                <com.appacoustic.cointester.aaa.view.CustomTextView
                     android:id="@+id/tvAnalyzerCheckerCoinName"
                     style="@style/Tv"
                     android:textColor="@color/cadet"
@@ -150,7 +150,7 @@
                     app:ttf_name="titillium_web_semi_bold"
                     tools:text="Euro"/>
 
-                <com.appacoustic.cointester.view.CustomTextView
+                <com.appacoustic.cointester.aaa.view.CustomTextView
                     android:id="@+id/tvAnalyzerCheckerCoinPlace"
                     style="@style/Tv"
                     android:textColor="@color/cadet_1"

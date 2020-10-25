@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:padding="24dp">
 
-    <com.appacoustic.cointester.view.CustomTextView
+    <com.appacoustic.cointester.aaa.view.CustomTextView
         android:id="@+id/tvDatasheetName"
         style="@style/Tv"
         android:textColor="@color/cadet"
@@ -17,7 +17,7 @@
         app:ttf_name="titillium_web_semi_bold"
         tools:text="Euro"/>
 
-    <com.appacoustic.cointester.view.CustomTextView
+    <com.appacoustic.cointester.aaa.view.CustomTextView
         android:id="@+id/tvDatasheetPlace"
         style="@style/Tv"
         android:textColor="@color/cadet_1"

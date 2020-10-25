@@ -5,21 +5,21 @@
     style="@style/MatchParent"
     android:background="@android:color/white"
     android:padding="32dp"
-    tools:context="com.appacoustic.cointester.TutorialFragment">
+    tools:context="com.appacoustic.cointester.presentation.TutorialFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.appacoustic.cointester.view.CustomTextView
+        <com.appacoustic.cointester.aaa.view.CustomTextView
             style="@style/Tv"
             android:layout_gravity="center"
             android:text="@string/tutorial"
             android:textSize="48sp"
             app:ttf_name="titillium_web_semi_bold"/>
 
-        <com.appacoustic.cointester.view.CustomTextView
+        <com.appacoustic.cointester.aaa.view.CustomTextView
             style="@style/Tv"
             android:text="@string/hello_blank_fragment"/>
     </LinearLayout>

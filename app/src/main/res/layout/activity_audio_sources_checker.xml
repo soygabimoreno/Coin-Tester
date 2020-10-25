@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/MatchParent"
     android:padding="@dimen/activity_padding"
-    tools:context=".analyzer.settings.AudioSourcesCheckerActivity">
+    tools:context=".aaa.analyzer.settings.AudioSourcesCheckerActivity">
 
     <TextView
         android:id="@+id/tvAudioSourcesChecker"
