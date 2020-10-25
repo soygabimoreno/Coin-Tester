@@ -108,6 +108,7 @@ public class AnalyzerUtil {
 
     /**
      * Return a array of verified audio sampling rates.
+     *
      * @param requested: the sampling rates to be verified.
      */
     public static String[] validateAudioRates(String[] requested) {

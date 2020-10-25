@@ -954,7 +954,7 @@ class RealDoubleFFT_Mixed {
     void rfftf(int n, double r[], double wtable[]) {
         if (n == 1) return;
         rfftf1(n, r, wtable, 0);
-    } 	/*rfftf*/
+    }    /*rfftf*/
 
     /*---------------------------------------------------------
    rfftf: Real backward FFT

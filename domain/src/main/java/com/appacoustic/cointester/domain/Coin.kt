@@ -1,8 +1,10 @@
 package com.appacoustic.cointester.domain
 
-data class Coin(var name: String,
-                var place: String,
-                var head: Int) {
+data class Coin(
+    var name: String,
+    var place: String,
+    var head: Int
+) {
     var tones: IntArray? = null
     var tail: Int = 0
     var diameter: Float = 0F

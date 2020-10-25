@@ -84,11 +84,16 @@ public class CoinsAdapter extends RecyclerView.Adapter<CoinsAdapter.Holder> {
     }
 
     static class Holder extends RecyclerView.ViewHolder {
-        @BindView(R.id.rlItemCoinParent) RelativeLayout rlParent;
-        @BindView(R.id.ivItemCoin) ImageView iv;
-        @BindView(R.id.tvItemCoinName) TextView tvName;
-        @BindView(R.id.tvItemCoinPlace) TextView tvPlace;
-        @BindView(R.id.btnItemCoin) Button btn;
+        @BindView(R.id.rlItemCoinParent)
+        RelativeLayout rlParent;
+        @BindView(R.id.ivItemCoin)
+        ImageView iv;
+        @BindView(R.id.tvItemCoinName)
+        TextView tvName;
+        @BindView(R.id.tvItemCoinPlace)
+        TextView tvPlace;
+        @BindView(R.id.btnItemCoin)
+        Button btn;
 
         public Holder(View v) {
             super(v);

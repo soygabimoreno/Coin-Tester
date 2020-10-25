@@ -278,7 +278,7 @@ public class STFT_OLD {
             rMSCount = 0;
         }
         return rMSOut;
-    }    
+    }
 
     public double getRMSFromFT() {
         getSpectrumAmplitudeDB();

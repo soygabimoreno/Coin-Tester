@@ -49,24 +49,39 @@ import butterknife.ButterKnife;
  */
 public class AnalyzerViews {
 
-    @BindView(R.id.agvAnalyzer) AnalyzerGraphicView agv;
-    @BindView(R.id.tvAnalyzerRMS) TextView tvRMS;
-    @BindView(R.id.tvAnalyzerMarker) TextView tvMarker;
-    @BindView(R.id.tvAnalyzerPeak) TextView tvPeak;
-    @BindView(R.id.tvAnalyzerRec) TextView tvRec;
-    @BindView(R.id.cbAnalyzerCheckerStuckTab) CheckBox cbStuckTab;
+    @BindView(R.id.agvAnalyzer)
+    AnalyzerGraphicView agv;
+    @BindView(R.id.tvAnalyzerRMS)
+    TextView tvRMS;
+    @BindView(R.id.tvAnalyzerMarker)
+    TextView tvMarker;
+    @BindView(R.id.tvAnalyzerPeak)
+    TextView tvPeak;
+    @BindView(R.id.tvAnalyzerRec)
+    TextView tvRec;
+    @BindView(R.id.cbAnalyzerCheckerStuckTab)
+    CheckBox cbStuckTab;
 
-    @BindString(R.string.tv_rms_text) String tvRMSText;
-    @BindString(R.string.tv_marker_text) String tvMarkerText;
-    @BindString(R.string.tv_peak_text) String tvPeakText;
-    @BindString(R.string.tv_rec_text) String tvRecText;
+    @BindString(R.string.tv_rms_text)
+    String tvRMSText;
+    @BindString(R.string.tv_marker_text)
+    String tvMarkerText;
+    @BindString(R.string.tv_peak_text)
+    String tvPeakText;
+    @BindString(R.string.tv_rec_text)
+    String tvRecText;
 
-    @BindArray(R.array.sample_rates) String[] sampleRates;
-    @BindArray(R.array.fft_lengths) String[] fFFTLengths;
-    @BindArray(R.array.fft_averages) String[] fFFTAverages;
+    @BindArray(R.array.sample_rates)
+    String[] sampleRates;
+    @BindArray(R.array.fft_lengths)
+    String[] fFFTLengths;
+    @BindArray(R.array.fft_averages)
+    String[] fFFTAverages;
 
-    @BindDimen(R.dimen.btn_text_font_size) float listItemTextSize;
-    @BindDimen(R.dimen.btn_text_font_size_small) float listItemTitleTextSize;
+    @BindDimen(R.dimen.btn_text_font_size)
+    float listItemTextSize;
+    @BindDimen(R.dimen.btn_text_font_size_small)
+    float listItemTitleTextSize;
 
     private final Activity activity;
     private final AnalyzerFragment analyzerFragment;

@@ -34,9 +34,10 @@ public class BesselCal {
      * Chebyshev polynomials, the routine requires one more
      * addition per loop than evaluating a nested polynomial of
      * the same degree.
-     * @param x argument to the polynomial.
+     *
+     * @param x    argument to the polynomial.
      * @param coef the coefficients of the polynomial.
-     * @param N the number of coefficients.
+     * @param N    the number of coefficients.
      */
     static double chbevl(double x, double coef[], int N) throws ArithmeticException {
         double b0, b1, b2;
@@ -136,6 +137,7 @@ public class BesselCal {
      * The range is partitioned into the two intervals [0,8] and
      * (8, infinity).  Chebyshev polynomial expansions are employed
      * in each interval.
+     *
      * @param x the value to compute the bessel function of.
      */
     public static double i0(double x) throws ArithmeticException {

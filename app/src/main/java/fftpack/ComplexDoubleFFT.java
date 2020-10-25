@@ -2,6 +2,7 @@ package fftpack;
 
 /**
  * FFT transform of a complex periodic sequence.
+ *
  * @author Baoshe Zhang
  * @author Astronomical Instrument Group of University of Lethbridge.
  */
@@ -20,8 +21,9 @@ public class ComplexDoubleFFT extends ComplexDoubleFFT_Mixed {
      * The sequences with the same size can share a wavenumber table. The prime
      * factorization of <em>n</em> together with a tabulation of the trigonometric functions
      * are computed and stored.
+     *
      * @param n the size of a complex data sequence. When <em>n</em> is a multiplication of small
-     * numbers (4, 2, 3, 5), this FFT transform is very efficient.
+     *          numbers (4, 2, 3, 5), this FFT transform is very efficient.
      */
     public ComplexDoubleFFT(int n) {
         ndim = n;
@@ -34,14 +36,15 @@ public class ComplexDoubleFFT extends ComplexDoubleFFT_Mixed {
 
     /**
      * Forward complex FFT transform.
+     *
      * @param x 2*<em>n</em> real double data representing <em>n</em> complex double data.
-     * As an input parameter, <em>x</em> is an array of 2*<em>n</em> real
-     * data representing <em>n</em> complex data. As an output parameter, <em>x</em> represents <em>n</em>
-     * FFT'd complex data. Their relation as follows:
-     * <br>
-     * x[2*i] is the real part of <em>i</em>-th complex data;
-     * <br>
-     * x[2*i+1] is the imaginary part of <em>i</em>-the complex data.
+     *          As an input parameter, <em>x</em> is an array of 2*<em>n</em> real
+     *          data representing <em>n</em> complex data. As an output parameter, <em>x</em> represents <em>n</em>
+     *          FFT'd complex data. Their relation as follows:
+     *          <br>
+     *          x[2*i] is the real part of <em>i</em>-th complex data;
+     *          <br>
+     *          x[2*i+1] is the imaginary part of <em>i</em>-the complex data.
      */
     public void ft(double x[]) {
         if (x.length != 2 * ndim)
@@ -51,6 +54,7 @@ public class ComplexDoubleFFT extends ComplexDoubleFFT_Mixed {
 
     /**
      * Forward complex FFT transform.
+     *
      * @param x an array of <em>n</em> Complex data
      */
     public void ft(Complex1D x) {
@@ -70,15 +74,16 @@ public class ComplexDoubleFFT extends ComplexDoubleFFT_Mixed {
 
     /**
      * Backward complex FFT transform. It is the unnormalized inverse transform of <em>ft</em>(double[]).
+     *
      * @param x 2*<em>n</em> real double data representing <em>n</em> complex double data.
-     * <p>
-     * As an input parameter, <em>x</em> is an array of 2*<em>n</em>
-     * real data representing <em>n</em> complex data. As an output parameter, <em>x</em> represents
-     * <em>n</em> FFT'd complex data. Their relation as follows:
-     * <br>
-     * x[2*<em>i</em>] is the real part of <em>i</em>-th complex data;
-     * <br>
-     * x[2*<em>i</em>+1] is the imaginary part of <em>i</em>-the complex data.
+     *          <p>
+     *          As an input parameter, <em>x</em> is an array of 2*<em>n</em>
+     *          real data representing <em>n</em> complex data. As an output parameter, <em>x</em> represents
+     *          <em>n</em> FFT'd complex data. Their relation as follows:
+     *          <br>
+     *          x[2*<em>i</em>] is the real part of <em>i</em>-th complex data;
+     *          <br>
+     *          x[2*<em>i</em>+1] is the imaginary part of <em>i</em>-the complex data.
      */
     public void bt(double x[]) {
         if (x.length != 2 * ndim)
@@ -88,6 +93,7 @@ public class ComplexDoubleFFT extends ComplexDoubleFFT_Mixed {
 
     /**
      * Backward complex FFT transform. It is the unnormalized inverse transform of <em>ft</em>(Complex1D[]).
+     *
      * @param x an array of <em>n</em> Complex data
      */
     public void bt(Complex1D x) {

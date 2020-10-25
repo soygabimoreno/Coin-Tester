@@ -19,7 +19,10 @@ class App : MultiDexApplication() {
         AppResources.getInstance().init(this)
 
         if (BuildConfig.BUG_TRACKERS_ENABLED) {
-            Fabric.with(this, Crashlytics())
+            Fabric.with(
+                this,
+                Crashlytics()
+            )
         }
     }
 }

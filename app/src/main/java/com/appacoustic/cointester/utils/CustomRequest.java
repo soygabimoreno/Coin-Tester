@@ -30,23 +30,24 @@ public class CustomRequest extends Request<JSONObject> {
 
     /**
      * Constructor.
-     * @param user User for making requests to the protected directory.
-     * @param password Password for making requests to the protected directory.
-     * @param method Integer with the type of request.<br>
-     * DEPRECATED_GET_OR_POST = -1;<br>
-     * GET = 0<br>
-     * POST = 1<br>
-     * PUT = 2<br>
-     * DELETE = 3<br>
-     * HEAD = 4<br>
-     * OPTIONS = 5<br>
-     * TRACE = 6<br>
-     * PATCH = 7<br>
-     * @param url URL service address.
-     * @param params Request parameters.
-     * @param shouldCache If it is false, never use cache memory. Always make request to the server.
+     *
+     * @param user             User for making requests to the protected directory.
+     * @param password         Password for making requests to the protected directory.
+     * @param method           Integer with the type of request.<br>
+     *                         DEPRECATED_GET_OR_POST = -1;<br>
+     *                         GET = 0<br>
+     *                         POST = 1<br>
+     *                         PUT = 2<br>
+     *                         DELETE = 3<br>
+     *                         HEAD = 4<br>
+     *                         OPTIONS = 5<br>
+     *                         TRACE = 6<br>
+     *                         PATCH = 7<br>
+     * @param url              URL service address.
+     * @param params           Request parameters.
+     * @param shouldCache      If it is false, never use cache memory. Always make request to the server.
      * @param responseListener Successful response listener. It will be waiting the server.
-     * @param errorListener Wrong response listener. When something fails.
+     * @param errorListener    Wrong response listener. When something fails.
      */
     public CustomRequest(String user, String password, int method, String url, Map<String, Object> params,
                          boolean shouldCache, Listener<JSONObject> responseListener, ErrorListener errorListener) {
@@ -84,6 +85,7 @@ public class CustomRequest extends Request<JSONObject> {
 
     /**
      * Put the <code>Listener</code> to listen the deliver response of the server.
+     *
      * @param response Response to deliver.
      */
     @Override
@@ -93,6 +95,7 @@ public class CustomRequest extends Request<JSONObject> {
 
     /**
      * It parses a <code>NetworkResponse</code> to a <code>JSONObject</code> <code>Response</code>.
+     *
      * @param response A NetworkResponse from the server.
      * @return a <code>JSONObject</code> <code>Response</code>.
      */

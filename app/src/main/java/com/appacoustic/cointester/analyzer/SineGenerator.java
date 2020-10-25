@@ -14,9 +14,10 @@ public class SineGenerator {
 
     /**
      * Create a sine wave generator:
-     * @param f frequency of the sine wave (hz)
+     *
+     * @param f  frequency of the sine wave (hz)
      * @param fs Sampling rate (hz)
-     * @param a Amplitude
+     * @param a  Amplitude
      */
 
     public SineGenerator(double f, int fs, double a) {
@@ -29,6 +30,7 @@ public class SineGenerator {
 
     /**
      * Set the new frequency, maintaining the phase
+     *
      * @param f New frequency, hz
      */
 
@@ -52,9 +54,10 @@ public class SineGenerator {
 
     /**
      * Generate the next batch of samples.
+     *
      * @param samples Where to put the samples
-     * @param start Start sample
-     * @param count # of samples (must be even)
+     * @param start   Start sample
+     * @param count   # of samples (must be even)
      */
 
     private void getSamples(double[] samples, int start, int count) {
@@ -74,9 +77,10 @@ public class SineGenerator {
 
     /**
      * Add samples to an existing buffer
+     *
      * @param samples Where to put the samples
-     * @param start Start sample
-     * @param count # of samples (must be even)
+     * @param start   Start sample
+     * @param count   # of samples (must be even)
      */
     private void addSamples(double[] samples, int start, int count) {
         for (int cnt = start; cnt < count; cnt += 2) {
