@@ -11,13 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GestureDetectorCompat;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,6 +27,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GestureDetectorCompat;
+import androidx.fragment.app.Fragment;
+
 import com.appacoustic.cointester.analyzer.AnalyzerUtil;
 import com.appacoustic.cointester.analyzer.RangeViewDialogC;
 import com.appacoustic.cointester.analyzer.SamplingLoopThread;
@@ -46,6 +46,7 @@ import com.appacoustic.cointester.analyzer.view.AnalyzerViews;
 import com.appacoustic.cointester.analyzer.view.SelectorText;
 import com.appacoustic.cointester.domain.Coin;
 import com.gabrielmorenoibarra.k.util.KLog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import butterknife.BindArray;
 import butterknife.BindColor;

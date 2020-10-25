@@ -7,11 +7,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.RotateAnimation;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.appacoustic.cointester.R;
 import com.gabrielmorenoibarra.k.util.KLog;

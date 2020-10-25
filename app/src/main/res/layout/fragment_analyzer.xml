@@ -9,7 +9,7 @@
     android:paddingEnd="@dimen/activity_padding"
     android:paddingBottom="64dp">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/cardViewAnalyzerChecker"
         style="@style/MatchParent"
         android:layout_centerHorizontal="true"
@@ -167,9 +167,9 @@
                 android:layout_toEndOf="@id/llAnalyzerCheckerCoin"
                 android:text="@string/stuck_tab"/>
         </RelativeLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAnalyzerChecker"
         style="@style/WrapContent"
         android:layout_alignParentBottom="true"

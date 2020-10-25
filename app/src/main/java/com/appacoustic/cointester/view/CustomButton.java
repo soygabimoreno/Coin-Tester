@@ -3,8 +3,9 @@ package com.appacoustic.cointester.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
+
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.appacoustic.cointester.R;
 import com.appacoustic.cointester.utils.Constants;
