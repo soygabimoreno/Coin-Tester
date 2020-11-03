@@ -3,7 +3,6 @@ package com.appacoustic.cointester.presentation;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.appacoustic.cointester.R;
 import com.appacoustic.cointester.aaa.utils.DataManager;
@@ -27,8 +27,6 @@ import com.gabrielmorenoibarra.g.GGraphics;
 import com.gabrielmorenoibarra.k.util.KLog;
 import com.google.android.material.tabs.TabLayout;
 
-import butterknife.BindDrawable;
-import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -41,25 +39,12 @@ public class MainActivity extends AppCompatActivity implements CoinsFragment.OnL
     public static final int CHECKER_POS = 1;
     public static final int TUTORIAL_POS = 2;
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.viewPager)
-    CustomViewPager vp;
     @BindView(R.id.tabs)
     TabLayout tabLayout;
 
-    @BindString(R.string.select_email_sending_app)
-    String selectEmailSendingApp;
-    @BindString(R.string.developed_by)
-    String developedBy;
-    @BindString(R.string.visit_web)
-    String visitWeb;
-
-    @BindDrawable(R.drawable.ic_logo_planet_devices)
-    Drawable logoPlanetDevices;
-
     @Override
     public void onListFragmentInteraction(Coin item) {
+        ViewPager vp = findViewById(R.id.viewPager);
         vp.setCurrentItem(CHECKER_POS);
         ((AnalyzerFragment) vp.getAdapter().instantiateItem(vp, CHECKER_POS)).loadCoin(item);
     }
@@ -69,9 +54,11 @@ public class MainActivity extends AppCompatActivity implements CoinsFragment.OnL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
 
+        ViewPager vp = findViewById(R.id.viewPager);
         vp.setAdapter(adapter);
         vp.setCurrentItem(CHECKER_POS);
 
@@ -89,11 +76,11 @@ public class MainActivity extends AppCompatActivity implements CoinsFragment.OnL
         switch (item.getItemId()) {
             case R.id.menuMainAbout:
                 final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-                alertDialog.setTitle(developedBy);
+                alertDialog.setTitle(getString(R.string.developed_by));
                 ImageView iv = new ImageView(this);
                 int px = GGraphics.dpToPx(this, 10);
                 iv.setPadding(px, GGraphics.dpToPx(this, 20), px, px);
-                iv.setImageDrawable(logoPlanetDevices);
+                iv.setImageDrawable(getDrawable(R.drawable.ic_logo_planet_devices));
                 iv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -102,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements CoinsFragment.OnL
                     }
                 });
                 alertDialog.setView(iv);
-                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, visitWeb, new DialogInterface.OnClickListener() {
+                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.visit_web), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         visitWeb();
                     }
@@ -113,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements CoinsFragment.OnL
             case R.id.menuMainContact:
                 Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + DataManager.getInstance().getContactEmail()));
                 intent.putExtra(Intent.EXTRA_SUBJECT, "EMAIL FROM APP COIN TESTER");
-                startActivity(Intent.createChooser(intent, selectEmailSendingApp));
+                startActivity(Intent.createChooser(intent, getString(R.string.select_email_sending_app)));
                 return true;
             case R.id.menuMainUserManual:
 //                analyzerViews.showInstructions();
@@ -146,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements CoinsFragment.OnL
     }
 
     public CustomViewPager getVp() {
-        return vp;
+        return findViewById(R.id.viewPager);
     }
 
     static class SectionsPagerAdapter extends FragmentPagerAdapter {
