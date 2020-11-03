@@ -10,11 +10,9 @@ import android.view.MenuItem
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.viewpager.widget.ViewPager
 import butterknife.ButterKnife
 import com.appacoustic.cointester.R
 import com.appacoustic.cointester.aaa.utils.DataManager
@@ -25,15 +23,14 @@ import com.appacoustic.cointester.presentation.MainActivity
 import com.gabrielmorenoibarra.g.G
 import com.gabrielmorenoibarra.g.GGraphics
 import com.gabrielmorenoibarra.k.util.KLog.Companion.d
-import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
 
     override fun onListFragmentInteraction(item: Coin) {
-        val vp = findViewById<ViewPager>(R.id.viewPager)
-        vp.currentItem = CHECKER_POS
-        (vp.adapter!!.instantiateItem(
-            vp,
+        viewPager.currentItem = CHECKER_POS
+        (viewPager.adapter!!.instantiateItem(
+            viewPager,
             CHECKER_POS
         ) as AnalyzerFragment).loadCoin(item)
     }
@@ -42,17 +39,14 @@ class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         val adapter = SectionsPagerAdapter(
             this,
             supportFragmentManager
         )
-        val vp = findViewById<ViewPager>(R.id.viewPager)
-        vp.adapter = adapter
-        vp.currentItem = CHECKER_POS
-        val tabs = findViewById<TabLayout>(R.id.tabs)
-        tabs.setupWithViewPager(vp)
+        viewPager.adapter = adapter
+        viewPager.currentItem = CHECKER_POS
+        tabs.setupWithViewPager(viewPager)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -138,7 +132,7 @@ class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
     }
 
     val vp: CustomViewPager
-        get() = findViewById(R.id.viewPager)
+        get() = viewPager
 
     internal class SectionsPagerAdapter(
         private val context: Context,
