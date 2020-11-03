@@ -49,8 +49,6 @@ import com.appacoustic.cointester.coredomain.Coin;
 import com.gabrielmorenoibarra.k.util.KLog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import butterknife.BindArray;
-import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -80,18 +78,6 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
     Button btnFFTLength;
     @BindView(R.id.btnAnalyzerAverage)
     Button btnAverage;
-
-    @BindColor(R.color.cadet)
-    int cadet;
-    @BindColor(R.color.cadet_1)
-    int cadet1;
-
-    @BindArray(R.array.audio_sources_entries)
-    String[] audioSourcesEntries;
-    @BindArray(R.array.audio_sources)
-    String[] audioSourcesString;
-    @BindArray(R.array.window_functions)
-    String[] windowFunctions;
 
     private int magnitudeTextSize;
 
@@ -144,6 +130,7 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
             }
         });
 
+        String[] audioSourcesString = getResources().getStringArray(R.array.audio_sources);
         int[] audioSources = new int[audioSourcesString.length];
         for (int i = 0; i < audioSourcesString.length; i++) {
             audioSources[i] = Integer.parseInt(audioSourcesString[i]);
@@ -153,7 +140,8 @@ public class AnalyzerFragment extends Fragment implements View.OnLongClickListen
         AnalyzerParams.Companion.setIdTestSignal2(audioSources[sourcesCounter + 1]);
         AnalyzerParams.Companion.setIdTestSignalWhiteNoise(audioSources[sourcesCounter + 2]);
 
-        params = new AnalyzerParams(audioSourcesEntries, audioSources, windowFunctions);
+        String[] windowFunctions = getResources().getStringArray(R.array.window_functions);
+        params = new AnalyzerParams(getResources().getStringArray(R.array.audio_sources_entries), audioSources, windowFunctions);
 
         // Initialized preferences by default values
         PreferenceManager.setDefaultValues(getActivity(), R.xml.preferences, false);
