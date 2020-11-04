@@ -38,9 +38,6 @@ import com.appacoustic.cointester.aaa.analyzer.model.AnalyzerParams;
 import com.appacoustic.cointester.presentation.AnalyzerFragment;
 import com.appacoustic.cointester.presentation.MainActivity;
 
-import butterknife.BindArray;
-import butterknife.BindDimen;
-import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -51,38 +48,17 @@ import butterknife.ButterKnife;
 public class AnalyzerViews {
 
     @BindView(R.id.agvAnalyzer)
-    AnalyzerGraphicView agv;
+    AnalyzerGraphicView agvAnalyzer;
     @BindView(R.id.tvAnalyzerRMS)
-    TextView tvRMS;
+    TextView tvAnalyzerRMS;
     @BindView(R.id.tvAnalyzerMarker)
-    TextView tvMarker;
+    TextView tvAnalyzerMarker;
     @BindView(R.id.tvAnalyzerPeak)
-    TextView tvPeak;
+    TextView tvAnalyzerPeak;
     @BindView(R.id.tvAnalyzerRec)
-    TextView tvRec;
+    TextView tvAnalyzerRec;
     @BindView(R.id.cbAnalyzerCheckerStuckTab)
-    CheckBox cbStuckTab;
-
-    @BindString(R.string.tv_rms_text)
-    String tvRMSText;
-    @BindString(R.string.tv_marker_text)
-    String tvMarkerText;
-    @BindString(R.string.tv_peak_text)
-    String tvPeakText;
-    @BindString(R.string.tv_rec_text)
-    String tvRecText;
-
-    @BindArray(R.array.sample_rates)
-    String[] sampleRates;
-    @BindArray(R.array.fft_lengths)
-    String[] fFFTLengths;
-    @BindArray(R.array.fft_averages)
-    String[] fFFTAverages;
-
-    @BindDimen(R.dimen.btn_text_font_size)
-    float listItemTextSize;
-    @BindDimen(R.dimen.btn_text_font_size_small)
-    float listItemTitleTextSize;
+    CheckBox cbAnalyzerCheckerStuckTab;
 
     private final Activity activity;
     private final AnalyzerFragment analyzerFragment;
@@ -114,20 +90,20 @@ public class AnalyzerViews {
 
         dpRatio = activity.getResources().getDisplayMetrics().density;
 
-        charRMS = new char[tvRMSText.length()];
-        charMarker = new char[tvMarkerText.length()];
-        charPeak = new char[tvPeakText.length()];
-        charRec = new char[tvRecText.length()];
+        charRMS = new char[activity.getResources().getString(R.string.tv_rms_text).length()];
+        charMarker = new char[activity.getResources().getString(R.string.tv_marker_text).length()];
+        charPeak = new char[activity.getResources().getString(R.string.tv_peak_text).length()];
+        charRec = new char[activity.getResources().getString(R.string.tv_rec_text).length()];
 
         /// initialize pop up window items list
         // http://www.codeofaninja.com/2013/04/show-listview-as-drop-down-android.html
-        popupMenuSampleRate = popupMenuCreate(AnalyzerUtil.validateAudioRates(sampleRates), R.id.btnAnalyzerSampleRate);
-        popupMenuFFTLen = popupMenuCreate(fFFTLengths, R.id.btnAnalyzerFFTLength);
-        popupMenuFFTAverage = popupMenuCreate(fFFTAverages, R.id.btnAnalyzerAverage);
+        popupMenuSampleRate = popupMenuCreate(AnalyzerUtil.validateAudioRates(activity.getResources().getStringArray(R.array.sample_rates)), R.id.btnAnalyzerSampleRate);
+        popupMenuFFTLen = popupMenuCreate(activity.getResources().getStringArray(R.array.fft_lengths), R.id.btnAnalyzerFFTLength);
+        popupMenuFFTAverage = popupMenuCreate(activity.getResources().getStringArray(R.array.fft_averages), R.id.btnAnalyzerAverage);
 
         setTextViewFontSize();
 
-        cbStuckTab.setOnClickListener(new View.OnClickListener() {
+        cbAnalyzerCheckerStuckTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((MainActivity) activity).getVp().setStuck(((AppCompatCheckBox) v).isChecked());
@@ -145,7 +121,7 @@ public class AnalyzerViews {
         // pixels left
         float px = display.getWidth() - activity.getResources().getDimension(R.dimen.tv_RMS_layout_width) - 5;
 
-        float fs = tvMarker.getTextSize();  // size in pixel
+        float fs = tvAnalyzerMarker.getTextSize();  // size in pixel
 
         // shrink font size if it can not fit in one line.
         final String text = activity.getString(R.string.tv_peak_text);
@@ -158,19 +134,19 @@ public class AnalyzerViews {
             mTestPaint.setTextSize(fs);
         }
 
-        tvMarker.setTextSize(TypedValue.COMPLEX_UNIT_PX, fs);
-        tvPeak.setTextSize(TypedValue.COMPLEX_UNIT_PX, fs);
+        tvAnalyzerMarker.setTextSize(TypedValue.COMPLEX_UNIT_PX, fs);
+        tvAnalyzerPeak.setTextSize(TypedValue.COMPLEX_UNIT_PX, fs);
     }
 
     // Prepare the spectrum and spectrogram plot (from scratch or full reset)
     // Should be called before samplingThread starts.
     public void setupView(AnalyzerParams params) {
-        agv.setupPlot(params);
+        agvAnalyzer.setupPlot(params);
     }
 
     // Will be called by SamplingLoopThread (in another thread)
     public void update(final double[] spectrumDBcopy) {
-        agv.saveSpectrum(spectrumDBcopy);
+        agvAnalyzer.saveSpectrum(spectrumDBcopy);
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -290,9 +266,9 @@ public class AnalyzerViews {
 
     public void enableSaveWavView(boolean bSaveWav) {
         if (bSaveWav) {
-            tvRec.setHeight((int) (19 * dpRatio));
+            tvAnalyzerRec.setHeight((int) (19 * dpRatio));
         } else {
-            tvRec.setHeight((int) (0 * dpRatio));
+            tvAnalyzerRec.setHeight((int) (0 * dpRatio));
         }
     }
 
@@ -337,6 +313,7 @@ public class AnalyzerViews {
 
         // get max text width
         Paint mTestPaint = new Paint();
+        float listItemTextSize = activity.getResources().getDimension(R.dimen.btn_text_font_size);
         mTestPaint.setTextSize(listItemTextSize);
         float w = 0;
         float wi;      // max text width in pixel
@@ -344,7 +321,7 @@ public class AnalyzerViews {
             String sts[] = popUpContent.split("::");
             String st = sts[0];
             if (sts.length == 2 && sts[1].equals("0")) {
-                mTestPaint.setTextSize(listItemTitleTextSize);
+                mTestPaint.setTextSize(activity.getResources().getDimension(R.dimen.btn_text_font_size_small));
                 wi = mTestPaint.measureText(st);
                 mTestPaint.setTextSize(listItemTextSize);
             } else {
@@ -396,14 +373,14 @@ public class AnalyzerViews {
                 if (id.equals("0")) {
                     listItem.setText(text);
                     listItem.setTag(id);
-                    listItem.setTextSize(listItemTitleTextSize / dpRatio);
+                    listItem.setTextSize(activity.getResources().getDimension(R.dimen.btn_text_font_size_small) / dpRatio);
                     listItem.setPadding(5, 5, 5, 5);
                     listItem.setTextColor(Color.GREEN);
                     listItem.setGravity(android.view.Gravity.CENTER);
                 } else {
                     listItem.setText(text);
                     listItem.setTag(id);
-                    listItem.setTextSize(listItemTextSize / dpRatio);
+                    listItem.setTextSize(activity.getResources().getDimension(R.dimen.btn_text_font_size) / dpRatio);
                     listItem.setPadding(5, 5, 5, 5);
                     listItem.setTextColor(Color.WHITE);
                     listItem.setGravity(android.view.Gravity.CENTER);
@@ -415,7 +392,7 @@ public class AnalyzerViews {
     }
 
     private void refreshMarkerLabel() {
-        double f1 = agv.getMarkerFreq();
+        double f1 = agvAnalyzer.getMarkerFreq();
 
         sbMarker.setLength(0);
         sbMarker.append(activity.getString(R.string.tv_marker_text_empty));
@@ -423,11 +400,11 @@ public class AnalyzerViews {
         sbMarker.append("Hz(");
         AnalyzerUtil.freq2Cent(sbMarker, f1, " ");
         sbMarker.append(") ");
-        SBNumFormat.fillInNumFixedWidth(sbMarker, agv.getMarkerDB(), 3, 1);
+        SBNumFormat.fillInNumFixedWidth(sbMarker, agvAnalyzer.getMarkerDB(), 3, 1);
         sbMarker.append("dB");
         sbMarker.getChars(0, Math.min(sbMarker.length(), charMarker.length), charMarker, 0);
 
-        tvMarker.setText(charMarker, 0, Math.min(sbMarker.length(), charMarker.length));
+        tvAnalyzerMarker.setText(charMarker, 0, Math.min(sbMarker.length(), charMarker.length));
     }
 
     private void refreshRMSLabel(double dtRMSFromFT) {
@@ -436,8 +413,8 @@ public class AnalyzerViews {
         SBNumFormat.fillInNumFixedWidth(sbRMS, 20 * Math.log10(dtRMSFromFT), 3, 1);
         sbRMS.getChars(0, Math.min(sbRMS.length(), charRMS.length), charRMS, 0);
 
-        tvRMS.setText(charRMS, 0, charRMS.length);
-        tvRMS.invalidate();
+        tvAnalyzerRMS.setText(charRMS, 0, charRMS.length);
+        tvAnalyzerRMS.invalidate();
     }
 
     private void refreshPeakLabel(double maxAmpFreq, double maxAmpDB) {
@@ -451,8 +428,8 @@ public class AnalyzerViews {
         sbPeak.append("dB");
         sbPeak.getChars(0, Math.min(sbPeak.length(), charPeak.length), charPeak, 0);
 
-        tvPeak.setText(charPeak, 0, charPeak.length);
-        tvPeak.invalidate();
+        tvAnalyzerPeak.setText(charPeak, 0, charPeak.length);
+        tvAnalyzerPeak.invalidate();
     }
 
     private void refreshRecTimeLable(double wavSec, double wavSecRemain) {
@@ -463,7 +440,7 @@ public class AnalyzerViews {
         sbRec.append(activity.getString(R.string.tv_rec_remain_text));
         SBNumFormat.fillTime(sbRec, wavSecRemain, 0);
         sbRec.getChars(0, Math.min(sbRec.length(), charRec.length), charRec, 0);
-        tvRec.setText(charRec, 0, Math.min(sbRec.length(), charRec.length));
+        tvAnalyzerRec.setText(charRec, 0, Math.min(sbRec.length(), charRec.length));
 //        tvRec.invalidate(); // COMMENT: No haría falta ???
     }
 
@@ -487,7 +464,7 @@ public class AnalyzerViews {
         }
         isInvalidating = true;
         long frameTime;                      // time delay for next frame
-        if (agv.getShowMode() != AnalyzerGraphicView.PlotMode.SPECTRUM) {
+        if (agvAnalyzer.getShowMode() != AnalyzerGraphicView.PlotMode.SPECTRUM) {
             frameTime = (long) (1000 / fpsLimit);  // use a much lower frame rate for spectrogram
         } else {
             frameTime = 1000 / 60;
@@ -502,7 +479,7 @@ public class AnalyzerViews {
             // Take care of synchronization of analyzerGraphic.spectrogramColors and iTimePointer,
             // and then just do invalidate() here.
             if ((viewMask & VIEW_MASK_graphView) != 0)
-                agv.invalidate();
+                agvAnalyzer.invalidate();
             // RMS
             if ((viewMask & VIEW_MASK_textview_RMS) != 0)
                 refreshRMSLabel(analyzerFragment.getDtRMSFromFT());
@@ -544,8 +521,8 @@ public class AnalyzerViews {
         }
     };
 
-    public AnalyzerGraphicView getAgv() {
-        return agv;
+    public AnalyzerGraphicView getAgvAnalyzer() {
+        return agvAnalyzer;
     }
 
     public PopupWindow getPopupMenuSampleRate() {
