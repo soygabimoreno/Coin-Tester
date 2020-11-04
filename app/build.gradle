@@ -85,9 +85,6 @@ dependencies {
 
     testImplementation(TestDependency.J_UNIT)
 
-    implementation 'com.jakewharton:butterknife:10.0.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
-
     implementation 'com.mukesh:permissions:1.0.4'
     implementation 'com.gabrielmorenoibarra.g:g:0.9.0'
     implementation "com.gabrielmorenoibarra.k:k:0.1.0"
