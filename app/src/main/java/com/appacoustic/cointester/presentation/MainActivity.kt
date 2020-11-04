@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import butterknife.ButterKnife
 import com.appacoustic.cointester.R
 import com.appacoustic.cointester.aaa.utils.DataManager
 import com.appacoustic.cointester.aaa.view.CustomViewPager
@@ -38,7 +37,6 @@ class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        ButterKnife.bind(this)
         setSupportActionBar(toolbar)
         val adapter = SectionsPagerAdapter(
             this,

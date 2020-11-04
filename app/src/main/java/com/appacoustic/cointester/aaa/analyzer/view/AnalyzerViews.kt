@@ -39,28 +39,6 @@ class AnalyzerViews(
     analyzerFragment: AnalyzerFragment,
     rootView: View
 ) {
-    //    @kotlin.jvm.JvmField
-//    @BindView(R.id.agvAnalyzer)
-//    var agvAnalyzer: AnalyzerGraphicView? = null
-//
-//    @kotlin.jvm.JvmField
-//    @BindView(R.id.tvAnalyzerRMS)
-//    var tvAnalyzerRMS: TextView? = null
-//
-//    @kotlin.jvm.JvmField
-//    @BindView(R.id.tvAnalyzerMarker)
-//    var tvAnalyzerMarker: TextView? = null
-//
-//    @kotlin.jvm.JvmField
-//    @BindView(R.id.tvAnalyzerPeak)
-//    var tvAnalyzerPeak: TextView? = null
-//
-//    @kotlin.jvm.JvmField
-//    @BindView(R.id.tvAnalyzerRec)
-//    var tvAnalyzerRec: TextView? = null
-//
-//    @kotlin.jvm.JvmField
-//    @BindView(R.id.cbAnalyzerCheckerStuckTab)
 
     val agvAnalyzer = activity.agvAnalyzer
 
