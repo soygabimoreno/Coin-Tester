@@ -67,9 +67,7 @@ public class RangeViewDialogC {
     }
 
     private void SetRangeView(boolean loadSaved) {
-        final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
         if (rangeViewDialog == null) {
-            KLog.Companion.d(METHOD_NAME + ": rangeViewDialog is not prepared.");
             return;
         }
         double[] vals = graphView.getViewPhysicalRange();

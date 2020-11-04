@@ -39,7 +39,6 @@ public class RecorderMonitor {
     // Input number of audio frames that read
     // Return true if an overrun check is performed, otherwise false.
     public boolean updateState(int numOfReadShort) {
-        final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
         long timeNow = SystemClock.uptimeMillis();
         if (nSamplesRead == 0) {      // get overrun checker synchronized
             timeStarted = timeNow - numOfReadShort * 1000 / sampleRate;
@@ -62,7 +61,7 @@ public class RecorderMonitor {
 //        + " sampleRate = " + Math.round(sampleRateReal*100)/100.0);
         // Check if buffer overrun occur
         if (nSamplesFromTime > bufferSampleSize + nSamplesRead) {
-            KLog.Companion.w(METHOD_NAME + ": Buffer Overrun occurred !\n"
+            KLog.w(": Buffer Overrun occurred !\n"
                     + " should read " + nSamplesFromTime + " (" + Math.round(f2 * 1000) / 1000.0 + "s),"
                     + " actual read " + nSamplesRead + " (" + Math.round(f1 * 1000) / 1000.0 + "s)\n"
                     + " diff " + (nSamplesFromTime - nSamplesRead) + " (" + Math.round((f2 - f1) * 1000) / 1e3 + "s)"

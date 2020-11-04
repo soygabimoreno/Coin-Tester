@@ -14,7 +14,6 @@ import com.appacoustic.cointester.aaa.analyzer.GridLabel;
 import com.appacoustic.cointester.aaa.analyzer.ScreenPhysicalMapping;
 import com.appacoustic.cointester.aaa.analyzer.SpectrogramBMP;
 import com.appacoustic.cointester.aaa.analyzer.model.AnalyzerParams;
-import com.gabrielmorenoibarra.k.util.KLog;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -120,8 +119,6 @@ public class AnalyzerGraphicView extends View {
 
     @Override
     protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
-        KLog.Companion.i(Thread.currentThread().getStackTrace()[2].getMethodName() +
-                ": canvas (" + oldWidth + "," + oldHeight + ") -> (" + width + "," + height + ")");
         this.canvasWidth = width;
         this.canvasHeight = height;
         spectrumPlot.setCanvas(width, height, null);
@@ -133,8 +130,6 @@ public class AnalyzerGraphicView extends View {
 
     @Override
     protected Parcelable onSaveInstanceState() {
-        KLog.Companion.i(Thread.currentThread().getStackTrace()[2].getMethodName() +
-                ": xShift = " + xShift + "  xZoom = " + xZoom + "  yShift = " + yShift + "  yZoom = " + yZoom);
         Parcelable parentState = super.onSaveInstanceState();
         SavedState savedState = new SavedState(parentState);
         savedState.freqAxisAlongX = spectrogramPlot.isShowFreqAlongX() ? 1 : 0;
@@ -180,7 +175,6 @@ public class AnalyzerGraphicView extends View {
 
     @Override
     public void onRestoreInstanceState(Parcelable state) {
-        final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
         if (state instanceof SavedState) {
             SavedState restoredState = (SavedState) state;
             super.onRestoreInstanceState(restoredState.getSuperState());
@@ -231,10 +225,7 @@ public class AnalyzerGraphicView extends View {
                 spectrumCompressedStored.setDbShortArray(tmpDBSpectrogram);
                 spectrogramBMP.rebuildLinearBMP();
             }
-
-            KLog.Companion.i(METHOD_NAME + ": xShift = " + xShift + "  xZoom = " + xZoom + "  yShift = " + yShift + "  yZoom = " + yZoom);
         } else {
-            KLog.Companion.i(METHOD_NAME + ": not SavedState?!");
             super.onRestoreInstanceState(state);
         }
     }
@@ -335,7 +326,6 @@ public class AnalyzerGraphicView extends View {
     }
 
     public void switch2Spectrogram() {
-        KLog.Companion.d(Thread.currentThread().getStackTrace()[2].getMethodName() + " " + hashCode());
         if (showMode == PlotMode.SPECTRUM && canvasHeight > 0) { // canvasHeight==0 means the program is just start
             if (spectrogramPlot.isShowFreqAlongX()) {
                 // No need to change x scaling
@@ -357,9 +347,7 @@ public class AnalyzerGraphicView extends View {
     }
 
     public double[] setViewRange(double[] ranges, double[] rangesDefault) {
-        final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
         if (ranges.length < VIEW_RANGE_DATA_LENGTH) {
-            KLog.Companion.w(METHOD_NAME + ": invalid input: ranges.length < VIEW_RANGE_DATA_LENGTH");
             return null;
         }
 
@@ -368,7 +356,6 @@ public class AnalyzerGraphicView extends View {
 
         if (rangesDefault != null) {
             if (rangesDefault.length != 2 * VIEW_RANGE_DATA_LENGTH) {
-                KLog.Companion.w(METHOD_NAME + ": invalid input: rangesDefault.length != 2 * VIEW_RANGE_DATA_LENGTH");
                 return null;
             }
             for (int i = 0; i < 6; i += 2) {

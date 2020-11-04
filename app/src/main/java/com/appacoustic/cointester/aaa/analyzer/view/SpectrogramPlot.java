@@ -102,8 +102,6 @@ public class SpectrogramPlot {
 
         axisFreq = new ScreenPhysicalMapping(0, 0, 0, ScreenPhysicalMapping.Type.LINEAR);
         axisTime = new ScreenPhysicalMapping(0, 0, 0, ScreenPhysicalMapping.Type.LINEAR);
-
-        KLog.Companion.i(Thread.currentThread().getStackTrace()[2].getMethodName() + ": initialized!");
     }
 
     // Before calling this, axes should be initialized.
@@ -120,15 +118,14 @@ public class SpectrogramPlot {
         nFreqPoints = fftLen / 2;           // no direct current term
         nTimePoints = (int) Math.ceil(timeWatch / timeInc);
         spectrogramBMP.init(nFreqPoints, nTimePoints, axisFreq);
-        KLog.Companion.i(Thread.currentThread().getStackTrace()[2].getMethodName() + ": done" +
-                "\n  sampleRate    = " + sampleRate +
-                "\n  fFTLength        = " + fftLen +
-                "\n  timeDurationE = " + timeDurationE + " * " + nAve + "  (" + nTimePoints + " points)" +
-                "\n  canvas size freq= " + axisFreq.getNCanvasPx() + " time=" + axisTime.getNCanvasPx());
+        KLog.i(
+                "sampleRate    = " + sampleRate +
+                        "\n  fFTLength        = " + fftLen +
+                        "\n  timeDurationE = " + timeDurationE + " * " + nAve + "  (" + nTimePoints + " points)" +
+                        "\n  canvas size freq= " + axisFreq.getNCanvasPx() + " time=" + axisTime.getNCanvasPx());
     }
 
     public void setCanvas(int _canvasWidth, int _canvasHeight, double[] axisBounds) {
-        KLog.Companion.i(Thread.currentThread().getStackTrace()[2].getMethodName() + ": " + _canvasWidth + " x " + _canvasHeight);
         canvasWidth = _canvasWidth;
         canvasHeight = _canvasHeight;
         if (canvasHeight > 1 && canvasWidth > 1) {
@@ -168,7 +165,6 @@ public class SpectrogramPlot {
 
     // Linear or Logarithmic frequency axis
     public void setFreqAxisMode(ScreenPhysicalMapping.Type mapType, double freq_lower_bound_for_log, GridLabel.Type gridType) {
-        KLog.Companion.i(Thread.currentThread().getStackTrace()[2].getMethodName() + ": set to mode " + mapType);
         axisFreq.setMappingType(mapType, freq_lower_bound_for_log);
         fqGridLabel.setGridType(gridType);
         spectrogramBMP.updateAxis(axisFreq);

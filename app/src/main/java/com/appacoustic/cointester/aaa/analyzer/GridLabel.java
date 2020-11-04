@@ -57,13 +57,10 @@ public class GridLabel {
     // return position of grid lines, there are roughly gridDensity lines for the bigger grid
     private static int genLinearGridPoints(double[][] gridPointsArray, double startValue, double endValue,
                                            double gridDensity, Type scale_mode) {
-        final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
         if (Double.isInfinite(startValue + endValue) || Double.isNaN(startValue + endValue)) {
-            KLog.Companion.e(METHOD_NAME + ": value invalid");
             return 0;
         }
         if (startValue == endValue) {
-            KLog.Companion.e(METHOD_NAME + ": startValue == endValue");
             return 0;
         }
         if (startValue > endValue) {
@@ -160,17 +157,13 @@ public class GridLabel {
     // TODO: might be merge to genLinearGridPoints.
     private static int genLogarithmicGridPoints(double[][] gridPointsArray, double startValue, double endValue,
                                                 double gridDensity) {
-        final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
         if (Double.isInfinite(startValue + endValue) || Double.isNaN(startValue + endValue)) {
-            KLog.Companion.e(METHOD_NAME + ": value invalid");
             return 0;
         }
         if (startValue == endValue) {
-            KLog.Companion.e(METHOD_NAME + ": startValue == endValue");
             return 0;
         }
         if (startValue <= 0 || endValue <= 0) {
-            KLog.Companion.e(METHOD_NAME + ": startValue <=0 || endValue <= 0 !!");
             return 0;
         }
         if (startValue > endValue) {
@@ -318,14 +311,11 @@ public class GridLabel {
 
     private static int genMusicNoteGridPoints(double[][] gridPointsArray, double startValue, double endValue,
                                               double gridDensity, int start_note) {
-        final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
         // For Type.FREQ_NOTE
         if (Double.isInfinite(startValue + endValue) || Double.isNaN(startValue + endValue)) {
-            KLog.Companion.e(METHOD_NAME + ": value invalid");
             return 0;
         }
         if (startValue == endValue) {
-            KLog.Companion.e(METHOD_NAME + ": startValue == endValue");
             return 0;
         }
         if (startValue > endValue) {

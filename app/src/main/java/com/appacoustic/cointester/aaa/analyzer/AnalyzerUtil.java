@@ -76,10 +76,8 @@ public class AnalyzerUtil {
     private double[] cmpDB;
 
     void sameTest(double[] data) {
-        final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
         // test
         if (cmpDB == null || cmpDB.length != data.length) {
-            KLog.Companion.i(METHOD_NAME + ": new");
             cmpDB = new double[data.length];
         } else {
             boolean same = true;

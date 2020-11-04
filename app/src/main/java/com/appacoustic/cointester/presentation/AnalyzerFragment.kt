@@ -34,16 +34,8 @@ import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView.OnReadyL
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.aaa.analyzer.view.SelectorText
 import com.appacoustic.cointester.coredomain.Coin
-import com.gabrielmorenoibarra.k.util.KLog.Companion.d
-import com.gabrielmorenoibarra.k.util.KLog.Companion.e
-import com.gabrielmorenoibarra.k.util.KLog.Companion.i
-import com.gabrielmorenoibarra.k.util.KLog.Companion.w
 import kotlinx.android.synthetic.main.fragment_analyzer.*
 
-/**
- * Main fragment.
- * Created by Gabriel Moreno on 2017-01-22.
- */
 class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListener, AdapterView.OnItemClickListener, OnReadyListener {
 
     private val magnitudeTextSize = 0
@@ -182,7 +174,6 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
     }
 
     override fun onResume() {
-        d(Thread.currentThread().stackTrace[2].methodName + " " + hashCode())
         super.onResume()
         LoadPreferences()
         analyzerViews!!.agvAnalyzer?.setReady(this) // TODO: move this earlier?
@@ -196,7 +187,6 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
     }
 
     override fun onPause() {
-        d(Thread.currentThread().stackTrace[2].methodName + " " + hashCode())
         bSamplingPreparation = false
         if (samplingThread != null) {
             samplingThread!!.finish()
@@ -206,7 +196,6 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
     }
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
-        d(Thread.currentThread().stackTrace[2].methodName + " " + hashCode())
         savedInstanceState.putDouble(
             "dtRMS",
             dtRMS
@@ -228,7 +217,6 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
 
     override fun onActivityCreated(savedInstanceState: Bundle?) { // Equivalent to onRestoreInstanceState()
         super.onActivityCreated(savedInstanceState)
-        d(Thread.currentThread().stackTrace[2].methodName + " " + hashCode())
         if (savedInstanceState != null) {
             dtRMS = savedInstanceState.getDouble("dtRMS")
             dtRMSFromFT = savedInstanceState.getDouble("dtRMSFromFT")
@@ -248,13 +236,10 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
                 uri,
                 activity
             )
-            w("mime:" + activity!!.contentResolver.getType(uri!!))
             fillFftCalibration(
                 params,
                 calibLoad
             )
-        } else if (requestCode == REQUEST_AUDIO_GET) {
-            w("requestCode == REQUEST_AUDIO_GET")
         }
     }
 
@@ -327,8 +312,6 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
                 requestType
             )
         } else {
-            e("No file chooser found!.")
-
             // Potentially direct the user to the Market with a Dialog
             Toast.makeText(
                 activity,
@@ -388,7 +371,6 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
         if (!isLockViewRange) {
             viewRangeArray = analyzerViews!!.agvAnalyzer?.viewPhysicalRange as DoubleArray
             // if range is align at boundary, extend the range.
-            i("set sampling rate:a " + viewRangeArray!!.get(0) + " ==? " + viewRangeArray!!.get(6))
             if (viewRangeArray!!.get(0) == viewRangeArray!!.get(6)) {
                 viewRangeArray!!.set(
                     0,
@@ -400,11 +382,9 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
             R.id.btnAnalyzerSampleRate -> {
                 analyzerViews!!.popupMenuSampleRate.dismiss()
                 if (!isLockViewRange) {
-                    i("set sampling rate:b " + viewRangeArray!![1] + " ==? " + viewRangeArray!![6 + 1])
                     if (viewRangeArray!![1] == viewRangeArray!![6 + 1]) {
                         viewRangeArray!![1] = (selectedItemTag.toInt() / 2).toDouble()
                     }
-                    i("onItemClick(): viewRangeArray saved. " + viewRangeArray!![0] + " ~ " + viewRangeArray!![1])
                 }
                 params!!.sampleRate = selectedItemTag.toInt()
                 b_need_restart_audio = true
@@ -440,7 +420,6 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
                 )
             }
             else -> {
-                w("onItemClick(): no this button")
                 b_need_restart_audio = false
             }
         }
@@ -489,11 +468,8 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
         )
         val st = rootView!!.findViewById<View>(R.id.tvAnalyzerLinearLogNote) as SelectorText
         st.value = axisMode
-        i(
-            """${Thread.currentThread().stackTrace[2].methodName}:
-  sampleRate  = ${params!!.sampleRate}
-  fFTLength      = ${params!!.fftLength}
-  nFFTAverage = ${params!!.nFftAverage}"""
+        KLog.i(
+            "sampleRate  = ${params!!.sampleRate}  fFTLength      = ${params!!.fftLength}  nFFTAverage = ${params!!.nFftAverage}"
         )
         (rootView!!.findViewById<View>(R.id.btnAnalyzerSampleRate) as Button).text =
             Integer.toString(params!!.sampleRate)
@@ -620,7 +596,6 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
             false
         )
         if (isLock) {
-            i(Thread.currentThread().stackTrace[2].methodName + ": isLocked")
             // Set view range and stick to measure mode
             var rr: DoubleArray? = DoubleArray(AnalyzerGraphicView.VIEW_RANGE_DATA_LENGTH)
             for (i in rr!!.indices) {
@@ -630,7 +605,6 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
                     0.0 / 0.0
                 )
                 if (java.lang.Double.isNaN(rr[i])) {  // not properly initialized
-                    w(Thread.currentThread().stackTrace[2].methodName + ": rr is not properly initialized")
                     rr = null
                     break
                 }
@@ -868,13 +842,12 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
                 }
                 isPinching = false
             }
-            else -> i("Invalid touch count")
+            else -> KLog.i("Invalid touch count")
         }
     }
 
     override fun onLongClick(view: View): Boolean {
         vibrate(300)
-        i("long click: $view")
         return true
     }
 
@@ -905,7 +878,6 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
         if (viewRangeArray != null) {
             analyzerViews!!.agvAnalyzer?.setupAxes(this.params)
             val rangeDefault = analyzerViews!!.agvAnalyzer?.viewPhysicalRange
-            i(Thread.currentThread().stackTrace[2].methodName + ": setViewRange: " + viewRangeArray!![0] + " ~ " + viewRangeArray!![1])
             analyzerViews!!.agvAnalyzer?.setViewRange(
                 viewRangeArray,
                 rangeDefault
@@ -973,18 +945,15 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
             )
             != PackageManager.PERMISSION_GRANTED
         ) {
-            w("Permission RECORD_AUDIO denied. Trying  to request...")
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     activity!!,
                     Manifest.permission.RECORD_AUDIO
                 ) &&
                 count_permission_explanation < 1
             ) {
-                w("  Show explanation here....")
                 analyzerViews!!.showPermissionExplanation(R.string.permission_explanation_recorder)
                 count_permission_explanation++
             } else {
-                w("  Requesting...")
                 if (count_permission_request < 3) {
                     ActivityCompat.requestPermissions(
                         activity!!,
@@ -1015,7 +984,6 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
             )
             != PackageManager.PERMISSION_GRANTED
         ) {
-            w("Permission WRITE_EXTERNAL_STORAGE denied. Trying  to request...")
             (rootView!!.findViewById<View>(R.id.tvAnalyzerMonitorRecord) as SelectorText).nextValue()
             saveWav = false
             analyzerViews!!.enableSaveWavView(saveWav)
@@ -1038,27 +1006,16 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
     ) {
         when (requestCode) {
             MY_PERMISSIONS_REQUEST_RECORD_AUDIO -> {
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    w("RECORD_AUDIO Permission granted by user.")
-                } else {
-                    w("RECORD_AUDIO Permission denied by user.")
-                }
             }
             MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE -> {
                 if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    w("WRITE_EXTERNAL_STORAGE Permission granted by user.")
                     if (!saveWav) {
-                        w("... saveWav == true")
                         activity!!.runOnUiThread {
                             (rootView!!.findViewById<View>(R.id.tvAnalyzerMonitorRecord) as SelectorText).nextValue()
                             saveWav = true
                             analyzerViews!!.enableSaveWavView(saveWav)
                         }
-                    } else {
-                        w("... saveWav == false")
                     }
-                } else {
-                    w("WRITE_EXTERNAL_STORAGE Permission denied by user.")
                 }
             }
         }
@@ -1102,7 +1059,6 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
                 false
             }
             R.id.tvAnalyzerLinearLogNote -> {
-                d(Thread.currentThread().stackTrace[2].methodName + " freq_scaling_mode = " + value)
                 analyzerViews!!.agvAnalyzer?.setAxisModeLinear(value)
                 editor.putString(
                     "freq_scaling_mode",
@@ -1201,7 +1157,6 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
      * By the way, the the labels are updated accordingly.
      */
     override fun ready() {
-        d(Thread.currentThread().stackTrace[2].methodName + " " + hashCode())
         analyzerViews!!.invalidateGraphView()
     }
 

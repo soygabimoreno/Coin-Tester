@@ -86,6 +86,4 @@ dependencies {
     testImplementation(TestDependency.J_UNIT)
 
     implementation 'com.mukesh:permissions:1.0.4'
-    implementation 'com.gabrielmorenoibarra.g:g:0.9.0'
-    implementation "com.gabrielmorenoibarra.k:k:0.1.0"
 }

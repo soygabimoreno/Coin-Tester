@@ -344,9 +344,6 @@ public class SpectrogramBMP {
                 bNeedClean = true;
             }
             if (!bNeedClean && iTimePointer >= _nTime) {
-                final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
-                KLog.Companion.w(METHOD_NAME + ": Should not happen!!");
-                KLog.Companion.i(METHOD_NAME + ": iTimePointer=" + iTimePointer + "  nFreqPoints=" + _nFreq + "  nTimePoints=" + _nTime);
                 bNeedClean = true;
             }
             if (bNeedClean) {
@@ -431,14 +428,12 @@ public class SpectrogramBMP {
 
         // like setupSpectrogram()
         void init(int _nFreq, int _nTime, ScreenPhysicalMapping _axis, int _bmpWidth) {
-            final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
             // _nFreq == 2^n
             if (bm.length != _bmpWidth * _nTime) {
                 bm = new int[_bmpWidth * _nTime];
                 bmShiftCache = new int[bm.length];
             }
             if (mapFreqToPixL.length != _nFreq + 1) {
-                KLog.Companion.d(METHOD_NAME + ": New");
                 mapFreqToPixL = new int[_nFreq + 1];
                 mapFreqToPixH = new int[_nFreq + 1];
             }
@@ -477,7 +472,6 @@ public class SpectrogramBMP {
 
         void fill(double[] db) {
             if (db.length - 1 != nFreq) {
-                KLog.Companion.e(Thread.currentThread().getStackTrace()[2].getMethodName() + ": WTF");
                 return;
             }
             int bmP0 = bmPt * bmpWidth;
@@ -717,15 +711,12 @@ public class SpectrogramBMP {
 
         void draw(Canvas c, SpectrogramPlot.TimeAxisMode showModeSpectrogram, ScreenPhysicalMapping axisFreq, Paint smoothBmpPaint) {
             if (bm.length == 0 || axisFreq.getNCanvasPx() == 0) {
-                KLog.Companion.d(Thread.currentThread().getStackTrace()[2].getMethodName() + ": bm.length == 0 || axisFreq.getNCanvasPx() == 0");
                 return;
             }
             int i1 = pixelAbscissa.length - 1;
             String st1 = "draw():  pixelAbscissa[" + (i1 - 1) + "]=" + pixelAbscissa[i1 - 1] + "  pixelAbscissa[" + i1 + "]=" + pixelAbscissa[i1] + "  bmpWidth=" + bmpWidth;
             String st2 = "draw():  axis.vL=" + axisFreq.getLowerBound() + "  axis.vU=" + axisFreq.getUpperBound() + "  axisFreq.nC=" + axisFreq.getNCanvasPx() + "  nTime=" + nTime;
             if (!st1.equals(st1old)) {
-                KLog.Companion.d(st1);
-                KLog.Companion.d(st2);
                 st1old = st1;
                 st2old = st2;
             }

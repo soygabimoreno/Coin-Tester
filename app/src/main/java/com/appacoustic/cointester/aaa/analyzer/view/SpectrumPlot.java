@@ -10,7 +10,6 @@ import android.graphics.Typeface;
 import com.appacoustic.cointester.aaa.analyzer.AxisTickLabels;
 import com.appacoustic.cointester.aaa.analyzer.GridLabel;
 import com.appacoustic.cointester.aaa.analyzer.ScreenPhysicalMapping;
-import com.gabrielmorenoibarra.k.util.KLog;
 
 import static java.lang.Math.ceil;
 import static java.lang.Math.floor;
@@ -94,7 +93,6 @@ public class SpectrumPlot {
     public void setFreqAxisMode(ScreenPhysicalMapping.Type mapType, double freq_lower_bound_for_log, GridLabel.Type gridType) {
         getAxisX().setMappingType(mapType, freq_lower_bound_for_log);
         freqGridLabel.setGridType(gridType);
-        KLog.Companion.i(Thread.currentThread().getStackTrace()[2].getMethodName() + ": set to mode " + mapType + " axisX.vL=" + getAxisX().getLowerBound() + "  freq_lower_bound_for_log = " + freq_lower_bound_for_log);
     }
 
     private void drawGridLines(Canvas c) {
@@ -126,7 +124,6 @@ public class SpectrumPlot {
         }
         synchronized (_db) {  // TODO: need lock on tmpDBSpectrum, but how?
             if (dBCache == null || dBCache.length != _db.length) {
-                KLog.Companion.d(Thread.currentThread().getStackTrace()[2].getMethodName() + ": new dBCache");
                 dBCache = new double[_db.length];
             }
             System.arraycopy(_db, 0, dBCache, 0, _db.length);
@@ -150,7 +147,6 @@ public class SpectrumPlot {
         }
 
         if (tmpLineXY.length != 4 * (dBCache.length)) {
-            KLog.Companion.d(Thread.currentThread().getStackTrace()[2].getMethodName() + ": new tmpLineXY");
             tmpLineXY = new float[4 * (dBCache.length)];
         }
 

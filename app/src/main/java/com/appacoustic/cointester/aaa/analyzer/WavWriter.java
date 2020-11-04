@@ -142,9 +142,7 @@ public class WavWriter {
     }
 
     public void stop() {
-        final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
         if (out == null) {
-            KLog.Companion.w(METHOD_NAME + ": Error closing " + outPath + "  null pointer");
             return;
         }
         try {
@@ -179,9 +177,7 @@ public class WavWriter {
 
     // Assume RECORDER_BPP == 16 and channels == 1
     public void pushAudioShort(short[] ss, int numOfReadShort) {
-        final String METHOD_NAME = Thread.currentThread().getStackTrace()[2].getMethodName();
         if (out == null) {
-            KLog.Companion.w(METHOD_NAME + ": Error writing " + outPath + "  null pointer");
             return;
         }
         if (byteBuffer == null || byteBuffer.length != ss.length * 2) {

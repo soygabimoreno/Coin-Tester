@@ -159,11 +159,6 @@ class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
         }
     }
 
-    fun updateActivityOnUiThread() {
-        d(Thread.currentThread().stackTrace[2].methodName + " " + hashCode())
-        runOnUiThread { G.refreshActivity(this@MainActivity) }
-    }
-
     companion object {
         val TAG = MainActivity::class.java.simpleName
         const val N_TABS = 3
