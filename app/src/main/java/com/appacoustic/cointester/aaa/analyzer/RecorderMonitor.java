@@ -2,7 +2,7 @@ package com.appacoustic.cointester.aaa.analyzer;
 
 import android.os.SystemClock;
 
-import com.gabrielmorenoibarra.k.util.KLog;
+import com.appacoustic.cointester.libFramework.KLog;
 
 /**
  * Monitor for recording.
@@ -61,7 +61,7 @@ public class RecorderMonitor {
 //        + " sampleRate = " + Math.round(sampleRateReal*100)/100.0);
         // Check if buffer overrun occur
         if (nSamplesFromTime > bufferSampleSize + nSamplesRead) {
-            KLog.w(": Buffer Overrun occurred !\n"
+            KLog.Companion.w("Buffer Overrun occurred !\n"
                     + " should read " + nSamplesFromTime + " (" + Math.round(f2 * 1000) / 1000.0 + "s),"
                     + " actual read " + nSamplesRead + " (" + Math.round(f1 * 1000) / 1000.0 + "s)\n"
                     + " diff " + (nSamplesFromTime - nSamplesRead) + " (" + Math.round((f2 - f1) * 1000) / 1e3 + "s)"
@@ -74,7 +74,7 @@ public class RecorderMonitor {
         if (nSamplesRead > 10 * sampleRate) {
             sampleRateReal = 0.9 * sampleRateReal + 0.1 * (nSamplesRead * 1000.0 / (timeNow - timeStarted));
             if (Math.abs(sampleRateReal - sampleRate) > 0.0145 * sampleRate) {  // 0.0145 = 25 cent
-                KLog.Companion.w(METHOD_NAME + ": Sample rate inaccurate, possible hardware problem !\n"
+                KLog.Companion.w("Sample rate inaccurate, possible hardware problem !\n"
                         + " should read " + nSamplesFromTime + " (" + Math.round(f2 * 1000) / 1000.0 + "s),"
                         + " actual read " + nSamplesRead + " (" + Math.round(f1 * 1000) / 1000.0 + "s)\n"
                         + " diff " + (nSamplesFromTime - nSamplesRead) + " (" + Math.round((f2 - f1) * 1000) / 1e3 + "s)"

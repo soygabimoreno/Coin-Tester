@@ -10,8 +10,8 @@ import android.preference.PreferenceActivity;
 
 import com.appacoustic.cointester.R;
 import com.appacoustic.cointester.aaa.analyzer.AnalyzerUtil;
+import com.appacoustic.cointester.libFramework.KLog;
 import com.appacoustic.cointester.presentation.AnalyzerFragment;
-import com.gabrielmorenoibarra.k.util.KLog;
 
 public class MyPreferencesActivity extends PreferenceActivity {
 

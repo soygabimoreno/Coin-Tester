@@ -8,7 +8,7 @@ import android.media.MediaRecorder;
 import android.os.Build;
 
 import com.appacoustic.cointester.R;
-import com.gabrielmorenoibarra.k.util.KLog;
+import com.appacoustic.cointester.libFramework.KLog;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -88,7 +88,7 @@ public class AnalyzerUtil {
                 }
             }
             if (same) {
-                KLog.Companion.i(METHOD_NAME + ": same data row!!");
+                KLog.Companion.i("Same data row!");
             }
             System.arraycopy(data, 0, cmpDB, 0, data.length);
         }

@@ -8,7 +8,7 @@ import com.appacoustic.cointester.aaa.analyzer.model.AnalyzerParams
 import com.appacoustic.cointester.aaa.analyzer.processing.STFT
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.aaa.utils.Tools
-import com.gabrielmorenoibarra.k.util.KLog
+import com.appacoustic.cointester.libFramework.KLog
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.max

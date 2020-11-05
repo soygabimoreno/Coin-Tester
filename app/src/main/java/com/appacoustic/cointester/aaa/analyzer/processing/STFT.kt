@@ -3,7 +3,7 @@ package com.appacoustic.cointester.aaa.analyzer.processing
 import com.appacoustic.cointester.aaa.analyzer.BesselCal
 import com.appacoustic.cointester.aaa.analyzer.model.AnalyzerParams
 import com.appacoustic.cointester.aaa.fft.RealDoubleFFT
-import com.gabrielmorenoibarra.k.util.KLog
+import com.appacoustic.cointester.libFramework.KLog
 import java.util.*
 import kotlin.math.*
 

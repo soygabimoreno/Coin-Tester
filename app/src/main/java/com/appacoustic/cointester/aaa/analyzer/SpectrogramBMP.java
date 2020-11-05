@@ -5,7 +5,7 @@ import android.graphics.Paint;
 
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView;
 import com.appacoustic.cointester.aaa.analyzer.view.SpectrogramPlot;
-import com.gabrielmorenoibarra.k.util.KLog;
+import com.appacoustic.cointester.libFramework.KLog;
 
 import java.util.Arrays;
 
@@ -444,7 +444,7 @@ public class SpectrogramBMP {
             nFreq = _nFreq;
             nTime = _nTime;
             if (_axis == null) {
-                KLog.Companion.e(METHOD_NAME + ": damn: axis == null");
+                KLog.Companion.e("damn: axis == null");
                 return;
             }
             if (axis != _axis) {  // not itself

@@ -34,6 +34,7 @@ import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView.OnReadyL
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.aaa.analyzer.view.SelectorText
 import com.appacoustic.cointester.coredomain.Coin
+import com.appacoustic.cointester.libFramework.KLog
 import kotlinx.android.synthetic.main.fragment_analyzer.*
 
 class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListener, AdapterView.OnItemClickListener, OnReadyListener {

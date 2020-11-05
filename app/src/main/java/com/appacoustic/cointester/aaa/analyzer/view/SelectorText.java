@@ -15,7 +15,7 @@ import android.view.animation.RotateAnimation;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.appacoustic.cointester.R;
-import com.gabrielmorenoibarra.k.util.KLog;
+import com.appacoustic.cointester.libFramework.KLog;
 
 /**
  * TextView that toggles through a set of values.

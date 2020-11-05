@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.appacoustic.cointester.R
 import com.appacoustic.cointester.coredomain.Coin
 import com.appacoustic.cointester.presentation.CoinsFragment.OnListFragmentInteractionListener
-import com.gabrielmorenoibarra.g.G
 
 class CoinsAdapter(
     private val items: List<Coin>,
@@ -45,10 +44,6 @@ class CoinsAdapter(
         holder.ivItemCoin!!.setImageResource(head)
         holder.tvItemCoinName!!.text = name
         holder.tvItemCoinPlace!!.text = place
-        G.setAlphaSelector(
-            holder.rlItemCoinParent,
-            holder.btnItemCoin
-        )
         holder.rlItemCoinParent!!.setOnClickListener { listener?.onListFragmentInteraction(items[holder.adapterPosition]) }
         holder.btnItemCoin!!.setOnClickListener {
             val dialogBuilder = AlertDialog.Builder(context!!)

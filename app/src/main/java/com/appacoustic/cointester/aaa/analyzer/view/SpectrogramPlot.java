@@ -12,7 +12,7 @@ import com.appacoustic.cointester.aaa.analyzer.GridLabel;
 import com.appacoustic.cointester.aaa.analyzer.ScreenPhysicalMapping;
 import com.appacoustic.cointester.aaa.analyzer.SpectrogramBMP;
 import com.appacoustic.cointester.aaa.analyzer.model.AnalyzerParams;
-import com.gabrielmorenoibarra.k.util.KLog;
+import com.appacoustic.cointester.libFramework.KLog;
 
 /**
  * The spectrogram plot part of AnalyzerGraphic.
@@ -118,7 +118,7 @@ public class SpectrogramPlot {
         nFreqPoints = fftLen / 2;           // no direct current term
         nTimePoints = (int) Math.ceil(timeWatch / timeInc);
         spectrogramBMP.init(nFreqPoints, nTimePoints, axisFreq);
-        KLog.i(
+        KLog.Companion.i(
                 "sampleRate    = " + sampleRate +
                         "\n  fFTLength        = " + fftLen +
                         "\n  timeDurationE = " + timeDurationE + " * " + nAve + "  (" + nTimePoints + " points)" +

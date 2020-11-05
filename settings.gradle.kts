@@ -1,5 +1,5 @@
 include(
     ":app",
     ":coreDomain",
-    ":framework"
+    ":libFramework"
 )

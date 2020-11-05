@@ -17,8 +17,8 @@ import android.widget.TextView;
 
 import com.appacoustic.cointester.R;
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView;
+import com.appacoustic.cointester.libFramework.KLog;
 import com.appacoustic.cointester.presentation.AnalyzerFragment;
-import com.gabrielmorenoibarra.k.util.KLog;
 
 import java.text.DecimalFormat;
 
@@ -80,7 +80,7 @@ public class RangeViewDialogC {
             for (int i = 0; i < rr.length; i++) {
                 rr[i] = AnalyzerUtil.getDouble(sharedPref, "view_range_rr_" + i, 0.0 / 0.0);
                 if (Double.isNaN(rr[i])) {  // not properly initialized
-                    KLog.Companion.w(METHOD_NAME + ": rr is not properly initialized");
+                    KLog.Companion.w("rr is not properly initialized");
                     rr = null;
                     break;
                 }

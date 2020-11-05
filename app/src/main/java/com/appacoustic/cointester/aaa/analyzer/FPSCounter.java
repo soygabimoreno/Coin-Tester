@@ -2,7 +2,7 @@ package com.appacoustic.cointester.aaa.analyzer;
 
 import android.os.SystemClock;
 
-import com.gabrielmorenoibarra.k.util.KLog;
+import com.appacoustic.cointester.libFramework.KLog;
 
 /**
  * Frames Per Second Counter.

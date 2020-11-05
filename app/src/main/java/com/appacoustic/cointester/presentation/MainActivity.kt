@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
@@ -19,10 +20,8 @@ import com.appacoustic.cointester.aaa.view.CustomViewPager
 import com.appacoustic.cointester.coredomain.Coin
 import com.appacoustic.cointester.presentation.CoinsFragment.OnListFragmentInteractionListener
 import com.appacoustic.cointester.presentation.MainActivity
-import com.gabrielmorenoibarra.g.G
-import com.gabrielmorenoibarra.g.GGraphics
-import com.gabrielmorenoibarra.k.util.KLog.Companion.d
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlin.math.floor
 
 class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
 
@@ -55,19 +54,26 @@ class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
         return true
     }
 
+    fun dpToPx(
+        context: Context,
+        dp: Int
+    ): Int {
+        return floor(dp * (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT).toDouble()).toInt()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menuMainAbout -> {
                 val alertDialog = AlertDialog.Builder(this).create()
                 alertDialog.setTitle(getString(R.string.developed_by))
                 val iv = ImageView(this)
-                val px = GGraphics.dpToPx(
+                val px = dpToPx(
                     this,
                     10
                 )
                 iv.setPadding(
                     px,
-                    GGraphics.dpToPx(
+                    dpToPx(
                         this,
                         20
                     ),

@@ -3,7 +3,7 @@ package com.appacoustic.cointester.aaa.analyzer.settings;
 import android.content.Context;
 import android.net.Uri;
 
-import com.gabrielmorenoibarra.k.util.KLog;
+import com.appacoustic.cointester.libFramework.KLog;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

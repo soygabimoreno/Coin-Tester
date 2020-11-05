@@ -1,6 +1,6 @@
 package com.appacoustic.cointester.aaa.analyzer;
 
-import com.gabrielmorenoibarra.k.util.KLog;
+import com.appacoustic.cointester.libFramework.KLog;
 
 import static java.lang.Math.ceil;
 import static java.lang.Math.floor;
@@ -126,7 +126,7 @@ public class GridLabel {
         }
 
         if (gridPointsArray == null || gridPointsArray.length != 2) {
-            KLog.Companion.e(METHOD_NAME + " : empty array!!");
+            KLog.Companion.e("empty array!!");
             return 0;
         }
 

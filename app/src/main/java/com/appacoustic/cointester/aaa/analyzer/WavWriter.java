@@ -19,7 +19,7 @@ import android.annotation.SuppressLint;
 import android.os.Environment;
 import android.os.StatFs;
 
-import com.gabrielmorenoibarra.k.util.KLog;
+import com.appacoustic.cointester.libFramework.KLog;
 
 import java.io.File;
 import java.io.FileOutputStream;

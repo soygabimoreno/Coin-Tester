@@ -5,7 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.appacoustic.cointester.framework.requestPermissions
+import com.appacoustic.cointester.libFramework.requestPermissions
 
 class StartActivity : AppCompatActivity() {
 

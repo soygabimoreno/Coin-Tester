@@ -2,7 +2,7 @@ package com.appacoustic.cointester
 
 import android.app.Application
 import com.appacoustic.cointester.aaa.AppResources
-import com.gabrielmorenoibarra.k.util.KLog
+import com.appacoustic.cointester.libFramework.KLog
 
 class App : Application() {
 

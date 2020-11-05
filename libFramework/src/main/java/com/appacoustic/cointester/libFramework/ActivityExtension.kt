@@ -1,4 +1,4 @@
-package com.appacoustic.cointester.framework
+package com.appacoustic.cointester.libFramework
 
 import android.app.Activity
 import android.content.Intent
