@@ -163,35 +163,35 @@ class SamplingLoopThread(
 
         KLog.i(
             "Starting recorder... \n" +
-                    "Source: " + params.audioSourceName + "\n" +
-                    String.format(
-                        "Sample rate: %d Hz (requested %d Hz)\n",
-                        record.sampleRate,
-                        sampleRate
-                    ) +
-                    String.format(
-                        "Min buffer size: %d samples, %d bytes\n",
-                        minBufferSize / bytesPerSample,
-                        minBufferSize
-                    ) +
-                    String.format(
-                        "Buffer size: %d samples, %d bytes\n",
-                        bufferSize,
-                        bytesPerSample * bufferSize
-                    ) +
-                    String.format(
-                        "Read chunk size: %d samples, %d bytes\n",
-                        readChunkSize,
-                        bytesPerSample * readChunkSize
-                    ) +
-                    String.format(
-                        "FFT length: %d\n",
-                        fftLength
-                    ) +
-                    String.format(
-                        "N FFT average: %d\n",
-                        nFftAverage
-                    )
+                "Source: " + params.audioSourceName + "\n" +
+                String.format(
+                    "Sample rate: %d Hz (requested %d Hz)\n",
+                    record.sampleRate,
+                    sampleRate
+                ) +
+                String.format(
+                    "Min buffer size: %d samples, %d bytes\n",
+                    minBufferSize / bytesPerSample,
+                    minBufferSize
+                ) +
+                String.format(
+                    "Buffer size: %d samples, %d bytes\n",
+                    bufferSize,
+                    bytesPerSample * bufferSize
+                ) +
+                String.format(
+                    "Read chunk size: %d samples, %d bytes\n",
+                    readChunkSize,
+                    bytesPerSample * readChunkSize
+                ) +
+                String.format(
+                    "FFT length: %d\n",
+                    fftLength
+                ) +
+                String.format(
+                    "N FFT average: %d\n",
+                    nFftAverage
+                )
         )
         params.sampleRate = record.sampleRate
 
