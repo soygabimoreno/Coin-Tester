@@ -3,13 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.appacoustic.cointester.presentation.MainActivity">
     <item
-        android:id="@+id/menuMainContact"
-        android:title="@string/menu_main_contact"/>
-    <item
-        android:id="@+id/menuMainAbout"
-        android:title="@string/menu_main_about"/>
-
-    <item
         android:id="@+id/menuMainUserManual"
         android:title="@string/menu_main_user_manual"/>
 

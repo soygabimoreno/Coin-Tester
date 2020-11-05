@@ -256,8 +256,6 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menuMainAbout -> false
-            R.id.menuMainContact -> false
             R.id.menuMainUserManual -> {
                 analyzerViews!!.showInstructions()
                 true

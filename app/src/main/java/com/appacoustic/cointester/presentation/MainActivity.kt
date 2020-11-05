@@ -1,21 +1,17 @@
 package com.appacoustic.cointester.presentation
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageView
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.appacoustic.cointester.R
-import com.appacoustic.cointester.aaa.utils.DataManager
 import com.appacoustic.cointester.aaa.view.CustomViewPager
 import com.appacoustic.cointester.coredomain.Coin
 import com.appacoustic.cointester.presentation.CoinsFragment.OnListFragmentInteractionListener
@@ -63,54 +59,6 @@ class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menuMainAbout -> {
-                val alertDialog = AlertDialog.Builder(this).create()
-                alertDialog.setTitle(getString(R.string.developed_by))
-                val iv = ImageView(this)
-                val px = dpToPx(
-                    this,
-                    10
-                )
-                iv.setPadding(
-                    px,
-                    dpToPx(
-                        this,
-                        20
-                    ),
-                    px,
-                    px
-                )
-                iv.setImageDrawable(getDrawable(R.drawable.ic_logo_planet_devices))
-                iv.setOnClickListener {
-                    visitWeb()
-                    alertDialog.hide()
-                }
-                alertDialog.setView(iv)
-                alertDialog.setButton(
-                    DialogInterface.BUTTON_POSITIVE,
-                    getString(R.string.visit_web)
-                ) { dialog, which -> visitWeb() }
-                alertDialog.setCancelable(true)
-                alertDialog.show()
-                true
-            }
-            R.id.menuMainContact -> {
-                val intent = Intent(
-                    Intent.ACTION_SENDTO,
-                    Uri.parse("mailto:" + DataManager.getInstance().contactEmail)
-                )
-                intent.putExtra(
-                    Intent.EXTRA_SUBJECT,
-                    "EMAIL FROM APP COIN TESTER"
-                )
-                startActivity(
-                    Intent.createChooser(
-                        intent,
-                        getString(R.string.select_email_sending_app)
-                    )
-                )
-                true
-            }
             R.id.menuMainUserManual -> //                analyzerViews.showInstructions();
                 false
             R.id.menuMainPreferences -> //                Intent settings = new Intent(getBaseContext(), MyPreferencesActivity.class);
