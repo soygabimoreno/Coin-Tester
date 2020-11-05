@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity(),
             menu
         )
 
-        menu.findItem(R.id.menuMainInstructions).isVisible = !BuildConfig.DEBUG
+        menu.findItem(R.id.menuMainInstructions).isVisible = BuildConfig.DEBUG
         return true
     }
 
