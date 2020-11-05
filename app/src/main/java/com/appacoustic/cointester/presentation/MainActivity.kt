@@ -24,10 +24,9 @@ class MainActivity : AppCompatActivity(),
     OnListFragmentInteractionListener {
 
     companion object {
-        const val N_TABS = 3
+        const val N_TABS = 2
         const val COINS_POS = 0
         const val CHECKER_POS = 1
-        const val TUTORIAL_POS = 2
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,7 +94,6 @@ class MainActivity : AppCompatActivity(),
             when (position) {
                 COINS_POS -> return CoinsFragment.newInstance()
                 CHECKER_POS -> return AnalyzerFragment.newInstance()
-                TUTORIAL_POS -> return TutorialFragment.newInstance()
             }
             return return CoinsFragment.newInstance()
         }
@@ -108,7 +106,6 @@ class MainActivity : AppCompatActivity(),
             when (position) {
                 COINS_POS -> return context.getString(R.string.coins)
                 CHECKER_POS -> return context.getString(R.string.checker)
-                TUTORIAL_POS -> return context.getString(R.string.help)
             }
             return null
         }
