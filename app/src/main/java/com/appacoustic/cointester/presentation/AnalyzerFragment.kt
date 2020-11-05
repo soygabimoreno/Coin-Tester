@@ -256,10 +256,6 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menuMainUserManual -> {
-                analyzerViews!!.showInstructions()
-                true
-            }
             R.id.menuMainPreferences -> {
                 val settings = Intent(
                     activity!!.baseContext,

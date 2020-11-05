@@ -9,10 +9,8 @@
     <string name="checker">CHECKER</string>
     <string name="help">HELP</string>
     <string name="datasheet">Datasheet</string>
-    <string name="select_email_sending_app">Select Email Sending App</string>
-    <string name="visit_web">Visit web</string>
     <string name="tutorial">Tutorial</string>
-    <string name="developed_by">Developed by</string>
+    <string name="close">Close</string>
 
     <!-- Analyzer -->
     <string name="preferences">Preferences</string>
@@ -52,7 +50,7 @@
     <!-- Menus -->
     <string name="menu_main_about">About</string>
     <string name="menu_main_contact">Contact</string>
-    <string name="menu_main_user_manual">User Manual</string>
+    <string name="menu_main_instructions">Instructions</string>
     <string name="menu_main_preferences">Preferences</string>
     <string name="menu_main_audio_sources_checker">Audio Sources Checker</string>
     <string name="menu_main_ranges">Ranges</string>

@@ -1,32 +1,33 @@
 package com.appacoustic.cointester.presentation
 
+import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.util.DisplayMetrics
+import android.text.method.LinkMovementMethod
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import com.appacoustic.cointester.BuildConfig
 import com.appacoustic.cointester.R
+import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.aaa.view.CustomViewPager
 import com.appacoustic.cointester.coredomain.Coin
 import com.appacoustic.cointester.presentation.CoinsFragment.OnListFragmentInteractionListener
-import com.appacoustic.cointester.presentation.MainActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlin.math.floor
 
-class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
+class MainActivity : AppCompatActivity(),
+    OnListFragmentInteractionListener {
 
-    override fun onListFragmentInteraction(item: Coin) {
-        viewPager.currentItem = CHECKER_POS
-        (viewPager.adapter!!.instantiateItem(
-            viewPager,
-            CHECKER_POS
-        ) as AnalyzerFragment).loadCoin(item)
+    companion object {
+        const val N_TABS = 3
+        const val COINS_POS = 0
+        const val CHECKER_POS = 1
+        const val TUTORIAL_POS = 2
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,20 +48,18 @@ class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
             R.menu.menu_main,
             menu
         )
-        return true
-    }
 
-    fun dpToPx(
-        context: Context,
-        dp: Int
-    ): Int {
-        return floor(dp * (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT).toDouble()).toInt()
+        menu.findItem(R.id.menuMainInstructions).isVisible = !BuildConfig.DEBUG
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menuMainUserManual -> //                analyzerViews.showInstructions();
-                false
+            R.id.menuMainInstructions -> {
+                showInstructions()
+                true
+            }
+
             R.id.menuMainPreferences -> //                Intent settings = new Intent(getBaseContext(), MyPreferencesActivity.class);
 //                settings.putExtra(MY_PREFERENCES_MSG_SOURCE_ID, analyzerParam.audioSourceIDs);
 //                settings.putExtra(MY_PREFERENCES_MSG_SOURCE_NAME, analyzerParam.audioSourcesEntries);
@@ -77,10 +76,12 @@ class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
         }
     }
 
-    private fun visitWeb() {
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse("http://planetdevices.com")
-        startActivity(intent)
+    override fun onListFragmentInteraction(item: Coin) {
+        viewPager.currentItem = CHECKER_POS
+        (viewPager.adapter!!.instantiateItem(
+            viewPager,
+            CHECKER_POS
+        ) as AnalyzerFragment).loadCoin(item)
     }
 
     val vp: CustomViewPager
@@ -113,11 +114,22 @@ class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
         }
     }
 
-    companion object {
-        val TAG = MainActivity::class.java.simpleName
-        const val N_TABS = 3
-        const val COINS_POS = 0
-        const val CHECKER_POS = 1
-        const val TUTORIAL_POS = 2
+    private fun showInstructions() {
+        val tv = TextView(this)
+        tv.movementMethod = LinkMovementMethod.getInstance()
+        tv.setTextSize(
+            TypedValue.COMPLEX_UNIT_SP,
+            15f
+        )
+        tv.text = AnalyzerViews.fromHtml(getString(R.string.instructions_text))
+        AlertDialog.Builder(this)
+            .setTitle(R.string.instructions_title)
+            .setView(tv)
+            .setNegativeButton(
+                R.string.instructions_dismiss,
+                null
+            )
+            .create()
+            .show()
     }
 }

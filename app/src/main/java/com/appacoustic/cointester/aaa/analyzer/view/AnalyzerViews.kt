@@ -2,8 +2,6 @@ package com.appacoustic.cointester.aaa.analyzer.view
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
@@ -12,7 +10,6 @@ import android.os.Handler
 import android.os.SystemClock
 import android.text.Html
 import android.text.Spanned
-import android.text.method.LinkMovementMethod
 import android.text.method.ScrollingMovementMethod
 import android.util.TypedValue
 import android.view.Gravity
@@ -170,37 +167,6 @@ class AnalyzerViews(
         }
     }
 
-    fun showInstructions() {
-        val tv = TextView(activity)
-        tv.movementMethod = LinkMovementMethod.getInstance()
-        tv.setTextSize(
-            TypedValue.COMPLEX_UNIT_SP,
-            15f
-        )
-        tv.text = fromHtml(activity.getString(R.string.instructions_text))
-        var pInfo: PackageInfo? = null
-        var version: String? = """
-${activity.getString(R.string.app_name)}  Version: """
-        try {
-            pInfo = activity.packageManager.getPackageInfo(
-                activity.packageName,
-                0
-            )
-            version += pInfo.versionName
-        } catch (e: PackageManager.NameNotFoundException) {
-            version += "(Unknown)"
-        }
-        tv.append(version)
-        AlertDialog.Builder(activity)
-            .setTitle(R.string.instructions_title)
-            .setView(tv)
-            .setNegativeButton(
-                R.string.dismiss,
-                null
-            )
-            .create().show()
-    }
-
     fun showPermissionExplanation(resId: Int) {
         val tv = TextView(activity)
         tv.movementMethod = ScrollingMovementMethod()
@@ -209,7 +175,7 @@ ${activity.getString(R.string.app_name)}  Version: """
             .setTitle(R.string.permission_explanation_title)
             .setView(tv)
             .setNegativeButton(
-                R.string.dismiss,
+                R.string.close,
                 null
             )
             .create().show()
