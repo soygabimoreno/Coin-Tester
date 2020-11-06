@@ -16,16 +16,12 @@ import com.appacoustic.cointester.BuildConfig
 import com.appacoustic.cointester.R
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.aaa.view.CustomViewPager
-import com.appacoustic.cointester.coredomain.Coin
-import com.appacoustic.cointester.presentation.CoinsFragment.OnListFragmentInteractionListener
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(),
-    OnListFragmentInteractionListener {
+class MainActivity : AppCompatActivity() {
 
     companion object {
-        const val N_TABS = 2
-        const val COINS_POS = 0
+        const val N_TABS = 1
         const val CHECKER_POS = 1
     }
 
@@ -75,14 +71,6 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    override fun onListFragmentInteraction(item: Coin) {
-        viewPager.currentItem = CHECKER_POS
-        (viewPager.adapter!!.instantiateItem(
-            viewPager,
-            CHECKER_POS
-        ) as AnalyzerFragment).loadCoin(item)
-    }
-
     val vp: CustomViewPager
         get() = viewPager
 
@@ -92,10 +80,9 @@ class MainActivity : AppCompatActivity(),
     ) : FragmentPagerAdapter(fm!!) {
         override fun getItem(position: Int): Fragment {
             when (position) {
-                COINS_POS -> return CoinsFragment.newInstance()
                 CHECKER_POS -> return AnalyzerFragment.newInstance()
             }
-            return return CoinsFragment.newInstance()
+            return AnalyzerFragment.newInstance()
         }
 
         override fun getCount(): Int {
@@ -104,7 +91,6 @@ class MainActivity : AppCompatActivity(),
 
         override fun getPageTitle(position: Int): CharSequence? {
             when (position) {
-                COINS_POS -> return context.getString(R.string.coins)
                 CHECKER_POS -> return context.getString(R.string.checker)
             }
             return null
