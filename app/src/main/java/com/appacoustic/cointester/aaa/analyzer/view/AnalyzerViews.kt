@@ -18,13 +18,11 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.*
 import androidx.annotation.StringRes
-import androidx.appcompat.widget.AppCompatCheckBox
 import com.appacoustic.cointester.R
 import com.appacoustic.cointester.aaa.analyzer.AnalyzerUtil
 import com.appacoustic.cointester.aaa.analyzer.SBNumFormat
 import com.appacoustic.cointester.aaa.analyzer.model.AnalyzerParams
 import com.appacoustic.cointester.presentation.AnalyzerFragment
-import com.appacoustic.cointester.presentation.MainActivity
 import kotlinx.android.synthetic.main.fragment_analyzer.*
 
 /**
@@ -602,6 +600,5 @@ class AnalyzerViews(
             R.id.btnAnalyzerAverage
         )
         setTextViewFontSize()
-        activity.cbAnalyzerCheckerStuckTab!!.setOnClickListener { v -> (activity as MainActivity).vp.stuck = (v as AppCompatCheckBox).isChecked }
     }
 }

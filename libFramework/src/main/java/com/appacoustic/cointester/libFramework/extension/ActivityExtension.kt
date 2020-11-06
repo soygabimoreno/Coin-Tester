@@ -1,9 +1,10 @@
-package com.appacoustic.cointester.libFramework
+package com.appacoustic.cointester.libFramework.extension
 
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import com.appacoustic.cointester.libFramework.R
 import com.gabrielmorenoibarra.g.G
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport

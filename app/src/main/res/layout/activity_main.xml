@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
-    style="@style/MatchParent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -19,23 +18,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabs"
+    <FrameLayout
+        android:id="@+id/flContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/gradient"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"/>
-
-    <com.appacoustic.cointester.aaa.view.CustomViewPager
-        android:id="@+id/viewPager"
-        style="@style/MatchParent"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tabs"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
