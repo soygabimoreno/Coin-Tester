@@ -13,14 +13,12 @@ import com.appacoustic.cointester.R
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.libFramework.extension.navigateTo
 import com.appacoustic.cointester.presentation.analyzer.AnalyzerFragment
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
         navigateTo(
             R.id.flContainer,
             AnalyzerFragment.newInstance()

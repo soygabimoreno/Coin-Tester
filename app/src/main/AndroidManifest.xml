@@ -30,7 +30,7 @@
             android:name=".presentation.main.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme"/>
         <activity
             android:name="com.appacoustic.cointester.aaa.analyzer.settings.MyPreferencesActivity"
             android:label="@string/preferences"

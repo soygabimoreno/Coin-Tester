@@ -2,13 +2,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/MatchParent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@drawable/gradient"
     android:orientation="vertical"
-    android:paddingStart="@dimen/activity_padding"
-    android:paddingTop="@dimen/activity_padding"
-    android:paddingEnd="@dimen/activity_padding"
-    android:paddingBottom="64dp">
+    android:padding="16dp">
 
     <com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView
         android:id="@+id/agvAnalyzer"
@@ -26,18 +24,23 @@
             android:id="@+id/tvAnalyzerRMS"
             style="@style/TvAnalyzer"
             android:layout_width="@dimen/tv_RMS_layout_width"
+            android:layout_height="wrap_content"
             android:lines="2"
             android:text="@string/tv_rms_text"/>
 
         <TextView
             android:id="@+id/tvAnalyzerMarker"
             style="@style/TvAnalyzer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_toEndOf="@id/tvAnalyzerRMS"
             android:text="@string/tv_marker_text"/>
 
         <TextView
             android:id="@+id/tvAnalyzerPeak"
             style="@style/TvAnalyzer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@id/tvAnalyzerMarker"
             android:layout_toEndOf="@id/tvAnalyzerRMS"
             android:text="@string/tv_peak_text"/>
@@ -46,6 +49,8 @@
     <TextView
         android:id="@+id/tvAnalyzerRec"
         style="@style/TvAnalyzer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/tv_rec_text"/>
 
     <LinearLayout
@@ -57,24 +62,29 @@
         <com.appacoustic.cointester.aaa.analyzer.view.SelectorText
             android:id="@+id/tvAnalyzerMonitorRecord"
             style="@style/SelectorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:items="Mon Rec"
             app:itemsDisplay="@string/tv_monitor_record"/>
 
         <Button
             android:id="@+id/btnAnalyzerSampleRate"
-            style="@style/BtnAnalyzer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textSize="@dimen/btn_text_font_size"
             tools:text="8000"/>
 
         <Button
             android:id="@+id/btnAnalyzerFFTLength"
-            style="@style/BtnAnalyzer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textSize="@dimen/btn_text_font_size"
             tools:text="1024"/>
 
         <Button
             android:id="@+id/btnAnalyzerAverage"
-            style="@style/BtnAnalyzer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textSize="@dimen/btn_text_font_size"
             tools:text="1"/>
     </LinearLayout>
@@ -87,12 +97,16 @@
         <com.appacoustic.cointester.aaa.analyzer.view.SelectorText
             android:id="@+id/tvAnalyzerSpectrumSpectrogramMode"
             style="@style/SelectorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:items="spum spam"
             app:itemsDisplay="@string/tv_spectrum_spectrogram_mode"/>
 
         <com.appacoustic.cointester.aaa.analyzer.view.SelectorText
             android:id="@+id/tvAnalyzerDBDBA"
             style="@style/SelectorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:items="dB dBA"
             app:itemsDisplay="@string/tv_dB_dBA"/>
     </LinearLayout>
@@ -105,12 +119,16 @@
         <com.appacoustic.cointester.aaa.analyzer.view.SelectorText
             android:id="@+id/tvAnalyzerLinearLogNote"
             style="@style/SelectorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:items="linear log note"
             app:itemsDisplay="@string/tv_linear_log_note"/>
 
         <com.appacoustic.cointester.aaa.analyzer.view.SelectorText
             android:id="@+id/tvAnalyzerRunStop"
             style="@style/SelectorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:items="run stop"
             app:itemsDisplay="@string/tv_run_stop"/>
     </LinearLayout>
