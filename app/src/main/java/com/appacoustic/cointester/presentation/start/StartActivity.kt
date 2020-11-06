@@ -1,4 +1,4 @@
-package com.appacoustic.cointester.presentation
+package com.appacoustic.cointester.presentation.start
 
 import android.Manifest
 import android.app.Activity
@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.appacoustic.cointester.libFramework.extension.requestPermissions
+import com.appacoustic.cointester.presentation.main.MainActivity
 
 class StartActivity : AppCompatActivity() {
 

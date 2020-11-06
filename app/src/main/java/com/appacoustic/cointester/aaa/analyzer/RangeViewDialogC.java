@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.appacoustic.cointester.R;
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView;
 import com.appacoustic.cointester.libFramework.KLog;
-import com.appacoustic.cointester.presentation.AnalyzerFragment;
+import com.appacoustic.cointester.presentation.analyzer.AnalyzerFragment;
 
 import java.text.DecimalFormat;
 

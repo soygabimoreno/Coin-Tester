@@ -1,4 +1,4 @@
-package com.appacoustic.cointester.presentation
+package com.appacoustic.cointester.presentation.main
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -12,6 +12,7 @@ import com.appacoustic.cointester.BuildConfig
 import com.appacoustic.cointester.R
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.libFramework.extension.navigateTo
+import com.appacoustic.cointester.presentation.analyzer.AnalyzerFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

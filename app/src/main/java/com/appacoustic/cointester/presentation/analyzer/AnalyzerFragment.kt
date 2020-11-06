@@ -1,4 +1,4 @@
-package com.appacoustic.cointester.presentation
+package com.appacoustic.cointester.presentation.analyzer
 
 import android.Manifest
 import android.app.Activity
@@ -33,7 +33,6 @@ import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView.OnReadyListener
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.aaa.analyzer.view.SelectorText
-import com.appacoustic.cointester.coredomain.Coin
 import com.appacoustic.cointester.libFramework.KLog
 import kotlinx.android.synthetic.main.fragment_analyzer.*
 
@@ -86,10 +85,7 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
             view,
             savedInstanceState
         )
-        fabAnalyzerChecker.setOnClickListener {
-            //                canvasSpectrum.drawColor(Color.WHITE);
-//                recordPerform();
-        }
+
         val audioSourcesString = resources.getStringArray(R.array.audio_sources)
         val audioSources = IntArray(audioSourcesString.size)
         for (i in audioSourcesString.indices) {
@@ -1153,12 +1149,6 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
      */
     override fun ready() {
         analyzerViews!!.invalidateGraphView()
-    }
-
-    fun loadCoin(item: Coin) {
-        tvAnalyzerCheckerCoinName.text = item.name
-        tvAnalyzerCheckerCoinPlace.text = item.place
-        fabAnalyzerChecker.setImageResource(item.head)
     }
 
     companion object {

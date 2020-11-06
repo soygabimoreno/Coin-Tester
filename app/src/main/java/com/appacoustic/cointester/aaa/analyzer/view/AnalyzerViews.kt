@@ -22,7 +22,7 @@ import com.appacoustic.cointester.R
 import com.appacoustic.cointester.aaa.analyzer.AnalyzerUtil
 import com.appacoustic.cointester.aaa.analyzer.SBNumFormat
 import com.appacoustic.cointester.aaa.analyzer.model.AnalyzerParams
-import com.appacoustic.cointester.presentation.AnalyzerFragment
+import com.appacoustic.cointester.presentation.analyzer.AnalyzerFragment
 import kotlinx.android.synthetic.main.fragment_analyzer.*
 
 /**
