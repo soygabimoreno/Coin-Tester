@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.appacoustic.cointester.R;
-import com.appacoustic.cointester.aaa.AppResources;
 import com.appacoustic.cointester.aaa.analyzer.FPSCounter;
 import com.appacoustic.cointester.aaa.analyzer.GridLabel;
 import com.appacoustic.cointester.aaa.analyzer.ScreenPhysicalMapping;
@@ -266,8 +265,7 @@ public class AnalyzerGraphicView extends View {
     }
 
     public void setAxisModeLinear(String mode) {
-        AppResources appResources = AppResources.getInstance();
-        boolean linear = mode.equals(appResources.getString(R.string.linear));
+        boolean linear = mode.equals(context.getString(R.string.linear));
         ScreenPhysicalMapping.Type mapType;
         GridLabel.Type gridType;
         if (linear) {
@@ -275,7 +273,7 @@ public class AnalyzerGraphicView extends View {
             gridType = GridLabel.Type.FREQ;
         } else {
             mapType = ScreenPhysicalMapping.Type.LOG;
-            gridType = mode.equals(appResources.getString(R.string.note)) ? GridLabel.Type.FREQ_NOTE : GridLabel.Type.FREQ_LOG;
+            gridType = mode.equals(context.getString(R.string.note)) ? GridLabel.Type.FREQ_NOTE : GridLabel.Type.FREQ_LOG;
         }
         spectrumPlot.setFreqAxisMode(mapType, freqLowerBoundForLog, gridType);
         spectrogramPlot.setFreqAxisMode(mapType, freqLowerBoundForLog, gridType);
