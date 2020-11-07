@@ -1,6 +1,8 @@
 package com.appacoustic.cointester.presentation.main
 
 import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
 import android.text.method.LinkMovementMethod
 import android.util.TypedValue
 import android.view.Menu
@@ -19,6 +21,16 @@ class MainActivity : StatelessBaseActivity<
     MainViewModel.ViewEvents,
     MainViewModel
     >() {
+
+    companion object {
+        fun launch(context: Context) {
+            val intent = Intent(
+                context,
+                MainActivity::class.java
+            )
+            context.startActivity(intent)
+        }
+    }
 
     override val layoutResId = R.layout.activity_main
     override val viewModel: MainViewModel by viewModel()

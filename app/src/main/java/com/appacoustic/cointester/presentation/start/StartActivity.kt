@@ -1,37 +1,46 @@
 package com.appacoustic.cointester.presentation.start
 
 import android.Manifest
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.appacoustic.cointester.presentation.main.MainActivity
 
 class StartActivity : AppCompatActivity() {
 
-    private lateinit var activity: Activity
+    private val requestRecordAudioPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                requestWriteExternalStoragePermission()
+            } else {
+                // TODO
+            }
+        }
+
+    private val requestWriteExternalStoragePermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                navigateToMain()
+            } else {
+                // TODO
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity = this@StartActivity
-        requestPermissions()
+        requestRecordAudioPermission()
     }
 
-    private fun requestPermissions() {
-        val permissions = mutableSetOf<String>()
-        permissions.add(Manifest.permission.RECORD_AUDIO)
-        permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-        // TODO: Request permissions
-
-        init()
+    private fun requestRecordAudioPermission() {
+        requestRecordAudioPermission.launch(Manifest.permission.RECORD_AUDIO)
     }
 
-    private fun init() {
-        val intent = Intent(
-            activity,
-            MainActivity::class.java
-        )
-        startActivity(intent)
+    private fun requestWriteExternalStoragePermission() {
+        requestWriteExternalStoragePermission.launch(Manifest.permission.RECORD_AUDIO)
+    }
+
+    private fun navigateToMain() {
+        MainActivity.launch(this)
+        finish()
     }
 }
