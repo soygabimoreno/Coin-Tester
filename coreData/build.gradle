@@ -1,0 +1,7 @@
+apply from: "$rootDir/common-kotlin-library.gradle"
+
+dependencies {
+    implementation project(ModulesDependency.CORE_DOMAIN)
+
+    implementation(KoinDependency.KOIN_CORE)
+}
