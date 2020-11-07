@@ -18,6 +18,8 @@ object Version {
 object TestVersion {
     val J_UNIT = "4.13"
     val MOCKK = "1.10.0"
+    val ARCH_CORE = "2.1.0"
+    val COROUTINES = "1.3.9"
 
     val J_UNIT_EXT = "1.1.2"
     val TEST_RUNNER = "1.3.0"
@@ -79,6 +81,8 @@ object ArrowDependency {
 object TestDependency {
     val J_UNIT = "junit:junit:${TestVersion.J_UNIT}"
     val MOCKK = "io.mockk:mockk:${TestVersion.MOCKK}"
+    val ARCH_CORE_TESTING = "androidx.arch.core:core-testing:${TestVersion.ARCH_CORE}"
+    val COROUTINES_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${TestVersion.COROUTINES}"
 }
 
 object AndroidTestDependency {

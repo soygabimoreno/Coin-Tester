@@ -90,6 +90,9 @@ dependencies {
     implementation KoinDependency.KOIN_VIEW_MODEL
 
     testImplementation(TestDependency.J_UNIT)
+    testImplementation TestDependency.MOCKK
+    testImplementation TestDependency.ARCH_CORE_TESTING
+    testImplementation TestDependency.COROUTINES_TEST
 
     implementation 'com.mukesh:permissions:1.0.4'
 }
