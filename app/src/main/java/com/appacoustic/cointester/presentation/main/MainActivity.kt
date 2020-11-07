@@ -1,29 +1,29 @@
 package com.appacoustic.cointester.presentation.main
 
 import android.app.AlertDialog
-import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.appacoustic.cointester.BuildConfig
 import com.appacoustic.cointester.R
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerViews
+import com.appacoustic.cointester.libFramework.extension.exhaustive
 import com.appacoustic.cointester.libFramework.extension.navigateTo
+import com.appacoustic.cointester.libbase.activity.StatelessBaseActivity
 import com.appacoustic.cointester.presentation.analyzer.AnalyzerFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : StatelessBaseActivity<
+    MainViewModel.ViewEvents,
+    MainViewModel
+    >() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        navigateTo(
-            R.id.flContainer,
-            AnalyzerFragment.newInstance()
-        )
-    }
+    override val layoutResId = R.layout.activity_main
+    override val viewModel: MainViewModel by viewModel()
+
+    override fun initUI() {}
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(
@@ -75,5 +75,18 @@ class MainActivity : AppCompatActivity() {
             )
             .create()
             .show()
+    }
+
+    override fun handleViewEvent(viewEvent: MainViewModel.ViewEvents) {
+        when (viewEvent) {
+            is MainViewModel.ViewEvents.NavigateToAnalyzer -> navigateToAnalyzer()
+        }.exhaustive
+    }
+
+    private fun navigateToAnalyzer() {
+        navigateTo(
+            R.id.flContainer,
+            AnalyzerFragment.newInstance()
+        )
     }
 }
