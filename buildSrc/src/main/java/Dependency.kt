@@ -2,8 +2,10 @@ object Version {
     val KOTLIN = "1.4.10"
 
     val CORE_KTX = "1.3.1"
+    val COROUTINES = "1.3.9"
     val APP_COMPAT = "1.2.0"
     val CONSTRAINT_LAYOUT = "2.0.1"
+    val LIFECYCLE = "2.2.0"
     val RECYCLER_VIEW = "1.2.0-alpha02"
     val FIREBASE_ANALYTICS = "17.5.0"
     val FIREBASE_CRASHLYTICS = "17.2.1"
@@ -43,12 +45,15 @@ object ModulesDependency {
 
 object KotlinDependency {
     val KOTLIN = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Version.KOTLIN}"
+    val COROUTINES = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Version.COROUTINES}"
 }
 
 object AndroidDependency {
     val CORE_KTX = "androidx.core:core-ktx:${Version.CORE_KTX}"
     val APP_COMPAT = "androidx.appcompat:appcompat:${Version.APP_COMPAT}"
     val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:${Version.CONSTRAINT_LAYOUT}"
+    val LIFECYCLE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Version.LIFECYCLE}"
+    val LIFECYCLE_RUNTIME = "androidx.lifecycle:lifecycle-runtime-ktx:${Version.LIFECYCLE}"
     val RECYCLER_VIEW = "androidx.recyclerview:recyclerview:${Version.RECYCLER_VIEW}"
 }
 
