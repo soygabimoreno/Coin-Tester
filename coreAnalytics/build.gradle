@@ -1,0 +1,24 @@
+apply from: "$rootDir/common-android-library.gradle"
+
+dependencies {
+    implementation project(ModulesDependency.CORE_DOMAIN)
+    implementation project(ModulesDependency.LIB_FRAMEWORK)
+
+    implementation platform(FirebaseBomDependency.FIREBASE_BOM)
+    implementation(FirebaseBomDependency.FIREBASE_ANALYTICS)
+    implementation(FirebaseBomDependency.FIREBASE_CRASHLYTICS)
+    implementation(FirebaseBomDependency.FIREBASE_CONFIG)
+
+    implementation KotlinDependency.COROUTINES
+
+    implementation(KoinDependency.KOIN_CORE)
+    implementation KoinDependency.KOIN_SCOPE
+    implementation KoinDependency.KOIN_VIEW_MODEL
+
+    implementation ArrowDependency.ARROW_CORE
+    implementation ArrowDependency.ARROW_SYNTAX
+    kapt ArrowDependency.ARROW_META
+
+    implementation(AmplitudeDependency.AMPLITUDE)
+    implementation(AmplitudeDependency.OK_HTTP)
+}

@@ -1,5 +1,6 @@
 object Version {
     val KOTLIN = "1.4.10"
+    val FIREBASE_BOM = "25.12.0"
 
     val CORE_KTX = "1.3.1"
     val COROUTINES = "1.3.9"
@@ -13,6 +14,8 @@ object Version {
     val GSON = "2.8.5"
     val KOIN = "2.2.0-rc-1"
     val ARROW = "0.10.5"
+    val AMPLITUDE = "2.25.2"
+    val OK_HTTP = "4.8.1"
 }
 
 object TestVersion {
@@ -31,6 +34,7 @@ object TestVersion {
 
 object ModulesDependency {
     val CORE_DOMAIN = ":coreDomain"
+    val CORE_ANALYTICS = ":coreAnalytics"
     val CORE_INFRASTRUCTURE = ":coreInfrastructure"
     val CORE_DATA = ":coreData"
 
@@ -59,6 +63,13 @@ object AndroidDependency {
     val RECYCLER_VIEW = "androidx.recyclerview:recyclerview:${Version.RECYCLER_VIEW}"
 }
 
+object FirebaseBomDependency {
+    val FIREBASE_BOM = "com.google.firebase:firebase-bom:${Version.FIREBASE_BOM}"
+    val FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics-ktx"
+    val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics"
+    val FIREBASE_CONFIG = "com.google.firebase:firebase-config-ktx"
+}
+
 object GoogleDependency {
     val FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics-ktx:${Version.FIREBASE_ANALYTICS}"
     val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics:${Version.FIREBASE_CRASHLYTICS}"
@@ -76,6 +87,11 @@ object ArrowDependency {
     val ARROW_CORE = "io.arrow-kt:arrow-core:${Version.ARROW}"
     val ARROW_SYNTAX = "io.arrow-kt:arrow-syntax:${Version.ARROW}"
     val ARROW_META = "io.arrow-kt:arrow-meta:${Version.ARROW}"
+}
+
+object AmplitudeDependency {
+    val AMPLITUDE = "com.amplitude:android-sdk:${Version.AMPLITUDE}"
+    val OK_HTTP = "com.squareup.okhttp3:okhttp:${Version.OK_HTTP}"
 }
 
 object TestDependency {

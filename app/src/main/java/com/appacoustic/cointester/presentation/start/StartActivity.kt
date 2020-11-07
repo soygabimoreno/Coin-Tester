@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.appacoustic.cointester.libFramework.extension.requestPermissions
 import com.appacoustic.cointester.presentation.main.MainActivity
 
 class StartActivity : AppCompatActivity() {
@@ -22,9 +21,10 @@ class StartActivity : AppCompatActivity() {
         val permissions = mutableSetOf<String>()
         permissions.add(Manifest.permission.RECORD_AUDIO)
         permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        requestPermissions(permissions) {
-            init()
-        }
+
+        // TODO: Request permissions
+
+        init()
     }
 
     private fun init() {
