@@ -8,21 +8,35 @@ import com.appacoustic.cointester.presentation.main.MainActivity
 
 class StartActivity : AppCompatActivity() {
 
+    private val inputRecordAudioPermission = Manifest.permission.RECORD_AUDIO
     private val requestRecordAudioPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                requestWriteExternalStoragePermission()
-            } else {
-                // TODO
+            when {
+                isGranted -> {
+                    requestWriteExternalStoragePermission()
+                }
+                shouldShowRequestPermissionRationale(inputRecordAudioPermission) -> {
+                    // TODO
+                }
+                else -> {
+                    // TODO
+                }
             }
         }
 
+    private val inputWriteExternalStoragePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
     private val requestWriteExternalStoragePermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                navigateToMain()
-            } else {
-                // TODO
+            when {
+                isGranted -> {
+                    navigateToMain()
+                }
+                shouldShowRequestPermissionRationale(inputWriteExternalStoragePermission) -> {
+                    // TODO
+                }
+                else -> {
+                    // TODO
+                }
             }
         }
 
@@ -32,11 +46,11 @@ class StartActivity : AppCompatActivity() {
     }
 
     private fun requestRecordAudioPermission() {
-        requestRecordAudioPermission.launch(Manifest.permission.RECORD_AUDIO)
+        requestRecordAudioPermission.launch(inputRecordAudioPermission)
     }
 
     private fun requestWriteExternalStoragePermission() {
-        requestWriteExternalStoragePermission.launch(Manifest.permission.RECORD_AUDIO)
+        requestWriteExternalStoragePermission.launch(inputWriteExternalStoragePermission)
     }
 
     private fun navigateToMain() {

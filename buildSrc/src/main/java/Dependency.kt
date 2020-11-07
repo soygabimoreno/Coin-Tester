@@ -9,6 +9,7 @@ object Version {
     const val RECYCLER_VIEW = "1.2.0-alpha02"
     const val LIFECYCLE = "2.2.0"
     const val ACTIVITY_API = "1.2.0-beta01"
+    const val FRAGMENT_API = "1.3.0-beta01"
     const val FIREBASE_ANALYTICS = "17.5.0"
     const val FIREBASE_CRASHLYTICS = "17.2.1"
     const val MATERIAL = "1.2.1"
@@ -63,6 +64,7 @@ object AndroidDependency {
     const val LIFECYCLE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Version.LIFECYCLE}"
     const val LIFECYCLE_RUNTIME = "androidx.lifecycle:lifecycle-runtime-ktx:${Version.LIFECYCLE}"
     const val ACTIVITY_API = "androidx.activity:activity-ktx:${Version.ACTIVITY_API}"
+    const val FRAGMENT_API = "androidx.fragment:fragment-ktx:${Version.FRAGMENT_API}"
 }
 
 object FirebaseBomDependency {

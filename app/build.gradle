@@ -85,6 +85,7 @@ dependencies {
     implementation AndroidDependency.LIFECYCLE_VIEW_MODEL
     implementation AndroidDependency.LIFECYCLE_RUNTIME
     implementation AndroidDependency.ACTIVITY_API
+    implementation AndroidDependency.FRAGMENT_API
 
     implementation(GoogleDependency.MATERIAL)
     implementation(GoogleDependency.GSON)
@@ -96,6 +97,4 @@ dependencies {
     testImplementation TestDependency.MOCKK
     testImplementation TestDependency.ARCH_CORE_TESTING
     testImplementation TestDependency.COROUTINES_TEST
-
-    implementation 'com.mukesh:permissions:1.0.4'
 }
