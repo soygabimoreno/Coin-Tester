@@ -1,8 +1,8 @@
 include(
+    ":app",
+
     ":coreDomain",
 
     ":libFramework",
-    ":libBase",
-
-    ":app"
+    ":libBase"
 )

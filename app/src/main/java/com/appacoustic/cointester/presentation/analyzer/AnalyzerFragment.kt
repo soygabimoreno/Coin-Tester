@@ -17,7 +17,6 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GestureDetectorCompat
-import androidx.fragment.app.Fragment
 import com.appacoustic.cointester.R
 import com.appacoustic.cointester.aaa.analyzer.AnalyzerUtil
 import com.appacoustic.cointester.aaa.analyzer.RangeViewDialogC
@@ -34,9 +33,46 @@ import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView.OnReadyL
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.aaa.analyzer.view.SelectorText
 import com.appacoustic.cointester.libFramework.KLog
+import com.appacoustic.cointester.libFramework.extension.exhaustive
+import com.appacoustic.cointester.libbase.fragment.BaseFragment
 import kotlinx.android.synthetic.main.fragment_analyzer.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListener, AdapterView.OnItemClickListener, OnReadyListener {
+class AnalyzerFragment : BaseFragment<
+    AnalyzerViewModel.ViewState,
+    AnalyzerViewModel.ViewEvents,
+    AnalyzerViewModel
+    >(),
+    View.OnLongClickListener,
+    View.OnClickListener,
+    AdapterView.OnItemClickListener,
+    OnReadyListener {
+
+    override val layoutResId = R.layout.fragment_analyzer
+    override val viewModel: AnalyzerViewModel by viewModel()
+
+    override fun initUI() {
+    }
+
+    override fun renderViewState(viewState: AnalyzerViewModel.ViewState) {
+        when (viewState) {
+            is AnalyzerViewModel.ViewState.Content -> showContent()
+        }.exhaustive
+    }
+
+    private fun showContent() {
+        // TODO
+    }
+
+    override fun handleViewEvent(viewEvent: AnalyzerViewModel.ViewEvents) {
+        when (viewEvent) {
+            AnalyzerViewModel.ViewEvents.Foo -> foo()
+        }.exhaustive
+    }
+
+    private fun foo() {
+        // TODO
+    }
 
     private val magnitudeTextSize = 0
     var analyzerViews: AnalyzerViews? = null
@@ -68,13 +104,18 @@ class AnalyzerFragment : Fragment(), View.OnLongClickListener, View.OnClickListe
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        super.onCreateView(
+            inflater,
+            container,
+            savedInstanceState
+        )
         rootView = inflater.inflate(
-            R.layout.fragment_analyzer,
+            layoutResId,
             container,
             false
         )
-        return rootView
+        return rootView!!
     }
 
     override fun onViewCreated(
