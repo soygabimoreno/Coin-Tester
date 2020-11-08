@@ -9,9 +9,26 @@ import com.appacoustic.cointester.R
 import com.appacoustic.cointester.aaa.analyzer.AnalyzerUtil
 import com.appacoustic.cointester.libFramework.KLog.Companion.e
 import com.appacoustic.cointester.libFramework.KLog.Companion.i
-import com.appacoustic.cointester.presentation.analyzer.AnalyzerFragment
 
 class MyPreferencesActivity : PreferenceActivity() {
+
+    companion object {
+        const val EXTRA_SOURCE_ID = "EXTRA_SOURCE_ID"
+        const val EXTRA_SOURCE_NAME = "EXTRA_SOURCE_NAME"
+
+        private lateinit var audioSources: Array<String?>
+        private lateinit var audioSourcesName: Array<String?>
+        private fun getAudioSourceNameFromId(id: Int): String? {
+            for (i in audioSources.indices) {
+                if (audioSources[i] == id.toString()) {
+                    return audioSourcesName[i]
+                }
+            }
+            e("getAudioSourceName(): no this entry.")
+            return ""
+        }
+    }
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.preferences)
@@ -52,8 +69,8 @@ class MyPreferencesActivity : PreferenceActivity() {
 
         // Get list of default sources
         val intent = intent
-        val asid = intent.getIntArrayExtra(AnalyzerFragment.MY_PREFERENCES_MSG_SOURCE_ID)
-        val `as` = intent.getStringArrayExtra(AnalyzerFragment.MY_PREFERENCES_MSG_SOURCE_NAME)
+        val asid = intent.getIntArrayExtra(EXTRA_SOURCE_ID)
+        val `as` = intent.getStringArrayExtra(EXTRA_SOURCE_NAME)
         var nExtraSources = 0
         for (id in asid!!) {
             // See SamplingLoopThread::run() for the magic number 1000
@@ -97,20 +114,5 @@ class MyPreferencesActivity : PreferenceActivity() {
         super.onPause()
         preferenceScreen.sharedPreferences
             .unregisterOnSharedPreferenceChangeListener(prefListener)
-    }
-
-    companion object {
-        private val TAG = MyPreferencesActivity::class.java.simpleName
-        private lateinit var audioSources: Array<String?>
-        private lateinit var audioSourcesName: Array<String?>
-        private fun getAudioSourceNameFromId(id: Int): String? {
-            for (i in audioSources.indices) {
-                if (audioSources[i] == id.toString()) {
-                    return audioSourcesName[i]
-                }
-            }
-            e("getAudioSourceName(): no this entry.")
-            return ""
-        }
     }
 }

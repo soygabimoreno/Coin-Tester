@@ -515,7 +515,7 @@ class AnalyzerViews(
             // peak frequency
             if (viewMask and VIEW_MASK_textview_peak != 0) refreshPeakLabel(
                 analyzerFragment.getMaxAmplitudeFreq(),
-                analyzerFragment.maxAmpDB
+                analyzerFragment.maxAmplitudeDB
             )
             if (viewMask and VIEW_MASK_MarkerLabel != 0) refreshMarkerLabel()
             if (viewMask and VIEW_MASK_RecTimeLable != 0 && analyzerFragment.samplingThread != null) refreshRecTimeLable(
