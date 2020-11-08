@@ -1,8 +1,11 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+}
 
 repositories {
     google()
@@ -87,11 +90,21 @@ dependencies {
     implementation AndroidDependency.ACTIVITY_API
     implementation AndroidDependency.FRAGMENT_API
 
+    implementation platform(FirebaseBomDependency.FIREBASE_BOM)
+    implementation(FirebaseBomDependency.FIREBASE_CRASHLYTICS)
+
     implementation(GoogleDependency.MATERIAL)
     implementation(GoogleDependency.GSON)
 
     implementation KoinDependency.KOIN_SCOPE
     implementation KoinDependency.KOIN_VIEW_MODEL
+
+    implementation ArrowDependency.ARROW_CORE
+    implementation ArrowDependency.ARROW_SYNTAX
+    kapt ArrowDependency.ARROW_META
+
+    implementation(AmplitudeDependency.AMPLITUDE)
+    implementation(AmplitudeDependency.OK_HTTP)
 
     testImplementation(TestDependency.J_UNIT)
     testImplementation TestDependency.MOCKK

@@ -7,7 +7,7 @@ import org.koin.dsl.module
 val mainModule = module {
     scope(named<MainActivity>()) {
         viewModel {
-            MainViewModel()
+            MainViewModel(analyticsTrackerComponent = get())
         }
     }
 }

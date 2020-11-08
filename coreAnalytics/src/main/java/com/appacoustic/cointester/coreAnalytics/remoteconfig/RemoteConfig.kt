@@ -13,12 +13,12 @@ class RemoteConfig(
 ) {
 
     companion object {
-        private const val AMPLITUDE_API_KEY_THINKING_HATS = "AMPLITUDE_API_KEY_THINKING_HATS"
+        private const val AMPLITUDE_API_KEY_COIN_TESTER = "AMPLITUDE_API_KEY_COIN_TESTER"
     }
 
     init {
         val defaults = mapOf(
-            AMPLITUDE_API_KEY_THINKING_HATS to ""
+            AMPLITUDE_API_KEY_COIN_TESTER to ""
         )
 
         val configSettings = remoteConfigSettings {
@@ -34,6 +34,6 @@ class RemoteConfig(
     }
 
     suspend fun getAmplitudeApiKey(): Either<Throwable, String> = withContext(Dispatchers.IO) {
-        Either.catch { firebaseRemoteConfig.getString(AMPLITUDE_API_KEY_THINKING_HATS) }
+        Either.catch { firebaseRemoteConfig.getString(AMPLITUDE_API_KEY_COIN_TESTER) }
     }
 }
