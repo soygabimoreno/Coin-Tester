@@ -30,11 +30,11 @@ import com.appacoustic.cointester.aaa.analyzer.settings.CalibrationLoad
 import com.appacoustic.cointester.aaa.analyzer.settings.MyPreferencesActivity
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView.OnReadyListener
-import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.aaa.analyzer.view.SelectorText
 import com.appacoustic.cointester.libFramework.KLog
 import com.appacoustic.cointester.libFramework.extension.exhaustive
 import com.appacoustic.cointester.libbase.fragment.BaseFragment
+import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerViews
 import kotlinx.android.synthetic.main.fragment_analyzer.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -47,6 +47,34 @@ class AnalyzerFragment : BaseFragment<
     View.OnClickListener,
     AdapterView.OnItemClickListener,
     OnReadyListener {
+
+    companion object {
+        val TAG = AnalyzerFragment::class.java.simpleName
+
+        // for pass audioSourceIDs and audioSourcesEntries to MyPreferencesActivity
+        const val MY_PREFERENCES_MSG_SOURCE_ID = "MY_PREFERENCES_MSG_SOURCE_ID"
+        const val MY_PREFERENCES_MSG_SOURCE_NAME = "MY_PREFERENCES_MSG_SOURCE_NAME"
+
+        fun newInstance(): AnalyzerFragment {
+            return AnalyzerFragment()
+        }
+
+        const val REQUEST_AUDIO_GET = 1
+        const val REQUEST_CALIB_LOAD = 2
+        fun getMimeType(url: String?): String? {
+            var type: String? = null
+            val extension = MimeTypeMap.getFileExtensionFromUrl(url)
+            if (extension != null) {
+                type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            }
+            return type
+        }
+
+        /**
+         * Manage scroll and zoom
+         */
+        private const val INIT = Double.MIN_VALUE
+    }
 
     override val layoutResId = R.layout.fragment_analyzer
     override val viewModel: AnalyzerViewModel by viewModel()
@@ -74,7 +102,6 @@ class AnalyzerFragment : BaseFragment<
         // TODO
     }
 
-    private val magnitudeTextSize = 0
     var analyzerViews: AnalyzerViews? = null
         private set
     var samplingThread: SamplingLoopThread? = null
@@ -95,6 +122,7 @@ class AnalyzerFragment : BaseFragment<
     var saveWav = false
     var calibLoad = CalibrationLoad() // data for calibration of spectrum
     private var rootView: View? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -178,7 +206,7 @@ class AnalyzerFragment : BaseFragment<
             activity,
             AnalyzerGestureListener()
         )
-        rootView!!.setOnTouchListener(View.OnTouchListener { v, event ->
+        rootView!!.setOnTouchListener { v, event ->
             if (isInGraphView(
                     event.getX(0),
                     event.getY(0)
@@ -205,7 +233,7 @@ class AnalyzerFragment : BaseFragment<
                 }
             }
             true
-        })
+        }
         btnAnalyzerSampleRate.setOnClickListener { v -> analyzerViews!!.showPopupMenu(v) }
         btnAnalyzerFFTLength.setOnClickListener { v -> analyzerViews!!.showPopupMenu(v) }
         btnAnalyzerAverage.setOnClickListener { v -> analyzerViews!!.showPopupMenu(v) }
@@ -229,7 +257,7 @@ class AnalyzerFragment : BaseFragment<
         if (samplingThread != null) {
             samplingThread!!.finish()
         }
-        activity!!.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         super.onPause()
     }
 
@@ -295,7 +323,7 @@ class AnalyzerFragment : BaseFragment<
         return when (item.itemId) {
             R.id.menuMainPreferences -> {
                 val settings = Intent(
-                    activity!!.baseContext,
+                    requireActivity().baseContext,
                     MyPreferencesActivity::class.java
                 )
                 settings.putExtra(
@@ -306,7 +334,7 @@ class AnalyzerFragment : BaseFragment<
                     MY_PREFERENCES_MSG_SOURCE_NAME,
                     params!!.audioSourceNames
                 )
-                activity!!.startActivity(settings)
+                requireActivity().startActivity(settings)
                 true
             }
             R.id.menuMainAudioSourcesChecker -> {
@@ -314,7 +342,7 @@ class AnalyzerFragment : BaseFragment<
                     activity,
                     AudioSourcesCheckerActivity::class.java
                 )
-                activity!!.startActivity(int_info_rec)
+                requireActivity().startActivity(int_info_rec)
                 true
             }
             R.id.menuMainRanges -> {
@@ -338,7 +366,7 @@ class AnalyzerFragment : BaseFragment<
             intent.type = "*/*"
         }
         intent.addCategory(Intent.CATEGORY_OPENABLE)
-        if (intent.resolveActivity(activity!!.packageManager) != null) {
+        if (intent.resolveActivity(requireActivity().packageManager) != null) {
             startActivityForResult(
                 intent,
                 requestType
@@ -518,9 +546,9 @@ class AnalyzerFragment : BaseFragment<
             true
         )
         if (keepScreenOn) {
-            activity!!.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         } else {
-            activity!!.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
         params!!.audioSourceId = sharedPref.getString(
             "audioSource",
@@ -972,13 +1000,13 @@ class AnalyzerFragment : BaseFragment<
     //   https://developer.android.com/guide/topics/permissions/requesting.html
     private fun checkAndRequestPermissions(): Boolean {
         if (ContextCompat.checkSelfPermission(
-                activity!!,
+                requireActivity(),
                 Manifest.permission.RECORD_AUDIO
             )
             != PackageManager.PERMISSION_GRANTED
         ) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    activity!!,
+                    requireActivity(),
                     Manifest.permission.RECORD_AUDIO
                 ) &&
                 count_permission_explanation < 1
@@ -988,14 +1016,14 @@ class AnalyzerFragment : BaseFragment<
             } else {
                 if (count_permission_request < 3) {
                     ActivityCompat.requestPermissions(
-                        activity!!,
+                        requireActivity(),
                         arrayOf(Manifest.permission.RECORD_AUDIO),
                         MY_PERMISSIONS_REQUEST_RECORD_AUDIO
                     )
                     count_permission_explanation = 0
                     count_permission_request++
                 } else {
-                    activity!!.runOnUiThread {
+                    requireActivity().runOnUiThread {
                         val context = context!!.applicationContext
                         val text = "Permission denied."
                         val toast = Toast.makeText(
@@ -1011,7 +1039,7 @@ class AnalyzerFragment : BaseFragment<
         }
         if (saveWav &&
             ContextCompat.checkSelfPermission(
-                activity!!,
+                requireActivity(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
             != PackageManager.PERMISSION_GRANTED
@@ -1021,7 +1049,7 @@ class AnalyzerFragment : BaseFragment<
             analyzerViews!!.enableSaveWavView(saveWav)
             //      ((SelectorText) findViewById(R.id.tvAnalyzerRecording)).performClick();
             ActivityCompat.requestPermissions(
-                activity!!,
+                requireActivity(),
                 arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE
             )
@@ -1042,7 +1070,7 @@ class AnalyzerFragment : BaseFragment<
             MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE -> {
                 if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (!saveWav) {
-                        activity!!.runOnUiThread {
+                        requireActivity().runOnUiThread {
                             (rootView!!.findViewById<View>(R.id.tvAnalyzerMonitorRecord) as SelectorText).nextValue()
                             saveWav = true
                             analyzerViews!!.enableSaveWavView(saveWav)
@@ -1190,35 +1218,5 @@ class AnalyzerFragment : BaseFragment<
      */
     override fun ready() {
         analyzerViews!!.invalidateGraphView()
-    }
-
-    companion object {
-        val TAG = AnalyzerFragment::class.java.simpleName
-
-        // for pass audioSourceIDs and audioSourcesEntries to MyPreferencesActivity
-        @JvmField
-        val MY_PREFERENCES_MSG_SOURCE_ID = TAG + ".SOURCE_ID"
-
-        @JvmField
-        val MY_PREFERENCES_MSG_SOURCE_NAME = TAG + ".SOURCE_NAME"
-        fun newInstance(): AnalyzerFragment {
-            return AnalyzerFragment()
-        }
-
-        const val REQUEST_AUDIO_GET = 1
-        const val REQUEST_CALIB_LOAD = 2
-        fun getMimeType(url: String?): String? {
-            var type: String? = null
-            val extension = MimeTypeMap.getFileExtensionFromUrl(url)
-            if (extension != null) {
-                type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-            }
-            return type
-        }
-
-        /**
-         * Manage scroll and zoom
-         */
-        private const val INIT = Double.MIN_VALUE
     }
 }

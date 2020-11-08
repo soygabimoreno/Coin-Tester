@@ -10,11 +10,11 @@ import android.view.MenuItem
 import android.widget.TextView
 import com.appacoustic.cointester.BuildConfig
 import com.appacoustic.cointester.R
-import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.libFramework.extension.exhaustive
 import com.appacoustic.cointester.libFramework.extension.navigateTo
 import com.appacoustic.cointester.libbase.activity.StatelessBaseActivity
 import com.appacoustic.cointester.presentation.analyzer.AnalyzerFragment
+import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerViews
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : StatelessBaseActivity<
