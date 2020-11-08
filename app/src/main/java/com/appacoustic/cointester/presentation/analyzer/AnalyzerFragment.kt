@@ -70,7 +70,8 @@ class AnalyzerFragment : BaseFragment<
     }
 
     private fun showContent() {
-        // TODO
+
+        // TODO: Do stuff
     }
 
     override fun handleViewEvent(viewEvent: AnalyzerViewModel.ViewEvents) {
@@ -230,7 +231,7 @@ class AnalyzerFragment : BaseFragment<
 
     override fun onResume() {
         super.onResume()
-        LoadPreferences()
+        loadPreferences()
         analyzerViews.agvAnalyzer?.setReady(this) // TODO: move this earlier?
         analyzerViews.enableSaveWavView(saveWav)
 
@@ -243,9 +244,7 @@ class AnalyzerFragment : BaseFragment<
 
     override fun onPause() {
         bSamplingPreparation = false
-        if (samplingThread != null) {
-            samplingThread!!.finish()
-        }
+        viewModel.finishSampling()
         requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         super.onPause()
     }
@@ -523,7 +522,7 @@ class AnalyzerFragment : BaseFragment<
         (rootView.findViewById<View>(R.id.btnAnalyzerAverage) as Button).text = Integer.toString(params.nFftAverage)
     }
 
-    private fun LoadPreferences() {
+    private fun loadPreferences() {
         // Load preferences for recorder and views, beside loadPreferenceForView()
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(requireActivity())
         val keepScreenOn = sharedPref.getBoolean(
@@ -654,9 +653,7 @@ class AnalyzerFragment : BaseFragment<
                     break
                 }
             }
-            if (rr != null) {
-                viewRangeArray = rr
-            }
+            viewRangeArray = rr
             stickToMeasureMode()
         } else {
             stickToMeasureModeCancel()
@@ -909,17 +906,9 @@ class AnalyzerFragment : BaseFragment<
     private val MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2
     var graphInit: Thread? = null
     private var bSamplingPreparation = false
+
     private fun restartSampling(params: AnalyzerParams) {
-        // Stop previous sampler if any.
-        if (samplingThread != null) {
-            samplingThread!!.finish()
-            try {
-                samplingThread!!.join()
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-            }
-            samplingThread = null
-        }
+        viewModel.releaseSampling()
         if (viewRangeArray != null) {
             analyzerViews.agvAnalyzer?.setupAxes(this.params)
             val rangeDefault = analyzerViews.agvAnalyzer?.viewPhysicalRange
@@ -1096,11 +1085,9 @@ class AnalyzerFragment : BaseFragment<
                 true
             }
             R.id.tvAnalyzerRunStop -> {
-                val pause = value == "stop"
-                if (samplingThread != null && samplingThread!!.paused != pause) {
-                    samplingThread!!.paused = pause
-                }
-                analyzerViews.agvAnalyzer?.spectrogramPlot?.setPause(pause)
+                val paused = value == "stop"
+                viewModel.setSamplingPaused(paused)
+                analyzerViews.agvAnalyzer?.spectrogramPlot?.setPause(paused)
                 false
             }
             R.id.tvAnalyzerLinearLogNote -> {
@@ -1114,9 +1101,7 @@ class AnalyzerFragment : BaseFragment<
             }
             R.id.tvAnalyzerDBDBA -> {
                 params.dbaWeighting = value != "dB"
-                if (samplingThread != null) {
-                    samplingThread!!.setDbaWeighting(params.dbaWeighting)
-                }
+                viewModel.setSamplingDbaWeighting(params.dbaWeighting)
                 editor.putBoolean(
                     "dbA",
                     params.dbaWeighting
