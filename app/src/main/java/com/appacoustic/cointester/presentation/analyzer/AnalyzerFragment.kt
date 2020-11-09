@@ -343,7 +343,7 @@ class AnalyzerFragment : BaseFragment<
         }
     }
 
-    fun getSamplingThread(): SamplingLoopThread? = viewModel.getSamplingThread()
+    fun getSamplingThread(): SamplingLoopThread? = viewModel.samplingThread
 
     private fun selectFile() {
         // https://developer.android.com/guide/components/intents-common.html#Storage
