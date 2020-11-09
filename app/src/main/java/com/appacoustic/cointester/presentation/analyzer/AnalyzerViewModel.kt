@@ -12,9 +12,16 @@ class AnalyzerViewModel(
         updateViewState(ViewState.Content(samplingThread = null))
     }
 
-    fun startSampling() {
+    fun getSamplingThread(): SamplingLoopThread? =
+        (getViewState() as ViewState.Content).samplingThread
 
-        // TODO
+    fun startSampling(samplingThread: SamplingLoopThread) {
+        updateViewState(
+            (getViewState() as ViewState.Content).copy(
+                samplingThread = samplingThread
+            )
+        )
+        samplingThread.start()
     }
 
     fun finishSampling() {

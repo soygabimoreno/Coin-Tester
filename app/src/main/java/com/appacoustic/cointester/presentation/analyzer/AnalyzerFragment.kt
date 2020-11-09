@@ -28,6 +28,7 @@ import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView.OnReadyListener
 import com.appacoustic.cointester.aaa.analyzer.view.SelectorText
 import com.appacoustic.cointester.libFramework.KLog
+import com.appacoustic.cointester.libFramework.extension.debugToast
 import com.appacoustic.cointester.libFramework.extension.exhaustive
 import com.appacoustic.cointester.libbase.fragment.BaseFragment
 import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerViews
@@ -70,8 +71,7 @@ class AnalyzerFragment : BaseFragment<
     }
 
     private fun showContent() {
-
-        // TODO: Do stuff
+        debugToast("showContent")
     }
 
     override fun handleViewEvent(viewEvent: AnalyzerViewModel.ViewEvents) {
@@ -86,8 +86,6 @@ class AnalyzerFragment : BaseFragment<
 
     private lateinit var rootView: View
     private lateinit var analyzerViews: AnalyzerViews
-
-    var samplingThread: SamplingLoopThread? = null
 
     private lateinit var rangeViewDialogC: RangeViewDialogC
     private lateinit var gestureDetector: GestureDetectorCompat
@@ -344,6 +342,8 @@ class AnalyzerFragment : BaseFragment<
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    fun getSamplingThread(): SamplingLoopThread? = viewModel.getSamplingThread()
 
     private fun selectFile() {
         // https://developer.android.com/guide/components/intents-common.html#Storage
@@ -928,7 +928,7 @@ class AnalyzerFragment : BaseFragment<
         if (!bSamplingPreparation) return
 
         // Start sampling
-        samplingThread = SamplingLoopThread(
+        val samplingThread = SamplingLoopThread(
             params,
             analyzerViews,
             tvAnalyzerRunStop.value == "stop",
@@ -958,7 +958,7 @@ class AnalyzerFragment : BaseFragment<
                     dtRMSFromFT = rmsFromFT
                 }
             })
-        samplingThread!!.start()
+        viewModel.startSampling(samplingThread)
     }
 
     // For call requestPermissions() after each showPermissionExplanation()

@@ -518,9 +518,11 @@ class AnalyzerViews(
                 analyzerFragment.maxAmplitudeDB
             )
             if (viewMask and VIEW_MASK_MarkerLabel != 0) refreshMarkerLabel()
-            if (viewMask and VIEW_MASK_RecTimeLable != 0 && analyzerFragment.samplingThread != null) refreshRecTimeLable(
-                analyzerFragment.samplingThread!!.wavSeconds,
-                analyzerFragment.samplingThread!!.wavSecondsRemain
+
+            val samplingThread = analyzerFragment.getSamplingThread()
+            if (viewMask and VIEW_MASK_RecTimeLable != 0 && samplingThread != null) refreshRecTimeLable(
+                samplingThread.wavSeconds,
+                samplingThread.wavSecondsRemain
             )
         } else {
             if (!idPaddingInvalidate) {
