@@ -2,12 +2,15 @@ package com.appacoustic.cointester.presentation.analyzer
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.SystemClock
 import android.preference.PreferenceManager
+import android.text.method.LinkMovementMethod
+import android.util.TypedValue
 import android.view.*
 import android.widget.AdapterView
 import android.widget.Button
@@ -16,6 +19,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GestureDetectorCompat
+import com.appacoustic.cointester.BuildConfig
 import com.appacoustic.cointester.R
 import com.appacoustic.cointester.aaa.analyzer.AnalyzerUtil
 import com.appacoustic.cointester.aaa.analyzer.RangeViewDialogC
@@ -299,14 +303,19 @@ class AnalyzerFragment : BaseFragment<
         menu: Menu,
         inflater: MenuInflater
     ) {
-        super.onCreateOptionsMenu(
-            menu,
-            inflater
+        requireActivity().menuInflater.inflate(
+            R.menu.menu_main,
+            menu
         )
+        menu.findItem(R.id.menuMainInstructions).isVisible = BuildConfig.DEBUG
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.menuMainInstructions -> {
+                showInstructions()
+                true
+            }
             R.id.menuMainPreferences -> {
                 val settings = Intent(
                     requireActivity().baseContext,
@@ -324,11 +333,12 @@ class AnalyzerFragment : BaseFragment<
                 true
             }
             R.id.menuMainAudioSourcesChecker -> {
-                val int_info_rec = Intent(
-                    requireActivity(),
-                    AudioSourcesCheckerActivity::class.java
+                requireActivity().startActivity(
+                    Intent(
+                        requireActivity(),
+                        AudioSourcesCheckerActivity::class.java
+                    )
                 )
-                requireActivity().startActivity(int_info_rec)
                 true
             }
             R.id.menuMainRanges -> {
@@ -341,6 +351,25 @@ class AnalyzerFragment : BaseFragment<
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun showInstructions() {
+        val tv = TextView(requireContext())
+        tv.movementMethod = LinkMovementMethod.getInstance()
+        tv.setTextSize(
+            TypedValue.COMPLEX_UNIT_SP,
+            15f
+        )
+        tv.text = AnalyzerViews.fromHtml(getString(R.string.instructions_text))
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.instructions_title)
+            .setView(tv)
+            .setNegativeButton(
+                R.string.instructions_dismiss,
+                null
+            )
+            .create()
+            .show()
     }
 
     fun getSamplingThread(): SamplingLoopThread? = viewModel.samplingThread
