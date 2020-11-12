@@ -99,7 +99,7 @@
         <item>white noise</item>
     </string-array>
 
-    <string-array name="audio_sources" translatable="false">
+    <string-array name="audio_source_ids" translatable="false">
         <item>6</item>
         <item>0</item>
         <item>1</item>

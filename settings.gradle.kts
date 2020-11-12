@@ -1,6 +1,7 @@
 include(
     ":app",
 
+    "coreInfrastructure",
     ":coreDomain",
     ":coreData",
     ":coreAnalytics",

@@ -5,7 +5,7 @@ import com.appacoustic.cointester.libFramework.KLog
 
 class AnalyzerParams(
     val audioSourceNames: Array<String>,
-    val audioSourceIds: IntArray,
+    audioSourceIdsString: Array<String>,
     val windowFunctionNames: Array<String>
 ) {
 
@@ -14,10 +14,21 @@ class AnalyzerParams(
         const val BYTES_PER_SAMPLE = 2
         const val SAMPLE_VALUE_MAX = 32767.0
         const val N_MIC_SOURCES = 7
+    }
 
-        var idTestSignal1 = 0
-        var idTestSignal2 = 0
-        var idTestSignalWhiteNoise = 0
+    val audioSourceIds = IntArray(audioSourceIdsString.size)
+    var idTestSignal1: Int
+    var idTestSignal2: Int
+    var idTestSignalWhiteNoise: Int
+
+    init {
+        for (i in audioSourceIdsString.indices) {
+            audioSourceIds[i] = audioSourceIdsString[i].toInt()
+        }
+
+        idTestSignal1 = audioSourceIds[N_MIC_SOURCES]
+        idTestSignal2 = audioSourceIds[N_MIC_SOURCES + 1]
+        idTestSignalWhiteNoise = audioSourceIds[N_MIC_SOURCES + 2]
     }
 
     var sampleRate = 16000

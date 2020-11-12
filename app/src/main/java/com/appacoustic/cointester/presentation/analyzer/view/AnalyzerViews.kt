@@ -5,7 +5,6 @@ import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
-import android.os.Build
 import android.os.Handler
 import android.os.SystemClock
 import android.text.Html
@@ -31,34 +30,58 @@ import kotlinx.android.synthetic.main.fragment_analyzer.*
  * Should run on UI thread in general.
  */
 class AnalyzerViews(
-    activity: Activity,
-    analyzerFragment: AnalyzerFragment,
-    rootView: View
+    private val activity: Activity,
+    private val analyzerFragment: AnalyzerFragment,
+    private val rootView: View,
+    private val agvAnalyzer: AnalyzerGraphicView
 ) {
 
-    val agvAnalyzer = activity.agvAnalyzer
+    companion object {
+        fun fromHtml(source: String?): Spanned {
+            return Html.fromHtml(
+                source,
+                Html.FROM_HTML_MODE_LEGACY
+            )
+        }
 
-    private val activity: Activity
-    private val analyzerFragment: AnalyzerFragment
-    private val rootView: View
-    private val dpRatio: Float
+        private const val VIEW_MASK_graphView = 1 shl 0
+        private const val VIEW_MASK_textview_RMS = 1 shl 1
+        private const val VIEW_MASK_textview_peak = 1 shl 2
+        private const val VIEW_MASK_MarkerLabel = 1 shl 3
+        private const val VIEW_MASK_RecTimeLable = 1 shl 4
+    }
+
+    private val dpRatio: Float = activity.resources.displayMetrics.density
     private var fpsLimit = 8.0
     private val sbRMS = StringBuilder("")
     private val sbMarker = StringBuilder("")
     private val sbPeak = StringBuilder("")
     private val sbRec = StringBuilder("")
-    private val charRMS: CharArray
-    private val charMarker: CharArray
-    private val charPeak: CharArray
-    private val charRec: CharArray
+    private val charRMS: CharArray = CharArray(activity.resources.getString(R.string.tv_rms_text).length)
+    private val charMarker: CharArray = CharArray(activity.resources.getString(R.string.tv_marker_text).length)
+    private val charPeak: CharArray = CharArray(activity.resources.getString(R.string.tv_peak_text).length)
+    private val charRec: CharArray = CharArray(activity.resources.getString(R.string.tv_rec_text).length)
     var popupMenuSampleRate: PopupWindow
     var popupMenuFFTLen: PopupWindow
     var popupMenuFFTAverage: PopupWindow
     var isWarnOverrun = true
 
-    // Set text font size of textview_marker and tvAnalyzerPeak
-    // according to space left
-    //@SuppressWarnings("deprecation")
+    init {
+        popupMenuSampleRate = popupMenuCreate(
+            AnalyzerUtil.validateAudioRates(activity.resources.getStringArray(R.array.sample_rates)),
+            R.id.btnAnalyzerSampleRate
+        )
+        popupMenuFFTLen = popupMenuCreate(
+            activity.resources.getStringArray(R.array.fft_lengths),
+            R.id.btnAnalyzerFFTLength
+        )
+        popupMenuFFTAverage = popupMenuCreate(
+            activity.resources.getStringArray(R.array.fft_averages),
+            R.id.btnAnalyzerAverage
+        )
+        setTextViewFontSize()
+    }
+
     private fun setTextViewFontSize() {
         // At this point tv.getWidth(), tv.getLineCount() will return 0
         val display = activity.windowManager.defaultDisplay
@@ -89,12 +112,12 @@ class AnalyzerViews(
     // Prepare the spectrum and spectrogram plot (from scratch or full reset)
     // Should be called before samplingThread starts.
     fun setupView(params: AnalyzerParams?) {
-        activity.agvAnalyzer!!.setupPlot(params)
+        agvAnalyzer.setupPlot(params)
     }
 
     // Will be called by SamplingLoopThread (in another thread)
     fun update(spectrumDBcopy: DoubleArray?) {
-        activity.agvAnalyzer!!.saveSpectrum(spectrumDBcopy)
+        agvAnalyzer.saveSpectrum(spectrumDBcopy)
         activity.runOnUiThread { // data will get out of synchronize here
             invalidateGraphView()
         }
@@ -258,7 +281,7 @@ class AnalyzerViews(
         }
 
         // left and right padding, at least +7, or the whole app will stop respond, don't know why
-        w = w + 20 * dpRatio
+        w += 20 * dpRatio
         if (w < 60) {
             w = 60f
         }
@@ -330,7 +353,7 @@ class AnalyzerViews(
     }
 
     private fun refreshMarkerLabel() {
-        val f1 = activity.agvAnalyzer!!.markerFreq
+        val f1 = agvAnalyzer.markerFreq
         sbMarker.setLength(0)
         sbMarker.append(activity.getString(R.string.tv_marker_text_empty))
         SBNumFormat.fillInNumFixedWidthPositive(
@@ -348,7 +371,7 @@ class AnalyzerViews(
         sbMarker.append(") ")
         SBNumFormat.fillInNumFixedWidth(
             sbMarker,
-            activity.agvAnalyzer!!.markerDB,
+            agvAnalyzer.markerDB,
             3,
             1
         )
@@ -495,7 +518,7 @@ class AnalyzerViews(
         }
         isInvalidating = true
         val frameTime: Long // time delay for next frame
-        frameTime = if (activity.agvAnalyzer!!.showMode != AnalyzerGraphicView.PlotMode.SPECTRUM) {
+        frameTime = if (agvAnalyzer.showMode != AnalyzerGraphicView.PlotMode.SPECTRUM) {
             (1000 / fpsLimit).toLong() // use a much lower frame rate for spectrogram
         } else {
             1000 / 60.toLong()
@@ -509,7 +532,7 @@ class AnalyzerViews(
             idPaddingInvalidate = false
             // Take care of synchronization of analyzerGraphic.spectrogramColors and iTimePointer,
             // and then just do invalidate() here.
-            if (viewMask and VIEW_MASK_graphView != 0) activity.agvAnalyzer!!.invalidate()
+            if (viewMask and VIEW_MASK_graphView != 0) agvAnalyzer.invalidate()
             // RMS
             if (viewMask and VIEW_MASK_textview_RMS != 0) refreshRMSLabel(analyzerFragment.dtRMSFromFT)
             // peak frequency
@@ -556,52 +579,5 @@ class AnalyzerViews(
             // It is possible that t-timeToUpdate <= 0 here, don't know why
             invalidateGraphView(paddingViewMask)
         }
-    }
-
-    companion object {
-        // Thanks http://stackoverflow.com/questions/37904739/html-fromhtml-deprecated-in-android-n
-        fun fromHtml(source: String?): Spanned {
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                Html.fromHtml(
-                    source,
-                    Html.FROM_HTML_MODE_LEGACY
-                ) // or Html.FROM_HTML_MODE_COMPACT
-            } else {
-                Html.fromHtml(source)
-            }
-        }
-
-        private const val VIEW_MASK_graphView = 1 shl 0
-        private const val VIEW_MASK_textview_RMS = 1 shl 1
-        private const val VIEW_MASK_textview_peak = 1 shl 2
-        private const val VIEW_MASK_MarkerLabel = 1 shl 3
-        private const val VIEW_MASK_RecTimeLable = 1 shl 4
-    }
-
-    init {
-        this.activity = activity
-        this.analyzerFragment = analyzerFragment
-        this.rootView = rootView
-        dpRatio = activity.resources.displayMetrics.density
-        charRMS = CharArray(activity.resources.getString(R.string.tv_rms_text).length)
-        charMarker = CharArray(activity.resources.getString(R.string.tv_marker_text).length)
-        charPeak = CharArray(activity.resources.getString(R.string.tv_peak_text).length)
-        charRec = CharArray(activity.resources.getString(R.string.tv_rec_text).length)
-
-        /// initialize pop up window items list
-        // http://www.codeofaninja.com/2013/04/show-listview-as-drop-down-android.html
-        popupMenuSampleRate = popupMenuCreate(
-            AnalyzerUtil.validateAudioRates(activity.resources.getStringArray(R.array.sample_rates)),
-            R.id.btnAnalyzerSampleRate
-        )
-        popupMenuFFTLen = popupMenuCreate(
-            activity.resources.getStringArray(R.array.fft_lengths),
-            R.id.btnAnalyzerFFTLength
-        )
-        popupMenuFFTAverage = popupMenuCreate(
-            activity.resources.getStringArray(R.array.fft_averages),
-            R.id.btnAnalyzerAverage
-        )
-        setTextViewFontSize()
     }
 }

@@ -1,9 +1,11 @@
 package com.appacoustic.cointester.presentation.analyzer
 
 import com.appacoustic.cointester.aaa.analyzer.SamplingLoopThread
+import com.appacoustic.cointester.aaa.analyzer.model.AnalyzerParams
 import com.appacoustic.cointester.libbase.viewmodel.BaseViewModel
 
 class AnalyzerViewModel(
+    val analyzerParams: AnalyzerParams
 ) : BaseViewModel<
     AnalyzerViewModel.ViewState,
     AnalyzerViewModel.ViewEvents>() {

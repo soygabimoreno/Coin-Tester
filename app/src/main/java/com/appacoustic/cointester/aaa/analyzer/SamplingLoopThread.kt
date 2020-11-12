@@ -77,7 +77,7 @@ class SamplingLoopThread(
         val amp0 = Tools.dBToLinear(TEST_SIGNAL_1_DB_1)
         val amp1 = Tools.dBToLinear(TEST_SIGNAL_2_DB_1)
         val amp2 = Tools.dBToLinear(TEST_SIGNAL_2_DB_2)
-        sineGenerator0 = if (audioSourceId == AnalyzerParams.idTestSignal1) {
+        sineGenerator0 = if (audioSourceId == params.idTestSignal1) {
             SineGenerator(
                 TEST_SIGNAL_1_FREQ_1,
                 sampleRate,
@@ -138,7 +138,7 @@ class SamplingLoopThread(
         // The buffer size here seems not relate to the delay.
         // So choose a larger size (~1sec) so that overrun is unlikely.
         val record = try {
-            if (audioSourceId < AnalyzerParams.idTestSignal1) {
+            if (audioSourceId < params.idTestSignal1) {
                 AudioRecord(
                     audioSourceId,
                     sampleRate,
@@ -236,7 +236,7 @@ class SamplingLoopThread(
         // When running in this loop (including when paused), you cannot change properties
         // related to recorder: e.g. audioSourceId, sampleRate, bufferSampleSize
         while (running) {
-            val numOfReadShort = if (audioSourceId >= AnalyzerParams.idTestSignal1) {
+            val numOfReadShort = if (audioSourceId >= params.idTestSignal1) {
                 readTestData(
                     audioSamples,
                     0,
@@ -328,7 +328,7 @@ class SamplingLoopThread(
             data,
             0.0
         )
-        when (id - AnalyzerParams.idTestSignal1) {
+        when (id - params.idTestSignal1) {
             1 -> {
                 sineGenerator1.getSamples(data)
                 sineGenerator0.addSamples(data)

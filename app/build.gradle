@@ -73,6 +73,7 @@ android {
 }
 
 dependencies {
+    implementation project(ModulesDependency.CORE_INFRASTRUCTURE)
     implementation project(ModulesDependency.CORE_DOMAIN)
     implementation project(ModulesDependency.CORE_DATA)
     implementation project(ModulesDependency.CORE_ANALYTICS)

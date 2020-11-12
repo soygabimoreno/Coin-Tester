@@ -13,7 +13,7 @@
         <ListPreference
             android:defaultValue="@string/audio_sources_default"
             android:entries="@array/audio_sources_entries"
-            android:entryValues="@array/audio_sources"
+            android:entryValues="@array/audio_source_ids"
             android:key="audioSource"
             android:summary="@string/preferences_audio_source_text"
             android:title="@string/preferences_audio_source_title"/>
