@@ -1,6 +1,9 @@
 package com.appacoustic.cointester.presentation.main
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.appacoustic.cointester.aaa.analyzer.model.AnalyzerParams
+import com.appacoustic.cointester.coreAnalytics.AnalyticsTrackerComponent
+import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -22,6 +25,9 @@ class MainViewModelTest {
     private val testDispatcher = TestCoroutineDispatcher()
     private val testCoroutineScope = TestCoroutineScope(testDispatcher)
 
+    private val analyzerParams = mockk<AnalyzerParams>()
+    val analyticsTrackerComponent = mockk<AnalyticsTrackerComponent>(relaxed = true)
+
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
@@ -41,5 +47,5 @@ class MainViewModelTest {
         assertTrue(event is MainViewModel.ViewEvents.NavigateToAnalyzer)
     }
 
-    private fun buildViewModel() = MainViewModel()
+    private fun buildViewModel() = MainViewModel(analyticsTrackerComponent = analyticsTrackerComponent)
 }

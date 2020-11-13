@@ -1,12 +1,13 @@
 package com.appacoustic.cointester.aaa.analyzer.model
 
 import android.media.MediaRecorder
-import com.appacoustic.cointester.libFramework.KLog
+import com.appacoustic.cointester.coreAnalytics.error.ErrorTrackerComponent
 
 class AnalyzerParams(
     val audioSourceNames: Array<String>,
     audioSourceIdsString: Array<String>,
-    val windowFunctionNames: Array<String>
+    val windowFunctionNames: Array<String>,
+    val errorTrackerComponent: ErrorTrackerComponent
 ) {
 
     companion object {
@@ -51,7 +52,7 @@ class AnalyzerParams(
                 return audioSourceNames[i]
             }
         }
-        KLog.Companion.e("Non-standard entry")
+        errorTrackerComponent.trackError(Throwable("ANALYZER_PARAMS_NON_STANDARD_ENTRY"))
         return id.toString()
     }
 }

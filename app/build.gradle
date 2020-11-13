@@ -111,4 +111,10 @@ dependencies {
     testImplementation TestDependency.MOCKK
     testImplementation TestDependency.ARCH_CORE_TESTING
     testImplementation TestDependency.COROUTINES_TEST
+
+    androidTestImplementation AndroidTestDependency.TEST_RUNNER
+    androidTestImplementation AndroidTestDependency.TEST_RULES
+    androidTestImplementation AndroidTestDependency.J_UNIT_EXT
+    androidTestImplementation AndroidTestDependency.KOIN_TEST
+    androidTestImplementation AndroidTestDependency.MOCKK_ANDROID
 }

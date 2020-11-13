@@ -16,9 +16,10 @@ val analyzerModule = module {
         viewModel {
             AnalyzerViewModel(
                 analyzerParams = AnalyzerParams(
-                    get(named(InfrastructureKeys.AUDIO_SOURCE_NAMES)),
-                    get(named(InfrastructureKeys.AUDIO_SOURCE_IDS_STRING)),
-                    get(named(InfrastructureKeys.WINDOW_FUNCTIONS))
+                    audioSourceNames = get(named(InfrastructureKeys.AUDIO_SOURCE_NAMES)),
+                    audioSourceIdsString = get(named(InfrastructureKeys.AUDIO_SOURCE_IDS_STRING)),
+                    windowFunctionNames = get(named(InfrastructureKeys.WINDOW_FUNCTIONS)),
+                    errorTrackerComponent = get()
                 )
             )
         }
