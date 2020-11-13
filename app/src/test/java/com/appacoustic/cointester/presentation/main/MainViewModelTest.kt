@@ -1,8 +1,8 @@
 package com.appacoustic.cointester.presentation.main
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.appacoustic.cointester.aaa.analyzer.model.AnalyzerParams
 import com.appacoustic.cointester.coreAnalytics.AnalyticsTrackerComponent
+import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

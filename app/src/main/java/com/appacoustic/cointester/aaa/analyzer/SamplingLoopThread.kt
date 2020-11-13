@@ -4,10 +4,10 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.os.SystemClock
 import com.appacoustic.cointester.R
-import com.appacoustic.cointester.aaa.analyzer.model.AnalyzerParams
 import com.appacoustic.cointester.aaa.analyzer.processing.STFT
 import com.appacoustic.cointester.aaa.utils.Tools
 import com.appacoustic.cointester.libFramework.KLog
+import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
 import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerViews
 import java.util.*
 import kotlin.math.ceil

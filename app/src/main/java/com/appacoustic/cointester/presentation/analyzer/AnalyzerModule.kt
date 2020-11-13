@@ -1,8 +1,8 @@
 package com.appacoustic.cointester.presentation.analyzer
 
 import com.appacoustic.cointester.R
-import com.appacoustic.cointester.aaa.analyzer.model.AnalyzerParams
 import com.appacoustic.cointester.coreinfrastructure.InfrastructureKeys
+import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named

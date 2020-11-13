@@ -1,6 +1,5 @@
-package com.appacoustic.cointester.aaa.analyzer.model
+package com.appacoustic.cointester.presentation.analyzer.domain
 
-import android.media.MediaRecorder
 import com.appacoustic.cointester.coreAnalytics.error.ErrorTrackerComponent
 
 class AnalyzerParams(
@@ -11,7 +10,7 @@ class AnalyzerParams(
 ) {
 
     companion object {
-        const val RECORDER_AGC_OFF = MediaRecorder.AudioSource.DEFAULT
+        const val RECORDER_AGC_OFF = 0 // MediaRecorder.AudioSource.DEFAULT
         const val BYTES_PER_SAMPLE = 2
         const val SAMPLE_VALUE_MAX = 32767.0
         const val N_MIC_SOURCES = 7

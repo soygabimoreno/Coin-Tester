@@ -11,8 +11,8 @@ import com.appacoustic.cointester.aaa.analyzer.AxisTickLabels;
 import com.appacoustic.cointester.aaa.analyzer.GridLabel;
 import com.appacoustic.cointester.aaa.analyzer.ScreenPhysicalMapping;
 import com.appacoustic.cointester.aaa.analyzer.SpectrogramBMP;
-import com.appacoustic.cointester.aaa.analyzer.model.AnalyzerParams;
 import com.appacoustic.cointester.libFramework.KLog;
+import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams;
 
 /**
  * The spectrogram plot part of AnalyzerGraphic.

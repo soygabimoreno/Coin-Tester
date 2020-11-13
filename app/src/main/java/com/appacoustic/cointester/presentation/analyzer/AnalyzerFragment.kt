@@ -24,7 +24,6 @@ import com.appacoustic.cointester.R
 import com.appacoustic.cointester.aaa.analyzer.AnalyzerUtil
 import com.appacoustic.cointester.aaa.analyzer.RangeViewDialogC
 import com.appacoustic.cointester.aaa.analyzer.SamplingLoopThread
-import com.appacoustic.cointester.aaa.analyzer.model.AnalyzerParams
 import com.appacoustic.cointester.aaa.analyzer.settings.AudioSourcesCheckerActivity
 import com.appacoustic.cointester.aaa.analyzer.settings.CalibrationLoad
 import com.appacoustic.cointester.aaa.analyzer.settings.MyPreferencesActivity
@@ -35,6 +34,7 @@ import com.appacoustic.cointester.libFramework.KLog
 import com.appacoustic.cointester.libFramework.extension.debugToast
 import com.appacoustic.cointester.libFramework.extension.exhaustive
 import com.appacoustic.cointester.libbase.fragment.BaseFragment
+import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
 import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerViews
 import kotlinx.android.synthetic.main.fragment_analyzer.*
 import org.koin.androidx.viewmodel.ext.android.viewModel

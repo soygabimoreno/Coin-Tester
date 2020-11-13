@@ -4,6 +4,7 @@ import androidx.test.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.appacoustic.cointester.R
 import com.appacoustic.cointester.coreAnalytics.error.ErrorTrackerComponent
+import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Assert.assertTrue
