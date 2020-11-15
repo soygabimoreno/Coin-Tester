@@ -508,29 +508,24 @@ class AnalyzerFragment : BaseFragment<
             false
         )
         if (analyzerParams.dbaWeighting) {
-            (rootView.findViewById<View>(R.id.tvAnalyzerDBDBA) as SelectorText).nextValue()
+            tvAnalyzerDBDBA.nextValue()
         }
         val isSpam = sharedPref.getBoolean(
             "spectrum_spectrogram_mode",
             true
         )
         if (!isSpam) {
-            (rootView.findViewById<View>(R.id.tvAnalyzerSpectrumSpectrogramMode) as SelectorText).nextValue()
+            tvAnalyzerSpectrumSpectrogramMode.nextValue()
         }
         val axisMode = sharedPref.getString(
             "freq_scaling_mode",
             "linear"
         )
-        val st = rootView.findViewById<View>(R.id.tvAnalyzerLinearLogNote) as SelectorText
-        st.value = axisMode
-        KLog.i(
-            "sampleRate  = ${analyzerParams.sampleRate}  fFTLength      = ${analyzerParams.fftLength}  nFFTAverage = ${analyzerParams.nFftAverage}"
-        )
-        (rootView.findViewById<View>(R.id.btnAnalyzerSampleRate) as Button).text =
-            Integer.toString(analyzerParams.sampleRate)
-        (rootView.findViewById<View>(R.id.btnAnalyzerFFTLength) as Button).text =
-            Integer.toString(analyzerParams.fftLength)
-        (rootView.findViewById<View>(R.id.btnAnalyzerAverage) as Button).text = Integer.toString(analyzerParams.nFftAverage)
+        tvAnalyzerLinearLogNote.value = axisMode
+        KLog.i("sampleRate = ${analyzerParams.sampleRate}, fFTLength = ${analyzerParams.fftLength}, nFFTAverage = ${analyzerParams.nFftAverage}")
+        btnAnalyzerSampleRate.text = analyzerParams.sampleRate.toString()
+        btnAnalyzerFFTLength.text = analyzerParams.fftLength.toString()
+        btnAnalyzerAverage.text = analyzerParams.nFftAverage.toString()
     }
 
     private fun loadPreferences() {
@@ -1010,7 +1005,7 @@ class AnalyzerFragment : BaseFragment<
             )
             != PackageManager.PERMISSION_GRANTED
         ) {
-            (rootView.findViewById<View>(R.id.tvAnalyzerMonitorRecord) as SelectorText).nextValue()
+            tvAnalyzerMonitorRecord.nextValue()
             saveWav = false
             analyzerViews.enableSaveWavView(saveWav)
             //      ((SelectorText) findViewById(R.id.tvAnalyzerRecording)).performClick();
@@ -1037,7 +1032,7 @@ class AnalyzerFragment : BaseFragment<
                 if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (!saveWav) {
                         requireActivity().runOnUiThread {
-                            (rootView.findViewById<View>(R.id.tvAnalyzerMonitorRecord) as SelectorText).nextValue()
+                            tvAnalyzerMonitorRecord.nextValue()
                             saveWav = true
                             analyzerViews.enableSaveWavView(saveWav)
                         }
