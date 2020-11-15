@@ -152,10 +152,9 @@ class AnalyzerFragment : BaseFragment<
         // Read preferences and set corresponding variables
         loadPreferenceForView()
         analyzerViews = AnalyzerViews(
-            requireActivity(),
-            this,
-            rootView,
-            agvAnalyzer
+            activity = requireActivity(),
+            analyzerFragment = this,
+            agvAnalyzer = agvAnalyzer
         )
 
         // travel Views, and attach ClickListener to the views that contain android:tag="select"

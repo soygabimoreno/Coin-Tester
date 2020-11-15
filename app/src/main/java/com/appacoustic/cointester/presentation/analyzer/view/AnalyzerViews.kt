@@ -32,7 +32,6 @@ import kotlinx.android.synthetic.main.fragment_analyzer.*
 class AnalyzerViews(
     private val activity: Activity,
     private val analyzerFragment: AnalyzerFragment,
-    private val rootView: View,
     private val agvAnalyzer: AnalyzerGraphicView
 ) {
 
@@ -291,9 +290,6 @@ class AnalyzerViews(
         popupWindow.height = WindowManager.LayoutParams.WRAP_CONTENT
         // Set window width according to max text width
         popupWindow.width = w.toInt()
-        // also set button width
-        (rootView.findViewById<View>(resId) as Button).width = (w + 4 * dpRatio).toInt()
-        // Set the text on button in loadPreferenceForView()
 
         // set the list view as pop up window content
         popupWindow.contentView = listView
