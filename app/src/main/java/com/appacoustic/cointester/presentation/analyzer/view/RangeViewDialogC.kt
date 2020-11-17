@@ -59,7 +59,7 @@ class RangeViewDialogC(
         override fun afterTextChanged(editable: Editable) {}
     }
 
-    private fun SetRangeView(loadSaved: Boolean) {
+    private fun setRangeView(loadSaved: Boolean) {
         if (rangeViewDialog == null) {
             return
         }
@@ -115,8 +115,8 @@ class RangeViewDialogC(
         (rangeViewView.findViewById<View>(R.id.cbRangesLockRanges) as CheckBox).isChecked = isLock
     }
 
-    fun ShowRangeViewDialog() {
-        SetRangeView(false)
+    fun show() {
+        setRangeView(false)
 
         // Listener for test if a field is modified
         val resList = intArrayOf(
@@ -140,7 +140,7 @@ class RangeViewDialogC(
             R.layout.dialog_ranges,
             null
         ) // null because there is no parent. https://possiblemobile.com/2013/05/layout-inflation-as-intended/
-        rangeViewView.findViewById<View>(R.id.btnRangesLoadPrevious).setOnClickListener { SetRangeView(true) }
+        rangeViewView.findViewById<View>(R.id.btnRangesLoadPrevious).setOnClickListener { setRangeView(true) }
         val freqDialogBuilder = AlertDialog.Builder(context)
         freqDialogBuilder
             .setView(rangeViewView)

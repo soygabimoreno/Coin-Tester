@@ -1,5 +1,7 @@
 package com.appacoustic.cointester.aaa.analyzer.settings
 
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.media.MediaRecorder
 import android.os.Bundle
@@ -13,8 +15,28 @@ import com.appacoustic.cointester.libFramework.KLog.Companion.i
 class MyPreferencesActivity : PreferenceActivity() {
 
     companion object {
-        const val EXTRA_SOURCE_ID = "EXTRA_SOURCE_ID"
-        const val EXTRA_SOURCE_NAME = "EXTRA_SOURCE_NAME"
+        const val EXTRA_AUDIO_SOURCE_IDS = "EXTRA_SOURCE_ID"
+        const val EXTRA_AUDIO_SOURCE_NAMES = "EXTRA_SOURCE_NAME"
+
+        fun launch(
+            context: Context,
+            audioSourceIds: IntArray,
+            audioSourceNames: Array<String>
+        ) {
+            val intent = Intent(
+                context,
+                MyPreferencesActivity::class.java
+            )
+            intent.putExtra(
+                EXTRA_AUDIO_SOURCE_IDS,
+                audioSourceIds
+            )
+            intent.putExtra(
+                EXTRA_AUDIO_SOURCE_NAMES,
+                audioSourceNames
+            )
+            context.startActivity(intent)
+        }
 
         private lateinit var audioSources: Array<String?>
         private lateinit var audioSourcesName: Array<String?>
@@ -69,10 +91,10 @@ class MyPreferencesActivity : PreferenceActivity() {
 
         // Get list of default sources
         val intent = intent
-        val asid = intent.getIntArrayExtra(EXTRA_SOURCE_ID)
-        val `as` = intent.getStringArrayExtra(EXTRA_SOURCE_NAME)
+        val audioSourceIds = intent.getIntArrayExtra(EXTRA_AUDIO_SOURCE_IDS)
+        val audioSourcesNames = intent.getStringArrayExtra(EXTRA_AUDIO_SOURCE_NAMES)
         var nExtraSources = 0
-        for (id in asid!!) {
+        for (id in audioSourceIds!!) {
             // See SamplingLoopThread::run() for the magic number 1000
             if (id >= 1000) nExtraSources++
         }
@@ -94,11 +116,11 @@ class MyPreferencesActivity : PreferenceActivity() {
             audioSources[j] = audioSourcesId[j].toString()
             j++
         }
-        for (i in asid.indices) {
+        for (i in audioSourceIds.indices) {
             // See SamplingLoopThread::run() for the magic number 1000
-            if (asid[i] >= 1000) {
-                audioSources[j] = asid[i].toString()
-                audioSourcesName[j] = `as`!![i]
+            if (audioSourceIds[i] >= 1000) {
+                audioSources[j] = audioSourceIds[i].toString()
+                audioSourcesName[j] = audioSourcesNames!![i]
                 j++
             }
         }

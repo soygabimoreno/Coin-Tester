@@ -100,7 +100,6 @@ class AnalyzerFragment : BaseFragment<
     var maxAmplitudeDB = 0.0
     private var maxAmplitudeFreq = 0.0
 
-    @JvmField
     var viewRangeArray: DoubleArray? = null
     private var isMeasure = false
     private var isLockViewRange = false
@@ -237,19 +236,19 @@ class AnalyzerFragment : BaseFragment<
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         savedInstanceState.putDouble(
-            "dtRMS",
+            STATE_DT_RMS,
             dtRMS
         )
         savedInstanceState.putDouble(
-            "dtRMSFromFT",
+            STATE_DT_RMS_FROM_FT,
             dtRMSFromFT
         )
         savedInstanceState.putDouble(
-            "maxAmpDB",
+            STATE_MAX_AMPLITUDE_DB,
             maxAmplitudeDB
         )
         savedInstanceState.putDouble(
-            "maxAmplitudeFreq",
+            STATE_MAX_AMPLITUDE_FREQUENCY,
             maxAmplitudeFreq
         )
         super.onSaveInstanceState(savedInstanceState)
@@ -258,9 +257,9 @@ class AnalyzerFragment : BaseFragment<
     override fun onActivityCreated(savedInstanceState: Bundle?) { // Equivalent to onRestoreInstanceState()
         super.onActivityCreated(savedInstanceState)
         if (savedInstanceState != null) {
-            dtRMS = savedInstanceState.getDouble("dtRMS")
-            dtRMSFromFT = savedInstanceState.getDouble("dtRMSFromFT")
-            maxAmplitudeDB = savedInstanceState.getDouble("maxAmpDB")
+            dtRMS = savedInstanceState.getDouble(STATE_DT_RMS)
+            dtRMSFromFT = savedInstanceState.getDouble(STATE_DT_RMS_FROM_FT)
+            maxAmplitudeDB = savedInstanceState.getDouble(STATE_MAX_AMPLITUDE_DB)
             maxAmplitudeFreq = savedInstanceState.getDouble("maxAmplitudeFreq")
         }
     }
@@ -301,19 +300,11 @@ class AnalyzerFragment : BaseFragment<
                 true
             }
             R.id.menuMainPreferences -> {
-                val settings = Intent(
-                    requireActivity().baseContext,
-                    MyPreferencesActivity::class.java
-                )
-                settings.putExtra(
-                    MyPreferencesActivity.EXTRA_SOURCE_ID,
-                    analyzerParams.audioSourceIds
-                )
-                settings.putExtra(
-                    MyPreferencesActivity.EXTRA_SOURCE_NAME,
+                MyPreferencesActivity.launch(
+                    requireContext(),
+                    analyzerParams.audioSourceIds,
                     analyzerParams.audioSourceNames
                 )
-                requireActivity().startActivity(settings)
                 true
             }
             R.id.menuMainAudioSourcesChecker -> {
@@ -326,7 +317,7 @@ class AnalyzerFragment : BaseFragment<
                 true
             }
             R.id.menuMainRanges -> {
-                rangeViewDialogC.ShowRangeViewDialog()
+                rangeViewDialogC.show()
                 true
             }
             R.id.menuMainCalibration -> {
