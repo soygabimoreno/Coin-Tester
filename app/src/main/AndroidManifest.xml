@@ -32,7 +32,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"/>
         <activity
-            android:name="com.appacoustic.cointester.aaa.analyzer.settings.MyPreferencesActivity"
+            android:name="com.appacoustic.cointester.presentation.mypreference.MyPreferenceActivity"
             android:label="@string/preferences"
             android:screenOrientation="portrait"/>
         <activity

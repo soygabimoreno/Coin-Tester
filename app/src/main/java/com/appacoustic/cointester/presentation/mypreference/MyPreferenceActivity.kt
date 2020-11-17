@@ -1,4 +1,4 @@
-package com.appacoustic.cointester.aaa.analyzer.settings
+package com.appacoustic.cointester.presentation.mypreference
 
 import android.content.Context
 import android.content.Intent
@@ -9,10 +9,9 @@ import android.preference.ListPreference
 import android.preference.PreferenceActivity
 import com.appacoustic.cointester.R
 import com.appacoustic.cointester.aaa.analyzer.AnalyzerUtil
-import com.appacoustic.cointester.libFramework.KLog.Companion.e
-import com.appacoustic.cointester.libFramework.KLog.Companion.i
+import com.appacoustic.cointester.libFramework.KLog
 
-class MyPreferencesActivity : PreferenceActivity() {
+class MyPreferenceActivity : PreferenceActivity() {
 
     companion object {
         const val EXTRA_AUDIO_SOURCE_IDS = "EXTRA_SOURCE_ID"
@@ -25,7 +24,7 @@ class MyPreferencesActivity : PreferenceActivity() {
         ) {
             val intent = Intent(
                 context,
-                MyPreferencesActivity::class.java
+                MyPreferenceActivity::class.java
             )
             intent.putExtra(
                 EXTRA_AUDIO_SOURCE_IDS,
@@ -40,16 +39,20 @@ class MyPreferencesActivity : PreferenceActivity() {
 
         private lateinit var audioSources: Array<String?>
         private lateinit var audioSourcesName: Array<String?>
-        private fun getAudioSourceNameFromId(id: Int): String? {
+
+        private fun findAudioSourceNameById(id: Int): String? {
             for (i in audioSources.indices) {
                 if (audioSources[i] == id.toString()) {
                     return audioSourcesName[i]
                 }
             }
-            e("getAudioSourceName(): no this entry.")
+            KLog.e("getAudioSourceName(): no this entry.")
             return ""
         }
     }
+
+    private lateinit var audioSourceIds: IntArray
+    private lateinit var audioSourcesNames: Array<String>
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,10 +60,13 @@ class MyPreferencesActivity : PreferenceActivity() {
 
         // as soon as the user modifies a preference,
         // the system saves the changes to a default SharedPreferences file
+
+        audioSourceIds = intent.getIntArrayExtra(EXTRA_AUDIO_SOURCE_IDS)!!
+        audioSourcesNames = intent.getStringArrayExtra(EXTRA_AUDIO_SOURCE_NAMES)!!
     }
 
     private val prefListener = OnSharedPreferenceChangeListener { prefs, key ->
-        i("$key=$prefs")
+        KLog.i("$key=$prefs")
         if (key == null || key == "windowFunction") {
             val connectionPref = findPreference(key)
             connectionPref.summary = prefs.getString(
@@ -75,7 +81,7 @@ class MyPreferencesActivity : PreferenceActivity() {
             )
             val audioSourceId = asi!!.toInt()
             val connectionPref = findPreference(key)
-            connectionPref.summary = getAudioSourceNameFromId(audioSourceId)
+            connectionPref.summary = findAudioSourceNameById(audioSourceId)
         }
         if (key == null || key == "spectrogramColorMap") {
             val connectionPref = findPreference(key)
@@ -91,10 +97,8 @@ class MyPreferencesActivity : PreferenceActivity() {
 
         // Get list of default sources
         val intent = intent
-        val audioSourceIds = intent.getIntArrayExtra(EXTRA_AUDIO_SOURCE_IDS)
-        val audioSourcesNames = intent.getStringArrayExtra(EXTRA_AUDIO_SOURCE_NAMES)
         var nExtraSources = 0
-        for (id in audioSourceIds!!) {
+        for (id in audioSourceIds) {
             // See SamplingLoopThread::run() for the magic number 1000
             if (id >= 1000) nExtraSources++
         }
@@ -102,8 +106,8 @@ class MyPreferencesActivity : PreferenceActivity() {
         // Get list of supported sources
         val au = AnalyzerUtil(this)
         val audioSourcesId = au.GetAllAudioSource(4)
-        i(" n_as = " + audioSourcesId.size)
-        i(" n_ex = $nExtraSources")
+        KLog.i(" n_as = " + audioSourcesId.size)
+        KLog.i(" n_ex = $nExtraSources")
         audioSourcesName = arrayOfNulls(audioSourcesId.size + nExtraSources)
         for (i in audioSourcesId.indices) {
             audioSourcesName[i] = au.getAudioSourceName(audioSourcesId[i])
@@ -120,21 +124,24 @@ class MyPreferencesActivity : PreferenceActivity() {
             // See SamplingLoopThread::run() for the magic number 1000
             if (audioSourceIds[i] >= 1000) {
                 audioSources[j] = audioSourceIds[i].toString()
-                audioSourcesName[j] = audioSourcesNames!![i]
+                audioSourcesName[j] = audioSourcesNames[i]
                 j++
             }
         }
-        val lp = findPreference("audioSource") as ListPreference
-        lp.setDefaultValue(MediaRecorder.AudioSource.VOICE_RECOGNITION)
-        lp.entries = audioSourcesName
-        lp.entryValues = audioSources
-        preferenceScreen.sharedPreferences
+
+        val listPreference = findPreference("audioSource") as ListPreference
+        listPreference.setDefaultValue(MediaRecorder.AudioSource.VOICE_RECOGNITION)
+        listPreference.entries = audioSourcesName
+        listPreference.entryValues = audioSources
+        preferenceScreen
+            .sharedPreferences
             .registerOnSharedPreferenceChangeListener(prefListener)
     }
 
     override fun onPause() {
         super.onPause()
-        preferenceScreen.sharedPreferences
+        preferenceScreen
+            .sharedPreferences
             .unregisterOnSharedPreferenceChangeListener(prefListener)
     }
 }

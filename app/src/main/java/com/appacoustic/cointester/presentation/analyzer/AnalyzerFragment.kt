@@ -25,7 +25,6 @@ import com.appacoustic.cointester.aaa.analyzer.AnalyzerUtil
 import com.appacoustic.cointester.aaa.analyzer.SamplingLoopThread
 import com.appacoustic.cointester.aaa.analyzer.settings.AudioSourcesCheckerActivity
 import com.appacoustic.cointester.aaa.analyzer.settings.CalibrationLoad
-import com.appacoustic.cointester.aaa.analyzer.settings.MyPreferencesActivity
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView.OnReadyListener
 import com.appacoustic.cointester.aaa.analyzer.view.SelectorText
@@ -36,6 +35,7 @@ import com.appacoustic.cointester.libbase.fragment.BaseFragment
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
 import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.presentation.analyzer.view.RangeViewDialogC
+import com.appacoustic.cointester.presentation.mypreference.MyPreferenceActivity
 import kotlinx.android.synthetic.main.fragment_analyzer.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -300,7 +300,7 @@ class AnalyzerFragment : BaseFragment<
                 true
             }
             R.id.menuMainPreferences -> {
-                MyPreferencesActivity.launch(
+                MyPreferenceActivity.launch(
                     requireContext(),
                     analyzerParams.audioSourceIds,
                     analyzerParams.audioSourceNames
