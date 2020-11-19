@@ -132,4 +132,11 @@
             app:items="run stop"
             app:itemsDisplay="@string/tv_run_stop"/>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvCustomRMS"
+        tools:text="3.5 dB"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </LinearLayout>

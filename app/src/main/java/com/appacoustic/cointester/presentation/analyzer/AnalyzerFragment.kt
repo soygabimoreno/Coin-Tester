@@ -69,6 +69,7 @@ class AnalyzerFragment : BaseFragment<
     override val viewModel: AnalyzerViewModel by viewModel()
 
     override fun initUI() {
+        tvCustomRMS.text = "45.9 dB"
     }
 
     override fun renderViewState(viewState: AnalyzerViewModel.ViewState) {
