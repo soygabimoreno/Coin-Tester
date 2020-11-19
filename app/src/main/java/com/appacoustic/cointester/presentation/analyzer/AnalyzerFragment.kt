@@ -57,6 +57,9 @@ class AnalyzerFragment : BaseFragment<
         private const val STATE_MAX_AMPLITUDE_DB = "STATE_MAX_AMPLITUDE_DB"
         private const val STATE_MAX_AMPLITUDE_FREQUENCY = "STATE_MAX_AMPLITUDE_FREQUENCY"
 
+        private const val REC = "Rec"
+        private const val STOP = "stop"
+
         fun newInstance() = AnalyzerFragment()
 
         private const val MIN_VALUE = Double.MIN_VALUE
@@ -153,12 +156,12 @@ class AnalyzerFragment : BaseFragment<
         analyzerViews = AnalyzerViews(
             activity = requireActivity(),
             analyzerFragment = this,
-            agvAnalyzer = agvAnalyzer
+            agv = agv
         )
 
         // travel Views, and attach ClickListener to the views that contain android:tag="select"
         visit(
-            agvAnalyzer.rootView as ViewGroup,
+            agv.rootView as ViewGroup,
             object : Visit {
                 override fun exec(view: View) {
                     view.setOnLongClickListener(this@AnalyzerFragment)
@@ -172,7 +175,7 @@ class AnalyzerFragment : BaseFragment<
         rangeViewDialogC = RangeViewDialogC(
             requireActivity(),
             this,
-            agvAnalyzer
+            agv
         )
 
         gestureDetector = GestureDetectorCompat(
@@ -203,21 +206,21 @@ class AnalyzerFragment : BaseFragment<
             } else {
                 // When finger is outside the plot, hide the marker and go to scaling mode.
                 if (isMeasure) {
-                    agvAnalyzer.hideMarker()
+                    agv.hideMarker()
                     switchMeasureAndScaleMode()
                 }
             }
             true
         }
-        btnAnalyzerSampleRate.setOnClickListener { v -> analyzerViews.showPopupMenu(v) }
-        btnAnalyzerFFTLength.setOnClickListener { v -> analyzerViews.showPopupMenu(v) }
-        btnAnalyzerAverage.setOnClickListener { v -> analyzerViews.showPopupMenu(v) }
+        btnSampleRate.setOnClickListener { v -> analyzerViews.showPopupMenu(v) }
+        btnFFTLength.setOnClickListener { v -> analyzerViews.showPopupMenu(v) }
+        btnAverage.setOnClickListener { v -> analyzerViews.showPopupMenu(v) }
     }
 
     override fun onResume() {
         super.onResume()
         loadPreferences()
-        agvAnalyzer.setReady(this) // TODO: move this earlier?
+        agv.setReady(this) // TODO: move this earlier?
         analyzerViews.enableSaveWavView(saveWav)
 
         // Used to prevent extra calling to restartSampling() (e.g. in LoadPreferences())
@@ -412,7 +415,7 @@ class AnalyzerFragment : BaseFragment<
 
         // so change of sample rate do not change view range
         if (!isLockViewRange) {
-            viewRangeArray = agvAnalyzer.viewPhysicalRange as DoubleArray
+            viewRangeArray = agv.viewPhysicalRange as DoubleArray
             // if range is align at boundary, extend the range.
             if (viewRangeArray!!.get(0) == viewRangeArray!!.get(6)) {
                 viewRangeArray!!.set(
@@ -422,7 +425,7 @@ class AnalyzerFragment : BaseFragment<
             }
         }
         when (buttonId) {
-            R.id.btnAnalyzerSampleRate -> {
+            R.id.btnSampleRate -> {
                 analyzerViews.popupMenuSampleRate.dismiss()
                 if (!isLockViewRange) {
                     if (viewRangeArray!![1] == viewRangeArray!![6 + 1]) {
@@ -436,7 +439,7 @@ class AnalyzerFragment : BaseFragment<
                     analyzerParams.sampleRate
                 )
             }
-            R.id.btnAnalyzerFFTLength -> {
+            R.id.btnFFTLength -> {
                 analyzerViews.popupMenuFFTLen.dismiss()
                 analyzerParams.fftLength = selectedItemTag.toInt()
                 analyzerParams.hopLength = (analyzerParams.fftLength * (1 - analyzerParams.overlapPercent / 100) + 0.5).toInt()
@@ -450,10 +453,10 @@ class AnalyzerFragment : BaseFragment<
                     calibrationLoad
                 )
             }
-            R.id.btnAnalyzerAverage -> {
+            R.id.btnAverage -> {
                 analyzerViews.popupMenuFFTAverage.dismiss()
                 analyzerParams.nFftAverage = selectedItemTag.toInt()
-                agvAnalyzer.setTimeMultiplier(analyzerParams.nFftAverage)
+                agv.setTimeMultiplier(analyzerParams.nFftAverage)
                 b_need_restart_audio = false
                 editor.putInt(
                     "button_average",
@@ -494,24 +497,24 @@ class AnalyzerFragment : BaseFragment<
             false
         )
         if (analyzerParams.dbaWeighting) {
-            tvAnalyzerDBDBA.nextValue()
+            stDBDBA.nextValue()
         }
         val isSpam = sharedPref.getBoolean(
             "spectrum_spectrogram_mode",
             true
         )
         if (!isSpam) {
-            tvAnalyzerSpectrumSpectrogramMode.nextValue()
+            stSpectrumSpectrogramMode.nextValue()
         }
         val axisMode = sharedPref.getString(
             "freq_scaling_mode",
             "linear"
         )
-        tvAnalyzerLinearLogNote.value = axisMode
+        stLinearLogNote.value = axisMode
         KLog.i("sampleRate = ${analyzerParams.sampleRate}, fFTLength = ${analyzerParams.fftLength}, nFFTAverage = ${analyzerParams.nFftAverage}")
-        btnAnalyzerSampleRate.text = analyzerParams.sampleRate.toString()
-        btnAnalyzerFFTLength.text = analyzerParams.fftLength.toString()
-        btnAnalyzerAverage.text = analyzerParams.nFftAverage.toString()
+        btnSampleRate.text = analyzerParams.sampleRate.toString()
+        btnFFTLength.text = analyzerParams.fftLength.toString()
+        btnAverage.text = analyzerParams.nFftAverage.toString()
     }
 
     private fun loadPreferences() {
@@ -546,14 +549,14 @@ class AnalyzerFragment : BaseFragment<
 
         // Settings of graph view
         // spectrum
-        agvAnalyzer.setShowLines(
+        agv.setShowLines(
             sharedPref.getBoolean(
                 "showLines",
                 false
             )
         )
         // set spectrum show range
-        agvAnalyzer.setSpectrumDBLowerBound(
+        agv.setSpectrumDBLowerBound(
             sharedPref.getString(
                 "spectrumRange",
                 java.lang.Double.toString(AnalyzerGraphicView.MIN_DB)
@@ -561,44 +564,44 @@ class AnalyzerFragment : BaseFragment<
         )
 
         // spectrogram
-        agvAnalyzer.setSpectrogramModeShifting(
+        agv.setSpectrogramModeShifting(
             sharedPref.getBoolean(
                 "spectrogramShifting",
                 false
             )
         )
-        agvAnalyzer.setShowTimeAxis(
+        agv.setShowTimeAxis(
             sharedPref.getBoolean(
                 "spectrogramTimeAxis",
                 true
             )
         )
-        agvAnalyzer.setShowFreqAlongX(
+        agv.setShowFreqAlongX(
             sharedPref.getBoolean(
                 "spectrogramShowFreqAlongX",
                 true
             )
         )
-        agvAnalyzer.setSmoothRender(
+        agv.setSmoothRender(
             sharedPref.getBoolean(
                 "spectrogramSmoothRender",
                 false
             )
         )
-        agvAnalyzer.setColorMap(
+        agv.setColorMap(
             sharedPref.getString(
                 "spectrogramColorMap",
                 "Hot"
             )
         )
         // set spectrogram show range
-        agvAnalyzer.setSpectrogramDBLowerBound(
+        agv.setSpectrogramDBLowerBound(
             sharedPref.getString(
                 "spectrogramRange",
-                java.lang.Double.toString(agvAnalyzer.spectrogramPlot!!.spectrogramBMP.getdBLowerBound())
+                java.lang.Double.toString(agv.spectrogramPlot!!.spectrogramBMP.getdBLowerBound())
             )!!.toFloat().toDouble()
         )
-        agvAnalyzer.setLogAxisMode(
+        agv.setLogAxisMode(
             sharedPref.getBoolean(
                 "spectrogramLogPlotMethod",
                 true
@@ -617,7 +620,7 @@ class AnalyzerFragment : BaseFragment<
 
         // Apply settings by travel the views with android:tag="select":
         visit(
-            agvAnalyzer.rootView as ViewGroup,
+            agv.rootView as ViewGroup,
             object : Visit {
                 override fun exec(v: View) {
                     processClick(v)
@@ -668,9 +671,9 @@ class AnalyzerFragment : BaseFragment<
         x: Float,
         y: Float
     ): Boolean {
-        agvAnalyzer.getLocationInWindow(windowLocation)
-        return x >= windowLocation[0] && y >= windowLocation[1] && x < windowLocation[0] + (agvAnalyzer.width
-            ?: 0) && y < windowLocation[1] + (agvAnalyzer.height
+        agv.getLocationInWindow(windowLocation)
+        return x >= windowLocation[0] && y >= windowLocation[1] && x < windowLocation[0] + (agv.width
+            ?: 0) && y < windowLocation[1] + (agv.height
             ?: 0)
     }
 
@@ -710,7 +713,7 @@ class AnalyzerFragment : BaseFragment<
         override fun onDoubleTap(event: MotionEvent): Boolean {
             if (!isMeasure) {
                 scaleEvent(event) // ends scale mode
-                agvAnalyzer.resetViewScale()
+                agv.resetViewScale()
             }
             return true
         }
@@ -760,8 +763,8 @@ class AnalyzerFragment : BaseFragment<
                 if (shiftingVelocity > 0f
                     && SystemClock.uptimeMillis() - timeFlingStart < 10000
                 ) {
-                    agvAnalyzer.xShift = agvAnalyzer.xShift - shiftingComponentX * shiftingPixel / agvAnalyzer.canvasWidth / agvAnalyzer.xZoom
-                    agvAnalyzer.yShift = agvAnalyzer.yShift - shiftingComponentY * shiftingPixel / agvAnalyzer.canvasHeight / agvAnalyzer.yZoom
+                    agv.xShift = agv.xShift - shiftingComponentX * shiftingPixel / agv.canvasWidth / agv.xZoom
+                    agv.yShift = agv.yShift - shiftingComponentY * shiftingPixel / agv.canvasHeight / agv.yZoom
                     // Am I need to use runOnUiThread() ?
                     analyzerViews.invalidateGraphView()
                     flyingMoveHandler.postDelayed(
@@ -786,7 +789,7 @@ class AnalyzerFragment : BaseFragment<
      */
     private fun measureEvent(event: MotionEvent) {
         when (event.pointerCount) {
-            1 -> agvAnalyzer.setMarker(
+            1 -> agv.setMarker(
                 event.x,
                 event.y
             )
@@ -818,14 +821,14 @@ class AnalyzerFragment : BaseFragment<
         when (event.pointerCount) {
             2 -> {
                 if (isPinching) {
-                    agvAnalyzer.setShiftScale(
+                    agv.setShiftScale(
                         event.getX(0).toDouble(),
                         event.getY(0).toDouble(),
                         event.getX(1).toDouble(),
                         event.getY(1).toDouble()
                     )
                 } else {
-                    agvAnalyzer.setShiftScaleBegin(
+                    agv.setShiftScaleBegin(
                         event.getX(0).toDouble(),
                         event.getY(0).toDouble(),
                         event.getX(1).toDouble(),
@@ -837,22 +840,22 @@ class AnalyzerFragment : BaseFragment<
             1 -> {
                 val x = event.getX(0)
                 val y = event.getY(0)
-                agvAnalyzer.getLocationInWindow(windowLocation)
+                agv.getLocationInWindow(windowLocation)
                 // KLog.Companion.i("scaleEvent(): xy=" + x + " " + y + "  wc = " + wc[0] + " " + wc[1]);
                 if (isPinching || xShift0 == MIN_VALUE) {
-                    xShift0 = agvAnalyzer.xShift
+                    xShift0 = agv.xShift
                     x0 = x.toDouble()
-                    yShift0 = agvAnalyzer.yShift
+                    yShift0 = agv.yShift
                     y0 = y.toDouble()
                 } else {
                     // when close to the axis, scroll that axis only
                     if (x0 < windowLocation[0] + 50) {
-                        agvAnalyzer.yShift = yShift0 + (y0 - y) / agvAnalyzer.canvasHeight / agvAnalyzer.yZoom
+                        agv.yShift = yShift0 + (y0 - y) / agv.canvasHeight / agv.yZoom
                     } else if (y0 < windowLocation[1] + 50) {
-                        agvAnalyzer.xShift = xShift0 + (x0 - x) / agvAnalyzer.canvasWidth / agvAnalyzer.xZoom
+                        agv.xShift = xShift0 + (x0 - x) / agv.canvasWidth / agv.xZoom
                     } else {
-                        agvAnalyzer.xShift = xShift0 + (x0 - x) / agvAnalyzer.canvasWidth / agvAnalyzer.xZoom
-                        agvAnalyzer.yShift = yShift0 + (y0 - y) / agvAnalyzer.canvasHeight / agvAnalyzer.yZoom
+                        agv.xShift = xShift0 + (x0 - x) / agv.canvasWidth / agv.xZoom
+                        agv.yShift = yShift0 + (y0 - y) / agv.canvasHeight / agv.yZoom
                     }
                 }
                 isPinching = false
@@ -883,9 +886,9 @@ class AnalyzerFragment : BaseFragment<
     private fun restartSampling(params: AnalyzerParams) {
         viewModel.releaseSampling()
         if (viewRangeArray != null) {
-            agvAnalyzer.setupAxes(this.analyzerParams)
-            val rangeDefault = agvAnalyzer.viewPhysicalRange
-            agvAnalyzer.setViewRange(
+            agv.setupAxes(this.analyzerParams)
+            val rangeDefault = agv.viewPhysicalRange
+            agv.setViewRange(
                 viewRangeArray,
                 rangeDefault
             )
@@ -904,7 +907,7 @@ class AnalyzerFragment : BaseFragment<
         val samplingThread = SamplingLoopThread(
             params,
             analyzerViews,
-            tvAnalyzerRunStop.value == "stop",
+            stRunStop.value == STOP,
             saveWav,
             object : SamplingLoopThread.Listener {
                 override fun onInitGraphs() {
@@ -991,7 +994,7 @@ class AnalyzerFragment : BaseFragment<
             )
             != PackageManager.PERMISSION_GRANTED
         ) {
-            tvAnalyzerMonitorRecord.nextValue()
+            stMonitorRecord.nextValue()
             saveWav = false
             analyzerViews.enableSaveWavView(saveWav)
             //      ((SelectorText) findViewById(R.id.tvAnalyzerRecording)).performClick();
@@ -1018,7 +1021,7 @@ class AnalyzerFragment : BaseFragment<
                 if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (!saveWav) {
                         requireActivity().runOnUiThread {
-                            tvAnalyzerMonitorRecord.nextValue()
+                            stMonitorRecord.nextValue()
                             saveWav = true
                             analyzerViews.enableSaveWavView(saveWav)
                         }
@@ -1045,10 +1048,10 @@ class AnalyzerFragment : BaseFragment<
             (v as TextView).text.toString()
         }
         return when (v.id) {
-            R.id.tvAnalyzerMonitorRecord -> {
-                saveWav = value == "Rec"
+            R.id.stMonitorRecord -> {
+                saveWav = value == REC
                 //  SelectorText st = (SelectorText) findViewById(R.id.run);
-                //  if (saveWav && ! st.getText().toString().equals("stop")) {
+                //  if (saveWav && ! st.getText().toString().equals(STOP)) {
                 //    st.nextValue();
                 //    if (samplingThread != null) {
                 //      samplingThread.setPaused(true);
@@ -1057,14 +1060,14 @@ class AnalyzerFragment : BaseFragment<
                 analyzerViews.enableSaveWavView(saveWav)
                 true
             }
-            R.id.tvAnalyzerRunStop -> {
-                val paused = value == "stop"
+            R.id.stRunStop -> {
+                val paused = value == STOP
                 viewModel.setSamplingPaused(paused)
-                agvAnalyzer.spectrogramPlot?.setPause(paused)
+                agv.spectrogramPlot?.setPause(paused)
                 false
             }
-            R.id.tvAnalyzerLinearLogNote -> {
-                agvAnalyzer.setAxisModeLinear(value)
+            R.id.stLinearLogNote -> {
+                agv.setAxisModeLinear(value)
                 editor.putString(
                     "freq_scaling_mode",
                     value
@@ -1072,7 +1075,7 @@ class AnalyzerFragment : BaseFragment<
                 editor.apply()
                 false
             }
-            R.id.tvAnalyzerDBDBA -> {
+            R.id.stDBDBA -> {
                 analyzerParams.dbaWeighting = value != "dB"
                 viewModel.setSamplingDbaWeighting(analyzerParams.dbaWeighting)
                 editor.putBoolean(
@@ -1082,11 +1085,11 @@ class AnalyzerFragment : BaseFragment<
                 editor.commit()
                 false
             }
-            R.id.tvAnalyzerSpectrumSpectrogramMode -> {
+            R.id.stSpectrumSpectrogramMode -> {
                 if (value == "spum") {
-                    agvAnalyzer.switch2Spectrum()
+                    agv.switch2Spectrum()
                 } else {
-                    agvAnalyzer.switch2Spectrogram()
+                    agv.switch2Spectrogram()
                 }
                 editor.putBoolean(
                     "spectrum_spectrogram_mode",

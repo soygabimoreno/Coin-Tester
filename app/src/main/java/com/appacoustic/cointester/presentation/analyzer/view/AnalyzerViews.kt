@@ -24,6 +24,8 @@ import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView
 import com.appacoustic.cointester.presentation.analyzer.AnalyzerFragment
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
 import kotlinx.android.synthetic.main.fragment_analyzer.*
+import kotlin.math.log10
+import kotlin.math.min
 
 /**
  * Operate the views in the UI here.
@@ -32,7 +34,7 @@ import kotlinx.android.synthetic.main.fragment_analyzer.*
 class AnalyzerViews(
     private val activity: Activity,
     private val analyzerFragment: AnalyzerFragment,
-    private val agvAnalyzer: AnalyzerGraphicView
+    private val agv: AnalyzerGraphicView
 ) {
 
     companion object {
@@ -68,15 +70,15 @@ class AnalyzerViews(
     init {
         popupMenuSampleRate = popupMenuCreate(
             AnalyzerUtil.validateAudioRates(activity.resources.getStringArray(R.array.sample_rates)),
-            R.id.btnAnalyzerSampleRate
+            R.id.btnSampleRate
         )
         popupMenuFFTLen = popupMenuCreate(
             activity.resources.getStringArray(R.array.fft_lengths),
-            R.id.btnAnalyzerFFTLength
+            R.id.btnFFTLength
         )
         popupMenuFFTAverage = popupMenuCreate(
             activity.resources.getStringArray(R.array.fft_averages),
-            R.id.btnAnalyzerAverage
+            R.id.btnAverage
         )
         setTextViewFontSize()
     }
@@ -86,7 +88,7 @@ class AnalyzerViews(
         val display = activity.windowManager.defaultDisplay
         // pixels left
         val px = display.width - activity.resources.getDimension(R.dimen.tv_RMS_layout_width) - 5
-        var fs = activity.tvAnalyzerMarker!!.textSize // size in pixel
+        var fs = activity.tvMarker.textSize // size in pixel
 
         // shrink font size if it can not fit in one line.
         val text = activity.getString(R.string.tv_peak_text)
@@ -98,11 +100,11 @@ class AnalyzerViews(
             fs -= 0.5f
             mTestPaint.textSize = fs
         }
-        activity.tvAnalyzerMarker!!.setTextSize(
+        activity.tvMarker.setTextSize(
             TypedValue.COMPLEX_UNIT_PX,
             fs
         )
-        activity.tvAnalyzerPeak!!.setTextSize(
+        activity.tvPeak.setTextSize(
             TypedValue.COMPLEX_UNIT_PX,
             fs
         )
@@ -111,12 +113,12 @@ class AnalyzerViews(
     // Prepare the spectrum and spectrogram plot (from scratch or full reset)
     // Should be called before samplingThread starts.
     fun setupView(params: AnalyzerParams?) {
-        agvAnalyzer.setupPlot(params)
+        agv.setupPlot(params)
     }
 
     // Will be called by SamplingLoopThread (in another thread)
     fun update(spectrumDBcopy: DoubleArray?) {
-        agvAnalyzer.saveSpectrum(spectrumDBcopy)
+        agv.saveSpectrum(spectrumDBcopy)
         activity.runOnUiThread { // data will get out of synchronize here
             invalidateGraphView()
         }
@@ -204,9 +206,9 @@ class AnalyzerViews(
 
     fun enableSaveWavView(bSaveWav: Boolean) {
         if (bSaveWav) {
-            activity.tvAnalyzerRec!!.height = (19 * dpRatio).toInt()
+            activity.tvRec.height = (19 * dpRatio).toInt()
         } else {
-            activity.tvAnalyzerRec!!.height = (0 * dpRatio).toInt()
+            activity.tvRec.height = (0 * dpRatio).toInt()
         }
     }
 
@@ -217,19 +219,19 @@ class AnalyzerViews(
         val y_bottom = activity.windowManager.defaultDisplay.height - wl[1]
         val gravity = Gravity.START or Gravity.BOTTOM
         when (view.id) {
-            R.id.btnAnalyzerSampleRate -> popupMenuSampleRate.showAtLocation(
+            R.id.btnSampleRate -> popupMenuSampleRate.showAtLocation(
                 view,
                 gravity,
                 x_left,
                 y_bottom
             )
-            R.id.btnAnalyzerFFTLength -> popupMenuFFTLen.showAtLocation(
+            R.id.btnFFTLength -> popupMenuFFTLen.showAtLocation(
                 view,
                 gravity,
                 x_left,
                 y_bottom
             )
-            R.id.btnAnalyzerAverage -> popupMenuFFTAverage.showAtLocation(
+            R.id.btnAverage -> popupMenuFFTAverage.showAtLocation(
                 view,
                 gravity,
                 x_left,
@@ -348,8 +350,8 @@ class AnalyzerViews(
         }
     }
 
-    private fun refreshMarkerLabel() {
-        val f1 = agvAnalyzer.markerFreq
+    private fun refreshTvMarker() {
+        val f1 = agv.markerFreq
         sbMarker.setLength(0)
         sbMarker.append(activity.getString(R.string.tv_marker_text_empty))
         SBNumFormat.fillInNumFixedWidthPositive(
@@ -367,57 +369,57 @@ class AnalyzerViews(
         sbMarker.append(") ")
         SBNumFormat.fillInNumFixedWidth(
             sbMarker,
-            agvAnalyzer.markerDB,
+            agv.markerDB,
             3,
             1
         )
         sbMarker.append("dB")
         sbMarker.getChars(
             0,
-            Math.min(
+            min(
                 sbMarker.length,
                 charMarker.size
             ),
             charMarker,
             0
         )
-        activity.tvAnalyzerMarker!!.setText(
+        activity.tvMarker.setText(
             charMarker,
             0,
-            Math.min(
+            min(
                 sbMarker.length,
                 charMarker.size
             )
         )
     }
 
-    private fun refreshRMSLabel(dtRMSFromFT: Double) {
+    private fun refreshTvRMS(dtRMSFromFT: Double) {
         sbRMS.setLength(0)
         sbRMS.append("RMS:dB \n")
         SBNumFormat.fillInNumFixedWidth(
             sbRMS,
-            20 * Math.log10(dtRMSFromFT),
+            20 * log10(dtRMSFromFT),
             3,
             1
         )
         sbRMS.getChars(
             0,
-            Math.min(
+            min(
                 sbRMS.length,
                 charRMS.size
             ),
             charRMS,
             0
         )
-        activity.tvAnalyzerRMS!!.setText(
+        activity.tvRMS.setText(
             charRMS,
             0,
             charRMS.size
         )
-        activity.tvAnalyzerRMS!!.invalidate()
+        activity.tvRMS.invalidate()
     }
 
-    private fun refreshPeakLabel(
+    private fun refreshTvPeak(
         maxAmpFreq: Double,
         maxAmpDB: Double
     ) {
@@ -445,22 +447,22 @@ class AnalyzerViews(
         sbPeak.append("dB")
         sbPeak.getChars(
             0,
-            Math.min(
+            min(
                 sbPeak.length,
                 charPeak.size
             ),
             charPeak,
             0
         )
-        activity.tvAnalyzerPeak!!.setText(
+        activity.tvPeak.setText(
             charPeak,
             0,
             charPeak.size
         )
-        activity.tvAnalyzerPeak!!.invalidate()
+        activity.tvPeak.invalidate()
     }
 
-    private fun refreshRecTimeLable(
+    private fun refreshTvRec(
         wavSec: Double,
         wavSecRemain: Double
     ) {
@@ -480,22 +482,21 @@ class AnalyzerViews(
         )
         sbRec.getChars(
             0,
-            Math.min(
+            min(
                 sbRec.length,
                 charRec.size
             ),
             charRec,
             0
         )
-        activity.tvAnalyzerRec!!.setText(
+        activity.tvRec.setText(
             charRec,
             0,
-            Math.min(
+            min(
                 sbRec.length,
                 charRec.size
             )
         )
-        //        tvRec.invalidate(); // COMMENT: No haría falta ???
     }
 
     private var timeToUpdate = SystemClock.uptimeMillis()
@@ -514,7 +515,7 @@ class AnalyzerViews(
         }
         isInvalidating = true
         val frameTime: Long // time delay for next frame
-        frameTime = if (agvAnalyzer.showMode != AnalyzerGraphicView.PlotMode.SPECTRUM) {
+        frameTime = if (agv.showMode != AnalyzerGraphicView.PlotMode.SPECTRUM) {
             (1000 / fpsLimit).toLong() // use a much lower frame rate for spectrogram
         } else {
             1000 / 60.toLong()
@@ -528,18 +529,18 @@ class AnalyzerViews(
             idPaddingInvalidate = false
             // Take care of synchronization of analyzerGraphic.spectrogramColors and iTimePointer,
             // and then just do invalidate() here.
-            if (viewMask and VIEW_MASK_graphView != 0) agvAnalyzer.invalidate()
+            if (viewMask and VIEW_MASK_graphView != 0) agv.invalidate()
             // RMS
-            if (viewMask and VIEW_MASK_textview_RMS != 0) refreshRMSLabel(analyzerFragment.dtRMSFromFT)
+            if (viewMask and VIEW_MASK_textview_RMS != 0) refreshTvRMS(analyzerFragment.dtRMSFromFT)
             // peak frequency
-            if (viewMask and VIEW_MASK_textview_peak != 0) refreshPeakLabel(
+            if (viewMask and VIEW_MASK_textview_peak != 0) refreshTvPeak(
                 analyzerFragment.getMaxAmplitudeFreq(),
                 analyzerFragment.maxAmplitudeDB
             )
-            if (viewMask and VIEW_MASK_MarkerLabel != 0) refreshMarkerLabel()
+            if (viewMask and VIEW_MASK_MarkerLabel != 0) refreshTvMarker()
 
             val samplingThread = analyzerFragment.getSamplingThread()
-            if (viewMask and VIEW_MASK_RecTimeLable != 0 && samplingThread != null) refreshRecTimeLable(
+            if (viewMask and VIEW_MASK_RecTimeLable != 0 && samplingThread != null) refreshTvRec(
                 samplingThread.wavSeconds,
                 samplingThread.wavSecondsRemain
             )
