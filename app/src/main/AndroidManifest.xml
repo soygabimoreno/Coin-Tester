@@ -36,7 +36,7 @@
             android:label="@string/preferences"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.appacoustic.cointester.aaa.analyzer.settings.AudioSourcesCheckerActivity"
+            android:name="com.appacoustic.cointester.presentation.audiosourceschecker.AudioSourcesCheckerActivity"
             android:label="@string/info_of_input_audio"
             android:parentActivityName=".presentation.main.MainActivity"
             android:screenOrientation="portrait">

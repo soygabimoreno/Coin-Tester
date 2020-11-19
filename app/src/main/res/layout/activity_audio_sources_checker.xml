@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".aaa.analyzer.settings.AudioSourcesCheckerActivity">
+    tools:context=".presentation.audiosourceschecker.AudioSourcesCheckerActivity">
 
     <TextView
         android:id="@+id/tvAudioSourcesChecker"
