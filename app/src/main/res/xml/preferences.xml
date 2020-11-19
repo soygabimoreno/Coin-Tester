@@ -4,7 +4,6 @@
         android:key="generalSettingsBar"
         android:title="@string/preferences_general_settings">
 
-        <!-- COMMENT: A lo mejor hace falta pasarle el 'true' desde strings.xml a 'defaultValue' -->
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="keepScreenOn"

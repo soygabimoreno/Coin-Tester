@@ -52,7 +52,7 @@ class MyPreferenceActivity : PreferenceActivity() {
     }
 
     private lateinit var audioSourceIds: IntArray
-    private lateinit var audioSourcesNames: Array<String>
+    private lateinit var audioSourceNames: Array<String>
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +62,7 @@ class MyPreferenceActivity : PreferenceActivity() {
         // the system saves the changes to a default SharedPreferences file
 
         audioSourceIds = intent.getIntArrayExtra(EXTRA_AUDIO_SOURCE_IDS)!!
-        audioSourcesNames = intent.getStringArrayExtra(EXTRA_AUDIO_SOURCE_NAMES)!!
+        audioSourceNames = intent.getStringArrayExtra(EXTRA_AUDIO_SOURCE_NAMES)!!
     }
 
     private val prefListener = OnSharedPreferenceChangeListener { prefs, key ->
@@ -124,7 +124,7 @@ class MyPreferenceActivity : PreferenceActivity() {
             // See SamplingLoopThread::run() for the magic number 1000
             if (audioSourceIds[i] >= 1000) {
                 audioSources[j] = audioSourceIds[i].toString()
-                audioSourcesName[j] = audioSourcesNames[i]
+                audioSourcesName[j] = audioSourceNames[i]
                 j++
             }
         }
