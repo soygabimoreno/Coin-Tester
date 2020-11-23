@@ -69,7 +69,6 @@ class AnalyzerFragment : BaseFragment<
     override val viewModel: AnalyzerViewModel by viewModel()
 
     override fun initUI() {
-        tvCustomRMS.text = "45.9 dB"
     }
 
     override fun renderViewState(viewState: AnalyzerViewModel.ViewState) {
@@ -84,12 +83,12 @@ class AnalyzerFragment : BaseFragment<
 
     override fun handleViewEvent(viewEvent: AnalyzerViewModel.ViewEvents) {
         when (viewEvent) {
-            AnalyzerViewModel.ViewEvents.Foo -> foo()
+            is AnalyzerViewModel.ViewEvents.UpdateRMS -> updateRMS(viewEvent.rmsString)
         }.exhaustive
     }
 
-    private fun foo() {
-        // TODO
+    private fun updateRMS(rmsString: String) {
+        tvCustomRMS.text = rmsString
     }
 
     private lateinit var rootView: View
@@ -931,6 +930,7 @@ class AnalyzerFragment : BaseFragment<
                     rms: Double,
                     rmsFromFT: Double
                 ) {
+                    viewModel.onUpdateRMS(rms)
                     dtRMS = rms
                     dtRMSFromFT = rmsFromFT
                 }
