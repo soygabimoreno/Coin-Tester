@@ -1,0 +1,23 @@
+<resources>
+
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="TvAnalyzer">
+        <item name="android:typeface">monospace</item>
+    </style>
+
+    <style name="SelectorText">
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:tag">@string/select</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="EtRanges">
+        <item name="android:ems">4</item>
+    </style>
+</resources>

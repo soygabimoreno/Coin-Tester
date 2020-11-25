@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvRangesFreqInstructions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/set_lower_and_upper_freq_bound"/>
+
+    <TextView
+        android:id="@+id/tvRangesFreqFromTo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvRangesFreqInstructions"
+        android:layout_marginTop="10dp"
+        android:text="@string/ranges_freq_from_to"/>
+
+    <EditText
+        android:id="@+id/etRangesFreqLowerBound"
+        style="@style/EtRanges"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvRangesFreqFromTo"
+        android:inputType="numberDecimal"/>
+
+    <EditText
+        android:id="@+id/etRangesFreqUpperBound"
+        style="@style/EtRanges"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvRangesFreqFromTo"
+        android:layout_toEndOf="@id/etRangesFreqLowerBound"
+        android:inputType="numberDecimal"/>
+
+    <TextView
+        android:id="@+id/tvRangesDBInstructions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etRangesFreqUpperBound"
+        android:layout_marginTop="30dp"
+        android:text="@string/set_lower_and_upper_db_bound"/>
+
+    <TextView
+        android:id="@+id/tvRangesDBFromTo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvRangesDBInstructions"
+        android:layout_marginTop="10dp"
+        android:text="@string/ranges_db_from_to"/>
+
+    <EditText
+        android:id="@+id/etRangesDBLowerBound"
+        style="@style/EtRanges"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvRangesDBFromTo"
+        android:inputType="numberDecimal|numberSigned"/>
+
+    <EditText
+        android:id="@+id/etRangesDBUpperBound"
+        style="@style/EtRanges"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvRangesDBFromTo"
+        android:layout_toEndOf="@id/etRangesFreqLowerBound"
+        android:inputType="numberDecimal|numberSigned"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etRangesDBUpperBound"
+        android:layout_marginTop="30dp">
+
+        <CheckBox
+            android:id="@+id/cbRangesLockRanges"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lock_ranges"/>
+
+        <Button
+            android:id="@+id/btnRangesLoadPrevious"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="@string/load_previous"/>
+    </LinearLayout>
+</RelativeLayout>

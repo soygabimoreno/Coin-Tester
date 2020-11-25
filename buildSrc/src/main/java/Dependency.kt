@@ -35,6 +35,7 @@ object TestVersion {
 }
 
 object ModulesDependency {
+    const val CORE = ":core"
     const val CORE_INFRASTRUCTURE = ":coreInfrastructure"
     const val CORE_DOMAIN = ":coreDomain"
     const val CORE_ANALYTICS = ":coreAnalytics"

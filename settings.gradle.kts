@@ -1,11 +1,10 @@
-include(
-    ":app",
+include(":app")
 
-    "coreInfrastructure",
-    ":coreDomain",
-    ":coreData",
-    ":coreAnalytics",
+include(":core")
+include(":coreInfrastructure")
+include(":coreDomain")
+include(":coreData")
+include(":coreAnalytics")
 
-    ":libFramework",
-    ":libBase"
-)
+include(":libFramework")
+include(":libBase")

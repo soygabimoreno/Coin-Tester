@@ -1,0 +1,5 @@
+<resources>
+    <dimen name="tv_RMS_layout_width">60dp</dimen>
+    <dimen name="btn_text_font_size">20sp</dimen>
+    <dimen name="btn_text_font_size_small">12sp</dimen>
+</resources>

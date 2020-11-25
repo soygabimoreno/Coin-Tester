@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.appacoustic.cointester.presentation.main.MainActivity">
+    <item
+        android:id="@+id/menuMainInstructions"
+        android:title="@string/menu_main_instructions"/>
+
+    <item
+        android:id="@+id/menuMainPreferences"
+        android:title="@string/menu_main_preferences"/>
+
+    <item
+        android:id="@+id/menuMainAudioSourcesChecker"
+        android:title="@string/menu_main_audio_sources_checker"/>
+
+    <item
+        android:id="@+id/menuMainRanges"
+        android:title="@string/menu_main_ranges"/>
+
+    <item
+        android:id="@+id/menuMainCalibration"
+        android:title="@string/menu_main_calibration"/>
+</menu>

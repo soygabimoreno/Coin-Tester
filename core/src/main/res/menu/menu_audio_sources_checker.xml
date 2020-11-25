@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".presentation.audiosourceschecker.AudioSourcesCheckerActivity">
+    <item
+        android:id="@+id/menuAudioSourcesCheckerStandardSources"
+        android:title="@string/menu_audio_sources_checker_standard_sources"/>
+
+    <item
+        android:id="@+id/menuAudioSourcesCheckerSupportedSources"
+        android:title="@string/menu_audio_sources_checker_supported_sources"/>
+
+    <item
+        android:id="@+id/menuAudioSourcesCheckerAllSources"
+        android:title="@string/menu_audio_sources_checker_all_sources"/>
+</menu>
