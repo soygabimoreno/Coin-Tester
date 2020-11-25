@@ -9,6 +9,7 @@ dependencies {
     implementation project(ModulesDependency.LIB_FRAMEWORK)
     implementation project(ModulesDependency.LIB_BASE)
     implementation project(ModulesDependency.LIB_PROCESSING)
+    implementation project(ModulesDependency.LIB_PROCESSING_ANDROID)
 
     implementation(KotlinDependency.KOTLIN)
 

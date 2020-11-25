@@ -49,6 +49,7 @@ object ModulesDependency {
     const val LIB_PLAYER = ":libPlayer"
     const val LIB_IMAGE_LOADER = ":libImageLoader"
     const val LIB_PROCESSING = ":libProcessing"
+    const val LIB_PROCESSING_ANDROID = ":libProcessingAndroid"
 
     const val APP = ":app"
 }
