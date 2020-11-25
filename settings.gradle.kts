@@ -8,3 +8,4 @@ include(":coreAnalytics")
 
 include(":libFramework")
 include(":libBase")
+include(":libProcessing")

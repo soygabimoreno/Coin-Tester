@@ -48,6 +48,7 @@ object ModulesDependency {
     const val LIB_BASE = ":libBase"
     const val LIB_PLAYER = ":libPlayer"
     const val LIB_IMAGE_LOADER = ":libImageLoader"
+    const val LIB_PROCESSING = ":libProcessing"
 
     const val APP = ":app"
 }

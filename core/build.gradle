@@ -8,6 +8,7 @@ dependencies {
 
     implementation project(ModulesDependency.LIB_FRAMEWORK)
     implementation project(ModulesDependency.LIB_BASE)
+    implementation project(ModulesDependency.LIB_PROCESSING)
 
     implementation(KotlinDependency.KOTLIN)
 
