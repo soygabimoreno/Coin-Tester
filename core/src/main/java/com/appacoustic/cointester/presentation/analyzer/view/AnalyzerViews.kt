@@ -19,7 +19,7 @@ import android.widget.*
 import androidx.annotation.StringRes
 import com.appacoustic.cointester.R
 import com.appacoustic.cointester.aaa.analyzer.AnalyzerUtil
-import com.appacoustic.cointester.aaa.analyzer.SBNumFormat
+import com.appacoustic.cointester.aaa.analyzer.StringBuilderNumberFormat
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView
 import com.appacoustic.cointester.presentation.analyzer.AnalyzerFragment
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
@@ -354,7 +354,7 @@ class AnalyzerViews(
         val f1 = agv.markerFreq
         sbMarker.setLength(0)
         sbMarker.append(activity.getString(R.string.tv_marker_text_empty))
-        SBNumFormat.fillInNumFixedWidthPositive(
+        StringBuilderNumberFormat.fillInNumFixedWidthPositive(
             sbMarker,
             f1,
             5,
@@ -367,7 +367,7 @@ class AnalyzerViews(
             " "
         )
         sbMarker.append(") ")
-        SBNumFormat.fillInNumFixedWidth(
+        StringBuilderNumberFormat.fillInNumFixedWidth(
             sbMarker,
             agv.markerDB,
             3,
@@ -396,7 +396,7 @@ class AnalyzerViews(
     private fun refreshTvRMS(dtRMSFromFT: Double) {
         sbRMS.setLength(0)
         sbRMS.append("RMS:dB \n")
-        SBNumFormat.fillInNumFixedWidth(
+        StringBuilderNumberFormat.fillInNumFixedWidth(
             sbRMS,
             20 * log10(dtRMSFromFT),
             3,
@@ -425,7 +425,7 @@ class AnalyzerViews(
     ) {
         sbPeak.setLength(0)
         sbPeak.append(activity.getString(R.string.tv_peak_text_empty))
-        SBNumFormat.fillInNumFixedWidthPositive(
+        StringBuilderNumberFormat.fillInNumFixedWidthPositive(
             sbPeak,
             maxAmpFreq,
             5,
@@ -438,7 +438,7 @@ class AnalyzerViews(
             " "
         )
         sbPeak.append(") ")
-        SBNumFormat.fillInNumFixedWidth(
+        StringBuilderNumberFormat.fillInNumFixedWidth(
             sbPeak,
             maxAmpDB,
             3,
@@ -469,13 +469,13 @@ class AnalyzerViews(
         // consist with @string/textview_rec_text
         sbRec.setLength(0)
         sbRec.append(activity.getString(R.string.tv_rec_text_empty))
-        SBNumFormat.fillTime(
+        StringBuilderNumberFormat.fillTime(
             sbRec,
             wavSec,
             1
         )
         sbRec.append(activity.getString(R.string.tv_rec_remain_text))
-        SBNumFormat.fillTime(
+        StringBuilderNumberFormat.fillTime(
             sbRec,
             wavSecRemain,
             0

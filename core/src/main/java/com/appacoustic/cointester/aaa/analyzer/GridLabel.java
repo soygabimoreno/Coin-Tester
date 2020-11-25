@@ -446,18 +446,18 @@ public class GridLabel {
                 } else {
                     if (gapPrecision == Integer.MAX_VALUE) {  // 1000, 10000 -> 1k, 10k
                         if (values[i] >= 1000) {
-                            SBNumFormat.fillInNumFixedFrac(strings[i], values[i] / 1000, 7, 0);
+                            StringBuilderNumberFormat.fillInNumFixedFrac(strings[i], values[i] / 1000, 7, 0);
                             strings[i].append('k');
                         } else {
-                            SBNumFormat.fillInNumFixedFrac(strings[i], values[i], 7, 0);
+                            StringBuilderNumberFormat.fillInNumFixedFrac(strings[i], values[i], 7, 0);
                         }
                     } else if (gapPrecision >= 3) {  // use 1k 2k ...
-                        SBNumFormat.fillInNumFixedFrac(strings[i], values[i] / 1000, 7, 0);
+                        StringBuilderNumberFormat.fillInNumFixedFrac(strings[i], values[i] / 1000, 7, 0);
                         strings[i].append('k');
                     } else if (gapPrecision >= 0) {
-                        SBNumFormat.fillInNumFixedFrac(strings[i], values[i], 7, 0);
+                        StringBuilderNumberFormat.fillInNumFixedFrac(strings[i], values[i], 7, 0);
                     } else {
-                        SBNumFormat.fillInNumFixedFrac(strings[i], values[i], 7, -gapPrecision);
+                        StringBuilderNumberFormat.fillInNumFixedFrac(strings[i], values[i], 7, -gapPrecision);
                     }
                 }
                 strings[i].getChars(0, strings[i].length(), chars[i], 0);

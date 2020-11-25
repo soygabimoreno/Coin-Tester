@@ -9,6 +9,8 @@ import com.appacoustic.cointester.aaa.utils.Tools
 import com.appacoustic.cointester.libFramework.KLog
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
 import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerViews
+import com.appacoustic.libprocessing.SineGenerator
+import com.appacoustic.libprocessingandroid.wav.WavWriter
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.max
@@ -330,8 +332,8 @@ class SamplingLoopThread(
         )
         when (id - params.idTestSignal1) {
             1 -> {
-                sineGenerator1.getSamples(data)
-                sineGenerator0.addSamples(data)
+                sineGenerator1.getSamples(data!!)
+                sineGenerator0.addSamples(data!!)
                 loopShorts(
                     shorts,
                     sizeInShorts,
@@ -340,7 +342,7 @@ class SamplingLoopThread(
             }
             // No break, so values of data added
             0 -> {
-                sineGenerator0.addSamples(data)
+                sineGenerator0.addSamples(data!!)
                 loopShorts(
                     shorts,
                     sizeInShorts,

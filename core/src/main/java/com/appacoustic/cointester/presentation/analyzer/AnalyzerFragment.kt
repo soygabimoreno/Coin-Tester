@@ -23,7 +23,6 @@ import com.appacoustic.cointester.BuildConfig
 import com.appacoustic.cointester.R
 import com.appacoustic.cointester.aaa.analyzer.AnalyzerUtil
 import com.appacoustic.cointester.aaa.analyzer.SamplingLoopThread
-import com.appacoustic.cointester.aaa.analyzer.settings.CalibrationLoad
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView
 import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView.OnReadyListener
 import com.appacoustic.cointester.aaa.analyzer.view.SelectorText
@@ -36,6 +35,7 @@ import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.presentation.analyzer.view.RangeViewDialogC
 import com.appacoustic.cointester.presentation.audiosourceschecker.AudioSourcesCheckerActivity
 import com.appacoustic.cointester.presentation.mypreference.MyPreferenceActivity
+import com.appacoustic.libprocessingandroid.calibration.CalibrationLoad
 import kotlinx.android.synthetic.main.fragment_analyzer.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -273,7 +273,7 @@ class AnalyzerFragment : BaseFragment<
         data: Intent?
     ) {
         if (requestCode == REQUEST_CODE_LOAD_CALIBRATION && resultCode == Activity.RESULT_OK) {
-            val uri = data!!.data
+            val uri = data!!.data!!
             calibrationLoad.loadFile(
                 uri,
                 requireActivity()
