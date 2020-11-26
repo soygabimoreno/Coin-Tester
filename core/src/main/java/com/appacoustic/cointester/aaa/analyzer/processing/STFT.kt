@@ -1,9 +1,9 @@
 package com.appacoustic.cointester.aaa.analyzer.processing
 
-import com.appacoustic.cointester.aaa.fft.RealDoubleFFT
 import com.appacoustic.cointester.libFramework.KLog
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
 import com.appacoustic.libprocessing.BesselCal
+import com.appacoustic.libprocessing.fft.RealDoubleFFT
 import java.util.*
 import kotlin.math.*
 
