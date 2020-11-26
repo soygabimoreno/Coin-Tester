@@ -1,26 +1,30 @@
-package com.appacoustic.cointester.aaa.utils;
+package com.appacoustic.cointester.aaa.utils
 
-import android.content.Context;
-import android.graphics.Typeface;
+import android.content.Context
+import android.graphics.Typeface
+import java.util.*
 
-import java.util.HashMap;
-import java.util.Map;
+object FontCache {
+    private val fontCache: MutableMap<String, Typeface?> = HashMap(2)
 
-public class FontCache {
-
-    private static Map<String, Typeface> fontCache = new HashMap<>(2);
-
-    public static Typeface getTypeface(Context context, String fontName) {
-        Typeface typeface = fontCache.get(fontName); // We get the Typeface if it has been loaded
+    @JvmStatic
+    fun getTypeface(
+        context: Context,
+        fontName: String
+    ): Typeface? {
+        var typeface = fontCache[fontName] // We get the Typeface if it has been loaded
         if (typeface == null) {
-            try {
-                typeface = Typeface.createFromAsset(context.getAssets(), "fonts/" + fontName); // We obtain (the first time) the Typeface from 'assets/fonts/'
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null; // If doesn't exists the specific resource
+            typeface = try {
+                Typeface.createFromAsset(
+                    context.assets,
+                    "fonts/$fontName"
+                ) // We obtain (the first time) the Typeface from 'assets/fonts/'
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return null // If doesn't exists the specific resource
             }
-            fontCache.put(fontName, typeface); // We store the Typeface (avoiding repetitions)
+            fontCache[fontName] = typeface // We store the Typeface (avoiding repetitions)
         }
-        return typeface;
+        return typeface
     }
 }

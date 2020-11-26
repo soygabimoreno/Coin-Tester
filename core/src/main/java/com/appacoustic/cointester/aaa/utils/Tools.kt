@@ -1,29 +1,38 @@
-package com.appacoustic.cointester.aaa.utils;
+package com.appacoustic.cointester.aaa.utils
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Typeface;
-import android.util.DisplayMetrics;
-import android.widget.TextView;
+import android.app.Activity
+import android.content.Context
+import android.util.DisplayMetrics
+import android.widget.TextView
+import com.appacoustic.cointester.aaa.utils.FontCache.getTypeface
 
-public class Tools {
-
-    public static void setTextViewTypeFace(Context context, String typefaceName, TextView tV) {
-        Typeface typeface = FontCache.getTypeface(context, typefaceName);
-        tV.setTypeface(typeface);
+object Tools {
+    fun setTextViewTypeFace(
+        context: Context?,
+        typefaceName: String?,
+        tV: TextView
+    ) {
+        val typeface = getTypeface(
+            context!!,
+            typefaceName!!
+        )
+        tV.typeface = typeface
     }
 
     /**
      * @param activity Related activity.
      * @return the height of the device screen in pixels.
      */
-    public static int getHeightScreen(Activity activity) {
-        DisplayMetrics metrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        return metrics.heightPixels;
+    fun getHeightScreen(activity: Activity): Int {
+        val metrics = DisplayMetrics()
+        activity.windowManager.defaultDisplay.getMetrics(metrics)
+        return metrics.heightPixels
     }
 
-    public static double dBToLinear(double dBValue) {
-        return Math.pow(10, dBValue / 20);
+    fun dBToLinear(dBValue: Double): Double {
+        return Math.pow(
+            10.0,
+            dBValue / 20
+        )
     }
 }

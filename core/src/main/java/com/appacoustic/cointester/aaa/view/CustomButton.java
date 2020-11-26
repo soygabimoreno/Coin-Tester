@@ -26,16 +26,10 @@ public class CustomButton extends AppCompatButton {
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomTextView);
         Typeface typeface;
-        switch (typedArray.getInt(R.styleable.CustomTextView_ttf_name, 0)) {
-            case 1:
-                typeface = FontCache.getTypeface(getContext(), Constants.TYPEFACE_TITILLIUM_WEB_REGULAR);
-                break;
-            case 2:
-                typeface = FontCache.getTypeface(getContext(), Constants.TYPEFACE_TITILLIUM_WEB_SEMI_BOLD);
-                break;
-            default:
-                typeface = FontCache.getTypeface(getContext(), Constants.TYPEFACE_TITILLIUM_WEB_REGULAR);
-                break;
+        if (typedArray.getInt(R.styleable.CustomTextView_ttf_name, 0) == 2) {
+            typeface = FontCache.getTypeface(getContext(), Constants.TYPEFACE_TITILLIUM_WEB_SEMI_BOLD);
+        } else {
+            typeface = FontCache.getTypeface(getContext(), Constants.TYPEFACE_TITILLIUM_WEB_REGULAR);
         }
         typedArray.recycle();
         setTypeface(typeface);
