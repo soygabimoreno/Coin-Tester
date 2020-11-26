@@ -6,7 +6,7 @@ import com.appacoustic.cointester.R
 import com.appacoustic.cointester.libFramework.extension.exhaustive
 import com.appacoustic.cointester.libFramework.extension.navigateTo
 import com.appacoustic.cointester.libbase.activity.StatelessBaseActivity
-import com.appacoustic.cointester.presentation.analyzer.AnalyzerFragment
+import com.appacoustic.cointester.presentation.sonometer.SonometerFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : StatelessBaseActivity<
@@ -38,7 +38,7 @@ class MainActivity : StatelessBaseActivity<
     private fun navigateToAnalyzer() {
         navigateTo(
             R.id.flContainer,
-            AnalyzerFragment.newInstance()
+            SonometerFragment.newInstance()
         )
     }
 }
