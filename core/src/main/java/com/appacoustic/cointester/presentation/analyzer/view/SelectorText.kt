@@ -1,4 +1,4 @@
-package com.appacoustic.cointester.aaa.analyzer.view
+package com.appacoustic.cointester.presentation.analyzer.view
 
 import android.annotation.SuppressLint
 import android.content.Context

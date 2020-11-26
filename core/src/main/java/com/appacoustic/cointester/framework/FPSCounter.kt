@@ -1,7 +1,7 @@
-package com.appacoustic.cointester.aaa.analyzer
+package com.appacoustic.cointester.framework
 
 import android.os.SystemClock
-import com.appacoustic.cointester.libFramework.KLog.Companion.d
+import com.appacoustic.cointester.libFramework.KLog
 
 /**
  * Frames Per Second Counter.
@@ -20,7 +20,7 @@ class FPSCounter(private val tag: String) {
         val timeNow = SystemClock.uptimeMillis()
         if (timeOld + timeUpdateInterval <= timeNow) {
             fPS = 1000 * frameCount.toDouble() / (timeNow - timeOld)
-            d(
+            KLog.d(
                 ": FPS: " + Math.round(100 * fPS) / 100.0 +
                     " (" + frameCount + "/" + (timeNow - timeOld) + " ms)"
             )

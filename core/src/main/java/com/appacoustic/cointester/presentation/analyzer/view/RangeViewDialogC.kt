@@ -13,8 +13,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import com.appacoustic.cointester.R
-import com.appacoustic.cointester.aaa.analyzer.AnalyzerUtil
-import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView
+import com.appacoustic.cointester.framework.AnalyzerUtil
 import com.appacoustic.cointester.libFramework.KLog.Companion.d
 import com.appacoustic.cointester.libFramework.KLog.Companion.w
 import com.appacoustic.cointester.presentation.analyzer.AnalyzerFragment

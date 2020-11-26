@@ -12,7 +12,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import com.appacoustic.cointester.R
-import com.appacoustic.cointester.aaa.analyzer.AnalyzerUtil
+import com.appacoustic.cointester.framework.AnalyzerUtil
 import kotlinx.android.synthetic.main.activity_audio_sources_checker.*
 import java.util.*
 
@@ -195,7 +195,7 @@ class AudioSourcesCheckerActivity : AppCompatActivity() {
         )
 
         // Get audio source list
-        val audioSourceId = analyzerUtil!!.GetAllAudioSource(testLevel)
+        val audioSourceId = analyzerUtil!!.getAllAudioSources(testLevel)
         val audioSourceStringList = ArrayList<String>()
         for (id in audioSourceId) {
             audioSourceStringList.add(analyzerUtil!!.getAudioSourceName(id))

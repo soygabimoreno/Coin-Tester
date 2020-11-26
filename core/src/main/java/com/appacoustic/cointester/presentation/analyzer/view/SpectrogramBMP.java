@@ -1,10 +1,9 @@
-package com.appacoustic.cointester.aaa.analyzer;
+package com.appacoustic.cointester.presentation.analyzer.view;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView;
-import com.appacoustic.cointester.aaa.analyzer.view.SpectrogramPlot;
+import com.appacoustic.cointester.framework.ScreenPhysicalMapping;
 import com.appacoustic.cointester.libFramework.KLog;
 
 import java.util.Arrays;

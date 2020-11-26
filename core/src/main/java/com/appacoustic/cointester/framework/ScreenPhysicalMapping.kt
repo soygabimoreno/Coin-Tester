@@ -1,4 +1,4 @@
-package com.appacoustic.cointester.aaa.analyzer
+package com.appacoustic.cointester.framework
 
 //    | lower bound  ...  higher bound |  physical unit
 //    | 0            ...             1 |  "unit 1" (Mapping can be linear or logarithmic)

@@ -1,4 +1,4 @@
-package com.appacoustic.cointester.aaa.analyzer.view;
+package com.appacoustic.cointester.presentation.analyzer.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,10 +8,8 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.appacoustic.cointester.R;
-import com.appacoustic.cointester.aaa.analyzer.FPSCounter;
-import com.appacoustic.cointester.aaa.analyzer.GridLabel;
-import com.appacoustic.cointester.aaa.analyzer.ScreenPhysicalMapping;
-import com.appacoustic.cointester.aaa.analyzer.SpectrogramBMP;
+import com.appacoustic.cointester.framework.FPSCounter;
+import com.appacoustic.cointester.framework.ScreenPhysicalMapping;
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams;
 
 import java.io.File;

@@ -1,4 +1,4 @@
-package com.appacoustic.cointester.aaa.analyzer.processing
+package com.appacoustic.cointester.framework.processing
 
 import com.appacoustic.cointester.libFramework.KLog
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams

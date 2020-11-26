@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.preference.ListPreference
 import android.preference.PreferenceActivity
 import com.appacoustic.cointester.R
-import com.appacoustic.cointester.aaa.analyzer.AnalyzerUtil
+import com.appacoustic.cointester.framework.AnalyzerUtil
 import com.appacoustic.cointester.libFramework.KLog
 
 class MyPreferenceActivity : PreferenceActivity() {
@@ -105,7 +105,7 @@ class MyPreferenceActivity : PreferenceActivity() {
 
         // Get list of supported sources
         val au = AnalyzerUtil(this)
-        val audioSourcesId = au.GetAllAudioSource(4)
+        val audioSourcesId = au.getAllAudioSources(4)
         KLog.i(" n_as = " + audioSourcesId.size)
         KLog.i(" n_ex = $nExtraSources")
         audioSourcesName = arrayOfNulls(audioSourcesId.size + nExtraSources)

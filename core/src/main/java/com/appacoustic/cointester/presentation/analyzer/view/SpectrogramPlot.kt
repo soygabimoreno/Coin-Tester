@@ -1,13 +1,11 @@
-package com.appacoustic.cointester.aaa.analyzer.view
+package com.appacoustic.cointester.presentation.analyzer.view
 
 import android.content.Context
 import android.graphics.*
-import com.appacoustic.cointester.aaa.analyzer.AxisTickLabels.draw
-import com.appacoustic.cointester.aaa.analyzer.GridLabel
-import com.appacoustic.cointester.aaa.analyzer.ScreenPhysicalMapping
-import com.appacoustic.cointester.aaa.analyzer.SpectrogramBMP
+import com.appacoustic.cointester.framework.ScreenPhysicalMapping
 import com.appacoustic.cointester.libFramework.KLog.Companion.i
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
+import com.appacoustic.cointester.presentation.analyzer.view.AxisTickLabels.draw
 
 /**
  * The spectrogram plot part of AnalyzerGraphic.
@@ -48,7 +46,7 @@ class SpectrogramPlot(_context: Context) {
     private val fqGridLabel: GridLabel
     private val tmGridLabel: GridLabel
     private var markerFreq: Double
-    private val DPRatio: Float
+    private val density: Float
     private val gridDensity = 1 / 85f // every 85 pixel one grid line, on average
     private var canvasHeight = 0
     private var canvasWidth = 0
@@ -119,8 +117,8 @@ class SpectrogramPlot(_context: Context) {
                 )
             }
         }
-        fqGridLabel.setDensity(axisFreq.nCanvasPx * gridDensity / DPRatio)
-        tmGridLabel.setDensity(axisTime.nCanvasPx * gridDensity / DPRatio)
+        fqGridLabel.setDensity(axisFreq.nCanvasPx * gridDensity / density)
+        tmGridLabel.setDensity(axisTime.nCanvasPx * gridDensity / density)
         spectrogramBMP.updateAxis(axisFreq)
     }
 
@@ -243,8 +241,8 @@ class SpectrogramPlot(_context: Context) {
             axisTime.nCanvasPx = t
             // swap bounds of freq axis
             axisFreq.reverseBounds()
-            fqGridLabel.setDensity(axisFreq.nCanvasPx * gridDensity / DPRatio)
-            tmGridLabel.setDensity(axisTime.nCanvasPx * gridDensity / DPRatio)
+            fqGridLabel.setDensity(axisFreq.nCanvasPx * gridDensity / density)
+            tmGridLabel.setDensity(axisTime.nCanvasPx * gridDensity / density)
         }
         showFreqAlongX = b
     }
@@ -445,8 +443,8 @@ class SpectrogramPlot(_context: Context) {
             return
         }
         updateDrawingWindowSize()
-        fqGridLabel.setDensity(axisFreq.nCanvasPx * gridDensity / DPRatio)
-        tmGridLabel.setDensity(axisTime.nCanvasPx * gridDensity / DPRatio)
+        fqGridLabel.setDensity(axisFreq.nCanvasPx * gridDensity / density)
+        tmGridLabel.setDensity(axisTime.nCanvasPx * gridDensity / density)
         fqGridLabel.updateGridLabels(
             axisFreq.lowerViewBound,
             axisFreq.upperViewBound
@@ -616,11 +614,11 @@ class SpectrogramPlot(_context: Context) {
     }
 
     init {
-        DPRatio = _context.resources.displayMetrics.density
+        density = _context.resources.displayMetrics.density
         gridPaint = Paint()
         gridPaint.color = Color.DKGRAY
         gridPaint.style = Paint.Style.STROKE
-        gridPaint.strokeWidth = 0.6f * DPRatio
+        gridPaint.strokeWidth = 0.6f * density
         markerPaint = Paint(gridPaint)
         markerPaint.color = Color.parseColor("#00CD00")
         markerTimePaint = Paint(markerPaint)
@@ -636,18 +634,18 @@ class SpectrogramPlot(_context: Context) {
         rulerBrightPaint.strokeWidth = 1f
         labelPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         labelPaint.color = Color.GRAY
-        labelPaint.textSize = 14.0f * DPRatio
+        labelPaint.textSize = 14.0f * density
         labelPaint.typeface = Typeface.MONOSPACE // or Typeface.SANS_SERIF
         backgroundPaint = Paint()
         backgroundPaint.color = Color.BLACK
         markerFreq = 0.0
         fqGridLabel = GridLabel(
             GridLabel.Type.FREQ,
-            (canvasWidth * gridDensity / DPRatio).toDouble()
+            (canvasWidth * gridDensity / density).toDouble()
         )
         tmGridLabel = GridLabel(
             GridLabel.Type.TIME,
-            (canvasHeight * gridDensity / DPRatio).toDouble()
+            (canvasHeight * gridDensity / density).toDouble()
         )
         axisFreq = ScreenPhysicalMapping(
             0.0,

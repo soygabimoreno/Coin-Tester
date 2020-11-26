@@ -1,11 +1,9 @@
-package com.appacoustic.cointester.aaa.analyzer.view
+package com.appacoustic.cointester.presentation.analyzer.view
 
 import android.content.Context
 import android.graphics.*
-import com.appacoustic.cointester.aaa.analyzer.AxisTickLabels.draw
-import com.appacoustic.cointester.aaa.analyzer.GridLabel
-import com.appacoustic.cointester.aaa.analyzer.ScreenPhysicalMapping
-import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView
+import com.appacoustic.cointester.framework.ScreenPhysicalMapping
+import com.appacoustic.cointester.presentation.analyzer.view.AxisTickLabels.draw
 
 /**
  * The spectrum plot part of AnalyzerGraphic.
@@ -21,7 +19,7 @@ class SpectrumPlot(_context: Context) {
     private var canvasWidth = 0
     private val freqGridLabel: GridLabel
     private val dBGridLabel: GridLabel
-    private val dPRatio: Float
+    private val density: Float
     private val gridDensity = 1 / 85.0 // Every 85 pixel one grid line (on average)
     private var markerFreq: Double
     private var markerDB // Marker location
@@ -39,8 +37,8 @@ class SpectrumPlot(_context: Context) {
 //        GLog.i("SpectrumPlot", "setCanvas: W="+_canvasWidth+"  H="+_canvasHeight);
         canvasWidth = _canvasWidth
         canvasHeight = _canvasHeight
-        freqGridLabel.setDensity(canvasWidth * gridDensity / dPRatio)
-        dBGridLabel.setDensity(canvasHeight * gridDensity / dPRatio)
+        freqGridLabel.setDensity(canvasWidth * gridDensity / density)
+        dBGridLabel.setDensity(canvasHeight * gridDensity / density)
         axisX.nCanvasPx = canvasWidth.toDouble()
         axisY.nCanvasPx = canvasHeight.toDouble()
         if (axisBounds != null) {
@@ -380,7 +378,7 @@ class SpectrumPlot(_context: Context) {
     }
 
     init {
-        dPRatio = _context.resources.displayMetrics.density
+        density = _context.resources.displayMetrics.density
         linePaint = Paint()
         linePaint.color = Color.parseColor("#0D2C6D")
         linePaint.style = Paint.Style.STROKE
@@ -390,22 +388,22 @@ class SpectrumPlot(_context: Context) {
         gridPaint = Paint()
         gridPaint.color = Color.DKGRAY
         gridPaint.style = Paint.Style.STROKE
-        gridPaint.strokeWidth = 0.6f * dPRatio
+        gridPaint.strokeWidth = 0.6f * density
         markerPaint = Paint(gridPaint)
         markerPaint.color = Color.parseColor("#00CD00")
         labelPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         labelPaint.color = Color.GRAY
-        labelPaint.textSize = 14.0f * dPRatio
+        labelPaint.textSize = 14.0f * density
         labelPaint.typeface = Typeface.MONOSPACE // or Typeface.SANS_SERIF
         markerDB = 0.0
         markerFreq = markerDB
         freqGridLabel = GridLabel(
             GridLabel.Type.FREQ,
-            canvasWidth * gridDensity / dPRatio
+            canvasWidth * gridDensity / density
         )
         dBGridLabel = GridLabel(
             GridLabel.Type.DB,
-            canvasHeight * gridDensity / dPRatio
+            canvasHeight * gridDensity / density
         )
         axisX = ScreenPhysicalMapping(
             0.0,

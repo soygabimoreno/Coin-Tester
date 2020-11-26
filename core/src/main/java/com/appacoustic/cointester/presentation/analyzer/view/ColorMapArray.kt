@@ -1,4 +1,4 @@
-package com.appacoustic.cointester.aaa.analyzer
+package com.appacoustic.cointester.presentation.analyzer.view
 
 import com.appacoustic.cointester.libFramework.KLog.Companion.i
 

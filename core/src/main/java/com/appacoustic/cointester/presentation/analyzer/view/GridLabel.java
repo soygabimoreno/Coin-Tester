@@ -1,6 +1,8 @@
-package com.appacoustic.cointester.aaa.analyzer;
+package com.appacoustic.cointester.presentation.analyzer.view;
 
+import com.appacoustic.cointester.framework.AnalyzerUtil;
 import com.appacoustic.cointester.libFramework.KLog;
+import com.appacoustic.cointester.presentation.analyzer.domain.StringBuilderNumberFormat;
 
 import static java.lang.Math.ceil;
 import static java.lang.Math.floor;

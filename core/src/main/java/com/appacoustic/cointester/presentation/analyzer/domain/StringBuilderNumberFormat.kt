@@ -1,9 +1,8 @@
-package com.appacoustic.cointester.aaa.analyzer
+package com.appacoustic.cointester.presentation.analyzer.domain
 
-import com.appacoustic.cointester.libFramework.KLog.Companion.w
+import com.appacoustic.cointester.libFramework.KLog
 
 object StringBuilderNumberFormat {
-    private val TAG = StringBuilderNumberFormat::class.java.simpleName
     private val charDigits = charArrayOf(
         '0',
         '1',
@@ -31,7 +30,7 @@ object StringBuilderNumberFormat {
             for (i in 0 until nInt + nFrac + if (nFrac > 0) 1 else 0) {
                 sb.append(padChar)
             }
-            w("fillInNumFixedWidthPositive: negative number")
+            KLog.w("fillInNumFixedWidthPositive: negative number")
             return
         }
         if (d >= Math.pow(

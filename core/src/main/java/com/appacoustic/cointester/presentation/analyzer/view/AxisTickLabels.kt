@@ -1,7 +1,8 @@
-package com.appacoustic.cointester.aaa.analyzer
+package com.appacoustic.cointester.presentation.analyzer.view
 
 import android.graphics.Canvas
 import android.graphics.Paint
+import com.appacoustic.cointester.framework.ScreenPhysicalMapping
 
 /**
  * Axis Tick labels.

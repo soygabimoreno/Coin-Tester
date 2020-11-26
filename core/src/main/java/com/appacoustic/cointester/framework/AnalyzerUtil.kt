@@ -1,4 +1,4 @@
-package com.appacoustic.cointester.aaa.analyzer
+package com.appacoustic.cointester.framework
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -7,9 +7,9 @@ import android.media.AudioRecord
 import android.media.MediaRecorder.AudioSource
 import android.os.Build
 import com.appacoustic.cointester.R
-import com.appacoustic.cointester.aaa.analyzer.AnalyzerUtil
 import com.appacoustic.cointester.libFramework.KLog.Companion.e
 import com.appacoustic.cointester.libFramework.KLog.Companion.i
+import com.appacoustic.cointester.presentation.analyzer.domain.StringBuilderNumberFormat
 import java.util.*
 
 /**
@@ -53,7 +53,7 @@ class AnalyzerUtil(context: Context) {
     //             & 1: leave only standard sources
     //             & 2: leave only permitted sources (&1)
     //             & 4: leave only sources coincide the API level (&1)
-    fun GetAllAudioSource(filterLevel: Int): IntArray {
+    fun getAllAudioSources(filterLevel: Int): IntArray {
         // Use reflection to get all possible audio source (in compilation environment)
         val iList = ArrayList<Int>()
         val clazz = AudioSource::class.java
