@@ -510,7 +510,7 @@ class AnalyzerFragment : BaseFragment<
             "freq_scaling_mode",
             "linear"
         )
-        stLinearLogNote.value = axisMode
+        stLinearLogNote.setValue(axisMode!!)
         KLog.i("sampleRate = ${analyzerParams.sampleRate}, fFTLength = ${analyzerParams.fftLength}, nFFTAverage = ${analyzerParams.nFftAverage}")
         btnSampleRate.text = analyzerParams.sampleRate.toString()
         btnFFTLength.text = analyzerParams.fftLength.toString()
@@ -1044,7 +1044,7 @@ class AnalyzerFragment : BaseFragment<
         val editor = sharedPref.edit()
         val value: String
         value = if (v is SelectorText) {
-            v.value
+            v.value!!
         } else {
             (v as TextView).text.toString()
         }
