@@ -4,6 +4,7 @@ import com.appacoustic.cointester.libFramework.KLog
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
 import com.appacoustic.libprocessing.BesselCal
 import com.appacoustic.libprocessing.fft.RealDoubleFFT
+import com.appacoustic.libprocessing.linearToDB
 import java.util.*
 import kotlin.math.*
 
@@ -364,7 +365,7 @@ class STFT(params: AnalyzerParams) {
     fun calculatePeak() {
         calculateSpectrumAmplitudeDB()
         // Find and show peak amplitude
-        maxAmplitudeDB = 20 * log10(0.125 / 32768)
+        maxAmplitudeDB = linearToDB(0.125 / 32768)
         maxAmplitudeFreq = 0.0
         for (i in 1 until spectrumAmplitudeOutDB.size) { // Skip the direct current term
             if (spectrumAmplitudeOutDB[i] > maxAmplitudeDB) {

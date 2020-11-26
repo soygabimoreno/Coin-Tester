@@ -5,11 +5,11 @@ import android.media.AudioRecord
 import android.os.SystemClock
 import com.appacoustic.cointester.R
 import com.appacoustic.cointester.aaa.analyzer.processing.STFT
-import com.appacoustic.cointester.aaa.utils.Tools
 import com.appacoustic.cointester.libFramework.KLog
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
 import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerViews
 import com.appacoustic.libprocessing.SineGenerator
+import com.appacoustic.libprocessing.dBToLinear
 import com.appacoustic.libprocessingandroid.wav.WavWriter
 import java.util.*
 import kotlin.math.ceil
@@ -76,9 +76,9 @@ class SamplingLoopThread(
     private var data: DoubleArray? = null
 
     init {
-        val amp0 = Tools.dBToLinear(TEST_SIGNAL_1_DB_1)
-        val amp1 = Tools.dBToLinear(TEST_SIGNAL_2_DB_1)
-        val amp2 = Tools.dBToLinear(TEST_SIGNAL_2_DB_2)
+        val amp0 = dBToLinear(TEST_SIGNAL_1_DB_1)
+        val amp1 = dBToLinear(TEST_SIGNAL_2_DB_1)
+        val amp2 = dBToLinear(TEST_SIGNAL_2_DB_2)
         sineGenerator0 = if (audioSourceId == params.idTestSignal1) {
             SineGenerator(
                 TEST_SIGNAL_1_FREQ_1,

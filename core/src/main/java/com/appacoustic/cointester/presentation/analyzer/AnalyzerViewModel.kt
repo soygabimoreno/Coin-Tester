@@ -5,8 +5,8 @@ import com.appacoustic.cointester.aaa.analyzer.SamplingLoopThread
 import com.appacoustic.cointester.libFramework.extension.roundTo1Decimal
 import com.appacoustic.cointester.libbase.viewmodel.BaseViewModel
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
+import com.appacoustic.libprocessing.linearToDB
 import kotlinx.coroutines.launch
-import kotlin.math.log10
 
 class AnalyzerViewModel(
     val analyzerParams: AnalyzerParams
@@ -54,7 +54,7 @@ class AnalyzerViewModel(
 
     fun onUpdateRMS(rms: Double) {
         val diff = 95
-        val rmsString = ((20 * log10(rms) + diff).roundTo1Decimal()).toString()
+        val rmsString = ((linearToDB(rms) + diff).roundTo1Decimal()).toString()
         viewModelScope.launch {
             sendViewEvent(ViewEvents.UpdateRMS(rmsString))
         }
