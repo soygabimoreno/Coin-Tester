@@ -1,166 +1,183 @@
-package com.appacoustic.cointester.aaa.analyzer.view;
+package com.appacoustic.cointester.aaa.analyzer.view
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-
-import com.appacoustic.cointester.aaa.analyzer.AxisTickLabels;
-import com.appacoustic.cointester.aaa.analyzer.GridLabel;
-import com.appacoustic.cointester.aaa.analyzer.ScreenPhysicalMapping;
-
-import static java.lang.Math.ceil;
-import static java.lang.Math.floor;
+import android.content.Context
+import android.graphics.*
+import com.appacoustic.cointester.aaa.analyzer.AxisTickLabels.draw
+import com.appacoustic.cointester.aaa.analyzer.GridLabel
+import com.appacoustic.cointester.aaa.analyzer.ScreenPhysicalMapping
+import com.appacoustic.cointester.aaa.analyzer.view.AnalyzerGraphicView
 
 /**
  * The spectrum plot part of AnalyzerGraphic.
  */
-public class SpectrumPlot {
+class SpectrumPlot(_context: Context) {
+    var isShowLines = false
+    private val linePaint: Paint
+    private val linePaintLight: Paint
+    private val markerPaint: Paint
+    private val gridPaint: Paint
+    private val labelPaint: Paint
+    private var canvasHeight = 0
+    private var canvasWidth = 0
+    private val freqGridLabel: GridLabel
+    private val dBGridLabel: GridLabel
+    private val dPRatio: Float
+    private val gridDensity = 1 / 85.0 // Every 85 pixel one grid line (on average)
+    private var markerFreq: Double
+    private var markerDB // Marker location
+        : Double
+    val axisX // For frequency axis
+        : ScreenPhysicalMapping
+    val axisY // For dB axis
+        : ScreenPhysicalMapping
 
-    private static final String TAG = SpectrumPlot.class.getSimpleName();
-
-    private boolean showLines;
-    private Paint linePaint, linePaintLight;
-    private Paint markerPaint;
-    private Paint gridPaint;
-    private Paint labelPaint;
-    private int canvasHeight = 0, canvasWidth = 0;
-
-    private GridLabel freqGridLabel;
-    private GridLabel dBGridLabel;
-    private float dPRatio;
-    private double gridDensity = 1 / 85.0; // Every 85 pixel one grid line (on average)
-
-    private double markerFreq, markerDB; // Marker location
-    private ScreenPhysicalMapping axisX;  // For frequency axis
-    private ScreenPhysicalMapping axisY;  // For dB axis
-
-    public SpectrumPlot(Context _context) {
-        dPRatio = _context.getResources().getDisplayMetrics().density;
-
-        linePaint = new Paint();
-        linePaint.setColor(Color.parseColor("#0D2C6D"));
-        linePaint.setStyle(Paint.Style.STROKE);
-        linePaint.setStrokeWidth(1);
-
-        linePaintLight = new Paint(linePaint);
-        linePaintLight.setColor(Color.parseColor("#3AB3E2"));
-
-        gridPaint = new Paint();
-        gridPaint.setColor(Color.DKGRAY);
-        gridPaint.setStyle(Paint.Style.STROKE);
-        gridPaint.setStrokeWidth(0.6f * dPRatio);
-
-        markerPaint = new Paint(gridPaint);
-        markerPaint.setColor(Color.parseColor("#00CD00"));
-
-        labelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        labelPaint.setColor(Color.GRAY);
-        labelPaint.setTextSize(14.0f * dPRatio);
-        labelPaint.setTypeface(Typeface.MONOSPACE);  // or Typeface.SANS_SERIF
-
-        markerFreq = markerDB = 0f;
-
-        freqGridLabel = new GridLabel(GridLabel.Type.FREQ, canvasWidth * gridDensity / dPRatio);
-        dBGridLabel = new GridLabel(GridLabel.Type.DB, canvasHeight * gridDensity / dPRatio);
-
-        axisX = new ScreenPhysicalMapping(0, 0, 0, ScreenPhysicalMapping.Type.LINEAR);
-        axisY = new ScreenPhysicalMapping(0, 0, 0, ScreenPhysicalMapping.Type.LINEAR);
-    }
-
-    public void setCanvas(int _canvasWidth, int _canvasHeight, double[] axisBounds) {
+    fun setCanvas(
+        _canvasWidth: Int,
+        _canvasHeight: Int,
+        axisBounds: DoubleArray?
+    ) {
 //        GLog.i("SpectrumPlot", "setCanvas: W="+_canvasWidth+"  H="+_canvasHeight);
-        canvasWidth = _canvasWidth;
-        canvasHeight = _canvasHeight;
-        freqGridLabel.setDensity(canvasWidth * gridDensity / dPRatio);
-        dBGridLabel.setDensity(canvasHeight * gridDensity / dPRatio);
-        getAxisX().setNCanvasPx(canvasWidth);
-        axisY.setNCanvasPx(canvasHeight);
+        canvasWidth = _canvasWidth
+        canvasHeight = _canvasHeight
+        freqGridLabel.setDensity(canvasWidth * gridDensity / dPRatio)
+        dBGridLabel.setDensity(canvasHeight * gridDensity / dPRatio)
+        axisX.nCanvasPx = canvasWidth.toDouble()
+        axisY.nCanvasPx = canvasHeight.toDouble()
         if (axisBounds != null) {
-            getAxisX().setBounds(axisBounds[0], axisBounds[2]);
-            axisY.setBounds(axisBounds[1], axisBounds[3]);
+            axisX.setBounds(
+                axisBounds[0],
+                axisBounds[2]
+            )
+            axisY.setBounds(
+                axisBounds[1],
+                axisBounds[3]
+            )
         }
     }
 
-    public void setZooms(double xZoom, double xShift, double yZoom, double yShift) {
-        getAxisX().setZoomShift(xZoom, xShift);
-        axisY.setZoomShift(yZoom, yShift);
+    fun setZooms(
+        xZoom: Double,
+        xShift: Double,
+        yZoom: Double,
+        yShift: Double
+    ) {
+        axisX.setZoomShift(
+            xZoom,
+            xShift
+        )
+        axisY.setZoomShift(
+            yZoom,
+            yShift
+        )
     }
 
     // Linear or Logarithmic frequency axis
-    public void setFreqAxisMode(ScreenPhysicalMapping.Type mapType, double freq_lower_bound_for_log, GridLabel.Type gridType) {
-        getAxisX().setMappingType(mapType, freq_lower_bound_for_log);
-        freqGridLabel.setGridType(gridType);
+    fun setFreqAxisMode(
+        mapType: ScreenPhysicalMapping.Type?,
+        freq_lower_bound_for_log: Double,
+        gridType: GridLabel.Type?
+    ) {
+        axisX.setMappingType(
+            mapType!!,
+            freq_lower_bound_for_log
+        )
+        freqGridLabel.setGridType(gridType)
     }
 
-    private void drawGridLines(Canvas c) {
-        for (int i = 0; i < freqGridLabel.values.length; i++) {
-            float xPos = (float) getAxisX().pxFromValue(freqGridLabel.values[i]);
-            c.drawLine(xPos, 0, xPos, canvasHeight, gridPaint);
+    private fun drawGridLines(c: Canvas) {
+        for (i in freqGridLabel.values.indices) {
+            val xPos = axisX.pxFromValue(freqGridLabel.values[i]).toFloat()
+            c.drawLine(
+                xPos,
+                0f,
+                xPos,
+                canvasHeight.toFloat(),
+                gridPaint
+            )
         }
-        for (int i = 0; i < dBGridLabel.values.length; i++) {
-            float yPos = (float) axisY.pxFromValue(dBGridLabel.values[i]);
-            c.drawLine(0, yPos, canvasWidth, yPos, gridPaint);
+        for (i in dBGridLabel.values.indices) {
+            val yPos = axisY.pxFromValue(dBGridLabel.values[i]).toFloat()
+            c.drawLine(
+                0f,
+                yPos,
+                canvasWidth.toFloat(),
+                yPos,
+                gridPaint
+            )
         }
     }
 
-    private double clampDB(double value) {
-        if (value < AnalyzerGraphicView.MIN_DB || Double.isNaN(value)) {
-            value = AnalyzerGraphicView.MIN_DB;
+    private fun clampDB(value: Double): Double {
+        var value = value
+        if (value < AnalyzerGraphicView.MIN_DB || java.lang.Double.isNaN(value)) {
+            value = AnalyzerGraphicView.MIN_DB
         }
-        return value;
+        return value
     }
 
-    private Matrix matrix = new Matrix();
-    private float[] tmpLineXY = new float[0];  // cache line data for drawing
-    private double[] dBCache = null;
+    private val matrix = Matrix()
+    private var tmpLineXY = FloatArray(0) // cache line data for drawing
+    private var dBCache: DoubleArray? = null
 
     // Plot the spectrum into the Canvas c
-    private void drawSpectrumOnCanvas(Canvas c, final double[] _db) {
-        if (canvasHeight < 1 || _db == null || _db.length == 0) {
-            return;
+    private fun drawSpectrumOnCanvas(
+        c: Canvas,
+        _db: DoubleArray?
+    ) {
+        if (canvasHeight < 1 || _db == null || _db.size == 0) {
+            return
         }
-        synchronized (_db) {  // TODO: need lock on tmpDBSpectrum, but how?
-            if (dBCache == null || dBCache.length != _db.length) {
-                dBCache = new double[_db.length];
+        synchronized(_db) {
+            // TODO: need lock on tmpDBSpectrum, but how?
+            if (dBCache == null || dBCache!!.size != _db.size) {
+                dBCache = DoubleArray(_db.size)
             }
-            System.arraycopy(_db, 0, dBCache, 0, _db.length);
+            System.arraycopy(
+                _db,
+                0,
+                dBCache,
+                0,
+                _db.size
+            )
         }
-
-        double canvasMinFreq = getAxisX().getLowerViewBound();
-        double canvasMaxFreq = getAxisX().getUpperViewBound();
+        val canvasMinFreq = axisX.lowerViewBound
+        val canvasMaxFreq = axisX.upperViewBound
         // There are db.length frequency points, including DC component
-        int nFreqPointsTotal = dBCache.length - 1;
-        double freqDelta = getAxisX().getUpperBound() / nFreqPointsTotal;
-        int beginFreqPt = (int) floor(canvasMinFreq / freqDelta);    // pointer to tmpLineXY
-        int endFreqPt = (int) ceil(canvasMaxFreq / freqDelta) + 1;
-        final double minYCanvas = axisY.pxNoZoomFromValue(AnalyzerGraphicView.MIN_DB);
+        val nFreqPointsTotal = dBCache!!.size - 1
+        val freqDelta = axisX.upperBound / nFreqPointsTotal
+        var beginFreqPt = Math.floor(canvasMinFreq / freqDelta).toInt() // pointer to tmpLineXY
+        var endFreqPt = Math.ceil(canvasMaxFreq / freqDelta).toInt() + 1
+        val minYCanvas = axisY.pxNoZoomFromValue(AnalyzerGraphicView.MIN_DB)
 
         // add one more boundary points
-        if (beginFreqPt == 0 && getAxisX().getMapType() == ScreenPhysicalMapping.Type.LOG) {
-            beginFreqPt++;
+        if (beginFreqPt == 0 && axisX.mapType === ScreenPhysicalMapping.Type.LOG) {
+            beginFreqPt++
         }
-        if (endFreqPt > dBCache.length) {
-            endFreqPt = dBCache.length;  // just in case canvasMaxFreq / freqDelta > nFreqPointsTotal
+        if (endFreqPt > dBCache!!.size) {
+            endFreqPt = dBCache!!.size // just in case canvasMaxFreq / freqDelta > nFreqPointsTotal
         }
-
-        if (tmpLineXY.length != 4 * (dBCache.length)) {
-            tmpLineXY = new float[4 * (dBCache.length)];
+        if (tmpLineXY.size != 4 * dBCache!!.size) {
+            tmpLineXY = FloatArray(4 * dBCache!!.size)
         }
 
         // spectrum bar
-        if (!showLines) {
-            c.save();
+        if (!isShowLines) {
+            c.save()
             // If bars are very close to each other, draw bars as lines
             // Otherwise, zoom in so that lines look like bars.
-            if (endFreqPt - beginFreqPt >= getAxisX().getNCanvasPx() / 2
-                    || getAxisX().getMapType() != ScreenPhysicalMapping.Type.LINEAR) {
-                matrix.reset();
-                matrix.setTranslate(0, (float) (-axisY.getShift() * canvasHeight));
-                matrix.postScale(1, (float) axisY.getZoom());
-                c.concat(matrix);
+            if (endFreqPt - beginFreqPt >= axisX.nCanvasPx / 2
+                || axisX.mapType !== ScreenPhysicalMapping.Type.LINEAR
+            ) {
+                matrix.reset()
+                matrix.setTranslate(
+                    0f,
+                    (-axisY.shift * canvasHeight).toFloat()
+                )
+                matrix.postScale(
+                    1f,
+                    axisY.zoom.toFloat()
+                )
+                c.concat(matrix)
                 //      float barWidthInPixel = 0.5f * freqDelta / (canvasMaxFreq - canvasMinFreq) * canvasWidth;
                 //      if (barWidthInPixel > 2) {
                 //        linePaint.setStrokeWidth(barWidthInPixel);
@@ -168,137 +185,239 @@ public class SpectrumPlot {
                 //        linePaint.setStrokeWidth(0);
                 //      }
                 // plot directly to the canvas
-                for (int i = beginFreqPt; i < endFreqPt; i++) {
-                    float x = (float) getAxisX().pxFromValue(i * freqDelta);
-                    float y = (float) axisY.pxNoZoomFromValue(clampDB(dBCache[i]));
-                    if (y != canvasHeight) { // ...forgot why
-                        tmpLineXY[4 * i] = x;
-                        tmpLineXY[4 * i + 1] = (float) minYCanvas;
-                        tmpLineXY[4 * i + 2] = x;
-                        tmpLineXY[4 * i + 3] = y;
+                for (i in beginFreqPt until endFreqPt) {
+                    val x = axisX.pxFromValue(i * freqDelta).toFloat()
+                    val y = axisY.pxNoZoomFromValue(clampDB(dBCache!![i])).toFloat()
+                    if (y != canvasHeight.toFloat()) { // ...forgot why
+                        tmpLineXY[4 * i] = x
+                        tmpLineXY[4 * i + 1] = minYCanvas.toFloat()
+                        tmpLineXY[4 * i + 2] = x
+                        tmpLineXY[4 * i + 3] = y
                     }
                 }
-                c.drawLines(tmpLineXY, 4 * beginFreqPt, 4 * (endFreqPt - beginFreqPt), linePaint);
+                c.drawLines(
+                    tmpLineXY,
+                    4 * beginFreqPt,
+                    4 * (endFreqPt - beginFreqPt),
+                    linePaint
+                )
             } else {
                 // for zoomed linear scale
-                int pixelStep = 2;  // each bar occupy this virtual pixel
-                matrix.reset();
-                double extraPixelAlignOffset = 0.0f;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                val pixelStep = 2 // each bar occupy this virtual pixel
+                matrix.reset()
+                val extraPixelAlignOffset = 0.0
+                //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 //          // There is an shift for Android 4.4, while no shift for Android 2.3
 //          // I guess that is relate to GL ES acceleration
 //          if (c.isHardwareAccelerated()) {
 //            extraPixelAlignOffset = 0.5f;
 //          }
 //        }
-                matrix.setTranslate((float) (-getAxisX().getShift() * nFreqPointsTotal * pixelStep - extraPixelAlignOffset),
-                        (float) (-axisY.getShift() * canvasHeight));
-                matrix.postScale((float) (canvasWidth / ((canvasMaxFreq - canvasMinFreq) / freqDelta * pixelStep)), (float) axisY.getZoom());
-                c.concat(matrix);
+                matrix.setTranslate(
+                    (-axisX.shift * nFreqPointsTotal * pixelStep - extraPixelAlignOffset).toFloat(),
+                    (-axisY.shift * canvasHeight).toFloat()
+                )
+                matrix.postScale(
+                    (canvasWidth / ((canvasMaxFreq - canvasMinFreq) / freqDelta * pixelStep)).toFloat(),
+                    axisY.zoom.toFloat()
+                )
+                c.concat(matrix)
                 // fill interval same as canvas pixel width.
-                for (int i = beginFreqPt; i < endFreqPt; i++) {
-                    float x = i * pixelStep;
-                    float y = (float) axisY.pxNoZoomFromValue(clampDB(dBCache[i]));
-                    if (y != canvasHeight) {
-                        tmpLineXY[4 * i] = x;
-                        tmpLineXY[4 * i + 1] = (float) minYCanvas;
-                        tmpLineXY[4 * i + 2] = x;
-                        tmpLineXY[4 * i + 3] = y;
+                for (i in beginFreqPt until endFreqPt) {
+                    val x = (i * pixelStep).toFloat()
+                    val y = axisY.pxNoZoomFromValue(clampDB(dBCache!![i])).toFloat()
+                    if (y != canvasHeight.toFloat()) {
+                        tmpLineXY[4 * i] = x
+                        tmpLineXY[4 * i + 1] = minYCanvas.toFloat()
+                        tmpLineXY[4 * i + 2] = x
+                        tmpLineXY[4 * i + 3] = y
                     }
                 }
-                c.drawLines(tmpLineXY, 4 * beginFreqPt, 4 * (endFreqPt - beginFreqPt), linePaint);
+                c.drawLines(
+                    tmpLineXY,
+                    4 * beginFreqPt,
+                    4 * (endFreqPt - beginFreqPt),
+                    linePaint
+                )
             }
-            c.restore();
+            c.restore()
         }
 
         // spectrum line
-        c.save();
-        matrix.reset();
-        matrix.setTranslate(0, (float) (-axisY.getShift() * canvasHeight));
-        matrix.postScale(1, (float) axisY.getZoom());
-        c.concat(matrix);
-        float o_x = (float) getAxisX().pxFromValue(beginFreqPt * freqDelta);
-        float o_y = (float) axisY.pxNoZoomFromValue(clampDB(dBCache[beginFreqPt]));
-        for (int i = beginFreqPt + 1; i < endFreqPt; i++) {
-            float x = (float) getAxisX().pxFromValue(i * freqDelta);
-            float y = (float) axisY.pxNoZoomFromValue(clampDB(dBCache[i]));
-            tmpLineXY[4 * i] = o_x;
-            tmpLineXY[4 * i + 1] = o_y;
-            tmpLineXY[4 * i + 2] = x;
-            tmpLineXY[4 * i + 3] = y;
-            o_x = x;
-            o_y = y;
+        c.save()
+        matrix.reset()
+        matrix.setTranslate(
+            0f,
+            (-axisY.shift * canvasHeight).toFloat()
+        )
+        matrix.postScale(
+            1f,
+            axisY.zoom.toFloat()
+        )
+        c.concat(matrix)
+        var o_x = axisX.pxFromValue(beginFreqPt * freqDelta).toFloat()
+        var o_y = axisY.pxNoZoomFromValue(clampDB(dBCache!![beginFreqPt])).toFloat()
+        for (i in beginFreqPt + 1 until endFreqPt) {
+            val x = axisX.pxFromValue(i * freqDelta).toFloat()
+            val y = axisY.pxNoZoomFromValue(clampDB(dBCache!![i])).toFloat()
+            tmpLineXY[4 * i] = o_x
+            tmpLineXY[4 * i + 1] = o_y
+            tmpLineXY[4 * i + 2] = x
+            tmpLineXY[4 * i + 3] = y
+            o_x = x
+            o_y = y
         }
-        c.drawLines(tmpLineXY, 4 * (beginFreqPt + 1), 4 * (endFreqPt - beginFreqPt - 1), linePaintLight);
-        c.restore();
+        c.drawLines(
+            tmpLineXY,
+            4 * (beginFreqPt + 1),
+            4 * (endFreqPt - beginFreqPt - 1),
+            linePaintLight
+        )
+        c.restore()
     }
 
     // x, y is in pixel unit
-    public void setMarker(double x, double y) {
-        markerFreq = getAxisX().valueFromPx(x);  // frequency
-        markerDB = axisY.valueFromPx(y);  // decibel
+    fun setMarker(
+        x: Double,
+        y: Double
+    ) {
+        markerFreq = axisX.valueFromPx(x) // frequency
+        markerDB = axisY.valueFromPx(y) // decibel
     }
 
-    public double getMarkerFreq() {
-        return canvasWidth == 0 ? 0 : markerFreq;
+    fun getMarkerFreq(): Double {
+        return if (canvasWidth == 0) 0.0 else markerFreq
     }
 
-    public double getMarkerDB() {
-        return canvasHeight == 0 ? 0 : markerDB;
+    fun getMarkerDB(): Double {
+        return if (canvasHeight == 0) 0.0 else markerDB
     }
 
-    public void hideMarker() {
-        markerFreq = 0;
-        markerDB = 0;
+    fun hideMarker() {
+        markerFreq = 0.0
+        markerDB = 0.0
     }
 
-    private void drawMarker(Canvas c) {
-        if (markerFreq == 0) {
-            return;
+    private fun drawMarker(c: Canvas) {
+        if (markerFreq == 0.0) {
+            return
         }
-        float cX, cY;
-        cX = (float) getAxisX().pxFromValue(markerFreq);
-        cY = (float) axisY.pxFromValue(markerDB);
-        c.drawLine(cX, 0, cX, canvasHeight, markerPaint);
-        c.drawLine(0, cY, canvasWidth, cY, markerPaint);
+        val cX: Float
+        val cY: Float
+        cX = axisX.pxFromValue(markerFreq).toFloat()
+        cY = axisY.pxFromValue(markerDB).toFloat()
+        c.drawLine(
+            cX,
+            0f,
+            cX,
+            canvasHeight.toFloat(),
+            markerPaint
+        )
+        c.drawLine(
+            0f,
+            cY,
+            canvasWidth.toFloat(),
+            cY,
+            markerPaint
+        )
     }
 
     // Plot spectrum with axis and ticks on the whole canvas c
-    public void drawSpectrumPlot(Canvas c, double[] savedDBSpectrum) {
-        freqGridLabel.updateGridLabels(getAxisX().getLowerViewBound(), getAxisX().getUpperViewBound());
-        dBGridLabel.updateGridLabels(axisY.getLowerViewBound(), axisY.getUpperViewBound());
-        drawGridLines(c);
-        drawSpectrumOnCanvas(c, savedDBSpectrum);
-        drawMarker(c);
-        AxisTickLabels.draw(c, getAxisX(), freqGridLabel,
-                0f, 0f, 0, 1,
-                labelPaint, gridPaint, gridPaint);
-        AxisTickLabels.draw(c, axisY, dBGridLabel,
-                0f, 0f, 1, 1,
-                labelPaint, gridPaint, gridPaint);
+    fun drawSpectrumPlot(
+        c: Canvas,
+        savedDBSpectrum: DoubleArray?
+    ) {
+        freqGridLabel.updateGridLabels(
+            axisX.lowerViewBound,
+            axisX.upperViewBound
+        )
+        dBGridLabel.updateGridLabels(
+            axisY.lowerViewBound,
+            axisY.upperViewBound
+        )
+        drawGridLines(c)
+        drawSpectrumOnCanvas(
+            c,
+            savedDBSpectrum
+        )
+        drawMarker(c)
+        draw(
+            c,
+            axisX,
+            freqGridLabel,
+            0f,
+            0f,
+            0,
+            1,
+            labelPaint,
+            gridPaint,
+            gridPaint
+        )
+        draw(
+            c,
+            axisY,
+            dBGridLabel,
+            0f,
+            0f,
+            1,
+            1,
+            labelPaint,
+            gridPaint,
+            gridPaint
+        )
     }
 
-    public ScreenPhysicalMapping getAxisX() {
-        return axisX;
+    fun setMarkerFreq(markerFreq: Double) {
+        this.markerFreq = markerFreq
     }
 
-    public ScreenPhysicalMapping getAxisY() {
-        return axisY;
+    fun setMarkerDB(markerDB: Double) {
+        this.markerDB = markerDB
     }
 
-    public boolean isShowLines() {
-        return showLines;
+    companion object {
+        private val TAG = SpectrumPlot::class.java.simpleName
     }
 
-    public void setShowLines(boolean showLines) {
-        this.showLines = showLines;
-    }
-
-    public void setMarkerFreq(double markerFreq) {
-        this.markerFreq = markerFreq;
-    }
-
-    public void setMarkerDB(double markerDB) {
-        this.markerDB = markerDB;
+    init {
+        dPRatio = _context.resources.displayMetrics.density
+        linePaint = Paint()
+        linePaint.color = Color.parseColor("#0D2C6D")
+        linePaint.style = Paint.Style.STROKE
+        linePaint.strokeWidth = 1f
+        linePaintLight = Paint(linePaint)
+        linePaintLight.color = Color.parseColor("#3AB3E2")
+        gridPaint = Paint()
+        gridPaint.color = Color.DKGRAY
+        gridPaint.style = Paint.Style.STROKE
+        gridPaint.strokeWidth = 0.6f * dPRatio
+        markerPaint = Paint(gridPaint)
+        markerPaint.color = Color.parseColor("#00CD00")
+        labelPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        labelPaint.color = Color.GRAY
+        labelPaint.textSize = 14.0f * dPRatio
+        labelPaint.typeface = Typeface.MONOSPACE // or Typeface.SANS_SERIF
+        markerDB = 0.0
+        markerFreq = markerDB
+        freqGridLabel = GridLabel(
+            GridLabel.Type.FREQ,
+            canvasWidth * gridDensity / dPRatio
+        )
+        dBGridLabel = GridLabel(
+            GridLabel.Type.DB,
+            canvasHeight * gridDensity / dPRatio
+        )
+        axisX = ScreenPhysicalMapping(
+            0.0,
+            0.0,
+            0.0,
+            ScreenPhysicalMapping.Type.LINEAR
+        )
+        axisY = ScreenPhysicalMapping(
+            0.0,
+            0.0,
+            0.0,
+            ScreenPhysicalMapping.Type.LINEAR
+        )
     }
 }
