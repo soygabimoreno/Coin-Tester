@@ -1,7 +1,6 @@
 package com.appacoustic.cointester.presentation.sonometer
 
 import com.appacoustic.cointester.R
-import com.appacoustic.cointester.libFramework.extension.debugToast
 import com.appacoustic.cointester.libFramework.extension.exhaustive
 import com.appacoustic.cointester.libbase.fragment.BaseFragment
 import kotlinx.android.synthetic.main.fragment_sonometer.*
@@ -31,7 +30,7 @@ class SonometerFragment : BaseFragment<
     }
 
     private fun showContent() {
-        debugToast("showContent")
+//        debugToast("showContent")
     }
 
     override fun handleViewEvent(viewEvent: SonometerViewModel.ViewEvents) {

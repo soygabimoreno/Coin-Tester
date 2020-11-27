@@ -27,6 +27,7 @@ dependencies {
     implementation(GoogleDependency.MATERIAL)
     implementation(GoogleDependency.GSON)
 
+    implementation KoinDependency.KOIN_CORE
     implementation KoinDependency.KOIN_SCOPE
     implementation KoinDependency.KOIN_VIEW_MODEL
 

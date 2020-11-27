@@ -1,7 +1,7 @@
 package com.appacoustic.cointester.presentation.analyzer
 
 import androidx.lifecycle.viewModelScope
-import com.appacoustic.cointester.framework.SamplingLoopThread
+import com.appacoustic.cointester.framework.sampling.SamplingLoopThread
 import com.appacoustic.cointester.libFramework.extension.roundTo1Decimal
 import com.appacoustic.cointester.libbase.viewmodel.BaseViewModel
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams

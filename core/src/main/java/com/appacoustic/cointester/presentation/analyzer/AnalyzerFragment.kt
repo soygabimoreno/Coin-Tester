@@ -22,7 +22,7 @@ import androidx.core.view.GestureDetectorCompat
 import com.appacoustic.cointester.BuildConfig
 import com.appacoustic.cointester.R
 import com.appacoustic.cointester.framework.AnalyzerUtil
-import com.appacoustic.cointester.framework.SamplingLoopThread
+import com.appacoustic.cointester.framework.sampling.SamplingLoopThread
 import com.appacoustic.cointester.libFramework.KLog
 import com.appacoustic.cointester.libFramework.extension.debugToast
 import com.appacoustic.cointester.libFramework.extension.exhaustive

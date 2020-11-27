@@ -1,16 +1,19 @@
-package com.appacoustic.cointester.framework
+package com.appacoustic.cointester.framework.sampling
 
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.os.SystemClock
-import com.appacoustic.cointester.R
+import com.appacoustic.cointester.coreAnalytics.error.ErrorTrackerComponent
+import com.appacoustic.cointester.framework.RecorderMonitor
 import com.appacoustic.cointester.framework.processing.STFT
 import com.appacoustic.cointester.libFramework.KLog
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
-import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerViews
 import com.appacoustic.libprocessing.SineGenerator
 import com.appacoustic.libprocessing.dBToLinear
 import com.appacoustic.libprocessingandroid.wav.WavWriter
+import org.koin.core.component.KoinApiExtension
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.max
@@ -20,13 +23,13 @@ import kotlin.math.round
 /**
  * Read a snapshot of audio data at a regular interval and compute the FFT.
  */
-class SamplingLoopThread(
-    private val params: AnalyzerParams,
-    private val analyzerViews: AnalyzerViews,
+@OptIn(KoinApiExtension::class)
+class SimpleSamplingLoopThread(
+    private val analyzerParams: AnalyzerParams,
     @Volatile var paused: Boolean,
     private val saveWav: Boolean,
     private val listener: Listener
-) : Thread() {
+) : Thread(), KoinComponent {
 
     companion object {
         private const val TEST_SIGNAL_1_FREQ_1 = 440.0
@@ -38,17 +41,19 @@ class SamplingLoopThread(
     }
 
     interface Listener {
-        fun onInitGraphs()
-        fun onUpdateAmplitude(
-            maxAmplitudeFreq: Double,
-            maxAmplitudeDB: Double
-        )
+//        fun onInitGraphs()
+//        fun onUpdateAmplitude(
+//            maxAmplitudeFreq: Double,
+//            maxAmplitudeDB: Double
+//        )
 
         fun onUpdateRms(
             rms: Double,
             rmsFromFT: Double
         )
     }
+
+    private val errorTrackerComponent: ErrorTrackerComponent by inject()
 
     @Volatile
     private var running = true
@@ -61,10 +66,10 @@ class SamplingLoopThread(
 
     private val bytesPerSample = AnalyzerParams.BYTES_PER_SAMPLE
     private val sampleValueMax = AnalyzerParams.SAMPLE_VALUE_MAX
-    private val sampleRate = params.sampleRate
-    private val audioSourceId = params.audioSourceId
-    private val fftLength = params.fftLength
-    private val nFftAverage = params.nFftAverage
+    private val sampleRate = analyzerParams.sampleRate
+    private val audioSourceId = analyzerParams.audioSourceId
+    private val fftLength = analyzerParams.fftLength
+    private val nFftAverage = analyzerParams.nFftAverage
 
     @Volatile
     var wavSecondsRemain = 0.0
@@ -76,10 +81,12 @@ class SamplingLoopThread(
     private var data: DoubleArray? = null
 
     init {
+        errorTrackerComponent.trackError(Exception("FOOOOO"))
+
         val amp0 = dBToLinear(TEST_SIGNAL_1_DB_1)
         val amp1 = dBToLinear(TEST_SIGNAL_2_DB_1)
         val amp2 = dBToLinear(TEST_SIGNAL_2_DB_2)
-        sineGenerator0 = if (audioSourceId == params.idTestSignal1) {
+        sineGenerator0 = if (audioSourceId == analyzerParams.idTestSignal1) {
             SineGenerator(
                 TEST_SIGNAL_1_FREQ_1,
                 sampleRate,
@@ -101,7 +108,7 @@ class SamplingLoopThread(
 
     override fun run() {
         val timeStart = SystemClock.uptimeMillis()
-        listener.onInitGraphs()
+//        listener.onInitGraphs()
         val timeEnd = SystemClock.uptimeMillis()
         val time = timeEnd - timeStart
         val timeMin = 500
@@ -121,11 +128,11 @@ class SamplingLoopThread(
             AudioFormat.ENCODING_PCM_16BIT
         )
         if (minBufferSize == AudioRecord.ERROR_BAD_VALUE) {
-            analyzerViews.notifyToast(R.string.error_invalid_audio_record_parameters)
+            errorTrackerComponent.trackError(Exception("ERROR_INVALID_AUDIO_RECORD_PARAMETERS"))
             return
         }
 
-        var readChunkSize = params.hopLength // Every hopLength one fft result (overlapped analyze window)
+        var readChunkSize = analyzerParams.hopLength // Every hopLength one fft result (overlapped analyze window)
         readChunkSize = min(
             readChunkSize,
             2048
@@ -140,7 +147,7 @@ class SamplingLoopThread(
         // The buffer size here seems not relate to the delay.
         // So choose a larger size (~1sec) so that overrun is unlikely.
         val record = try {
-            if (audioSourceId < params.idTestSignal1) {
+            if (audioSourceId < analyzerParams.idTestSignal1) {
                 AudioRecord(
                     audioSourceId,
                     sampleRate,
@@ -158,14 +165,14 @@ class SamplingLoopThread(
                 )
             }
         } catch (e: IllegalArgumentException) {
-            analyzerViews.notifyToast(R.string.error_illegal_recorder_argument)
+            errorTrackerComponent.trackError(Exception("ERROR_ILLEGAL_RECORDER_ARGUMENT"))
             e.printStackTrace()
             return
         }
 
         KLog.i(
             "Starting recorder... \n" +
-                "Source: " + params.audioSourceName + "\n" +
+                "Source: " + analyzerParams.audioSourceName + "\n" +
                 String.format(
                     "Sample rate: %d Hz (requested %d Hz)\n",
                     record.sampleRate,
@@ -195,18 +202,18 @@ class SamplingLoopThread(
                     nFftAverage
                 )
         )
-        params.sampleRate = record.sampleRate
+        analyzerParams.sampleRate = record.sampleRate
 
         if (record.state == AudioRecord.STATE_UNINITIALIZED) {
             KLog.e("Fail initializing the AudioRecord")
-            analyzerViews.notifyToast(R.string.error_initializing_recorder)
+            errorTrackerComponent.trackError(Exception("ERROR_INITIALIZING_RECORDER"))
             return
         }
 
         val audioSamples = ShortArray(readChunkSize)
 
 
-        stft = STFT(params)
+        stft = STFT(analyzerParams)
         val arraySize = fftLength / 2 + 1
         if (spectrumAmplitudeDBCopy == null || spectrumAmplitudeDBCopy?.size != arraySize) {
             spectrumAmplitudeDBCopy = DoubleArray(arraySize)
@@ -230,7 +237,7 @@ class SamplingLoopThread(
         try {
             record.startRecording()
         } catch (e: IllegalStateException) {
-            analyzerViews.notifyToast(R.string.error_start_recording)
+            errorTrackerComponent.trackError(Exception("ERROR_START_RECORDING"))
             e.printStackTrace()
             return
         }
@@ -238,7 +245,7 @@ class SamplingLoopThread(
         // When running in this loop (including when paused), you cannot change properties
         // related to recorder: e.g. audioSourceId, sampleRate, bufferSampleSize
         while (running) {
-            val numOfReadShort = if (audioSourceId >= params.idTestSignal1) {
+            val numOfReadShort = if (audioSourceId >= analyzerParams.idTestSignal1) {
                 readTestData(
                     audioSamples,
                     0,
@@ -254,7 +261,7 @@ class SamplingLoopThread(
             }
             if (recorderMonitor.updateState(numOfReadShort)) {
                 if (recorderMonitor.lastCheckOverrun) {
-                    analyzerViews.notifyOverrun()
+//                    analyzerViews.notifyOverrun()
                 }
                 if (saveWav) {
                     wavSecondsRemain = wavWriter.secondsLeft()
@@ -266,7 +273,7 @@ class SamplingLoopThread(
                     numOfReadShort
                 )
                 wavSeconds = wavWriter.secondsWritten()
-                analyzerViews.updateRec(wavSeconds)
+//                analyzerViews.updateRec(wavSeconds)
             }
             if (paused) {
                 // keep reading data, for overrun checker and for write wav data
@@ -288,15 +295,15 @@ class SamplingLoopThread(
                     0,
                     spectrumAmplitudeDB.size
                 )
-                analyzerViews.update(spectrumAmplitudeDBCopy) // Update
+//                analyzerViews.update(spectrumAmplitudeDBCopy) // Update
 
                 stft.calculatePeak()
                 val maxAmplitudeFreq = stft.maxAmplitudeFreq
                 val maxAmplitudeDB = stft.maxAmplitudeDB
-                listener.onUpdateAmplitude(
-                    maxAmplitudeFreq,
-                    maxAmplitudeDB
-                )
+//                listener.onUpdateAmplitude(
+//                    maxAmplitudeFreq,
+//                    maxAmplitudeDB
+//                )
 
                 val rms = stft.calculateRms()
                 val rmsFromFT = stft.calculateRmsFromFT()
@@ -313,7 +320,7 @@ class SamplingLoopThread(
         if (saveWav) {
             KLog.i("Ending saved wav")
             wavWriter.stop()
-            analyzerViews.notifyWAVSaved(wavWriter.relativeDir)
+//            analyzerViews.notifyWAVSaved(wavWriter.relativeDir)
         }
     }
 
@@ -330,7 +337,7 @@ class SamplingLoopThread(
             data,
             0.0
         )
-        when (id - params.idTestSignal1) {
+        when (id - analyzerParams.idTestSignal1) {
             1 -> {
                 sineGenerator1.getSamples(data!!)
                 sineGenerator0.addSamples(data!!)

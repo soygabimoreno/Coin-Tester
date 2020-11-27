@@ -7,7 +7,7 @@ import org.koin.dsl.module
 val sonometerModule = module {
     scope(named<SonometerFragment>()) {
         viewModel {
-            SonometerViewModel()
+            SonometerViewModel(analyzerParams = get())
         }
     }
 }
