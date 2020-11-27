@@ -1,46 +1,85 @@
 package com.appacoustic.cointester.presentation.analyzer.view
 
-import android.content.Context
 import android.graphics.*
 import com.appacoustic.cointester.framework.ScreenPhysicalMapping
 import com.appacoustic.cointester.presentation.analyzer.view.AxisTickLabels.draw
+import kotlin.math.ceil
+import kotlin.math.floor
 
 /**
  * The spectrum plot part of AnalyzerGraphic.
  */
-class SpectrumPlot(_context: Context) {
-    var isShowLines = false
-    private val linePaint: Paint
+class SpectrumPlot(
+    private val density: Float
+) {
+
+    var showLines = false
+    private val linePaint: Paint = Paint()
     private val linePaintLight: Paint
     private val markerPaint: Paint
-    private val gridPaint: Paint
+    private val gridPaint: Paint = Paint()
     private val labelPaint: Paint
     private var canvasHeight = 0
     private var canvasWidth = 0
-    private val freqGridLabel: GridLabel
+    private val frequencyGridLabel: GridLabel
     private val dBGridLabel: GridLabel
-    private val density: Float
     private val gridDensity = 1 / 85.0 // Every 85 pixel one grid line (on average)
-    private var markerFreq: Double
-    private var markerDB // Marker location
-        : Double
-    val axisX // For frequency axis
-        : ScreenPhysicalMapping
-    val axisY // For dB axis
-        : ScreenPhysicalMapping
+    private var markerFrequency: Double
+    private var markerDB: Double
+    val axisX: ScreenPhysicalMapping
+    val axisY: ScreenPhysicalMapping
+
+    init {
+        linePaint.color = Color.parseColor("#0D2C6D")
+        linePaint.style = Paint.Style.STROKE
+        linePaint.strokeWidth = 1f
+        linePaintLight = Paint(linePaint)
+        linePaintLight.color = Color.parseColor("#3AB3E2")
+        gridPaint.color = Color.DKGRAY
+        gridPaint.style = Paint.Style.STROKE
+        gridPaint.strokeWidth = 0.6f * density
+        markerPaint = Paint(gridPaint)
+        markerPaint.color = Color.parseColor("#00CD00")
+        labelPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        labelPaint.color = Color.WHITE
+        labelPaint.textSize = 14.0f * density
+        labelPaint.typeface = Typeface.MONOSPACE
+        markerDB = 0.0
+        markerFrequency = 0.0
+        frequencyGridLabel = GridLabel(
+            GridLabel.Type.FREQ,
+            canvasWidth * gridDensity / density
+        )
+        dBGridLabel = GridLabel(
+            GridLabel.Type.DB,
+            canvasHeight * gridDensity / density
+        )
+        axisX = ScreenPhysicalMapping(
+            nCanvasPx = 0.0,
+            lowerBound = 0.0,
+            upperBound = 0.0,
+            mapType = ScreenPhysicalMapping.Type.LINEAR
+        )
+        axisY = ScreenPhysicalMapping(
+            nCanvasPx = 0.0,
+            lowerBound = 0.0,
+            upperBound = 0.0,
+            mapType = ScreenPhysicalMapping.Type.LINEAR
+        )
+    }
 
     fun setCanvas(
-        _canvasWidth: Int,
-        _canvasHeight: Int,
+        canvasWidth: Int,
+        canvasHeight: Int,
         axisBounds: DoubleArray?
     ) {
-//        GLog.i("SpectrumPlot", "setCanvas: W="+_canvasWidth+"  H="+_canvasHeight);
-        canvasWidth = _canvasWidth
-        canvasHeight = _canvasHeight
-        freqGridLabel.setDensity(canvasWidth * gridDensity / density)
-        dBGridLabel.setDensity(canvasHeight * gridDensity / density)
-        axisX.nCanvasPx = canvasWidth.toDouble()
-        axisY.nCanvasPx = canvasHeight.toDouble()
+        this.canvasWidth = canvasWidth
+        this.canvasHeight = canvasHeight
+
+        frequencyGridLabel.setDensity(this.canvasWidth * gridDensity / density)
+        dBGridLabel.setDensity(this.canvasHeight * gridDensity / density)
+        axisX.nCanvasPx = this.canvasWidth.toDouble()
+        axisY.nCanvasPx = this.canvasHeight.toDouble()
         if (axisBounds != null) {
             axisX.setBounds(
                 axisBounds[0],
@@ -69,23 +108,22 @@ class SpectrumPlot(_context: Context) {
         )
     }
 
-    // Linear or Logarithmic frequency axis
-    fun setFreqAxisMode(
-        mapType: ScreenPhysicalMapping.Type?,
-        freq_lower_bound_for_log: Double,
+    fun setFrequencyAxisMode(
+        mapType: ScreenPhysicalMapping.Type,
+        freqLowerBoundForLog: Double,
         gridType: GridLabel.Type?
     ) {
         axisX.setMappingType(
-            mapType!!,
-            freq_lower_bound_for_log
+            mapType,
+            freqLowerBoundForLog
         )
-        freqGridLabel.setGridType(gridType)
+        frequencyGridLabel.gridType = gridType
     }
 
-    private fun drawGridLines(c: Canvas) {
-        for (i in freqGridLabel.values.indices) {
-            val xPos = axisX.pxFromValue(freqGridLabel.values[i]).toFloat()
-            c.drawLine(
+    private fun drawGridLines(canvas: Canvas) {
+        for (i in frequencyGridLabel.values.indices) {
+            val xPos = axisX.pxFromValue(frequencyGridLabel.values[i]).toFloat()
+            canvas.drawLine(
                 xPos,
                 0f,
                 xPos,
@@ -95,7 +133,7 @@ class SpectrumPlot(_context: Context) {
         }
         for (i in dBGridLabel.values.indices) {
             val yPos = axisY.pxFromValue(dBGridLabel.values[i]).toFloat()
-            c.drawLine(
+            canvas.drawLine(
                 0f,
                 yPos,
                 canvasWidth.toFloat(),
@@ -117,34 +155,33 @@ class SpectrumPlot(_context: Context) {
     private var tmpLineXY = FloatArray(0) // cache line data for drawing
     private var dBCache: DoubleArray? = null
 
-    // Plot the spectrum into the Canvas c
     private fun drawSpectrumOnCanvas(
-        c: Canvas,
-        _db: DoubleArray?
+        canvas: Canvas,
+        savedDBSpectrum: DoubleArray?
     ) {
-        if (canvasHeight < 1 || _db == null || _db.size == 0) {
+        if (canvasHeight < 1 || savedDBSpectrum == null || savedDBSpectrum.isEmpty()) {
             return
         }
-        synchronized(_db) {
+        synchronized(savedDBSpectrum) {
             // TODO: need lock on tmpDBSpectrum, but how?
-            if (dBCache == null || dBCache!!.size != _db.size) {
-                dBCache = DoubleArray(_db.size)
+            if (dBCache == null || dBCache!!.size != savedDBSpectrum.size) {
+                dBCache = DoubleArray(savedDBSpectrum.size)
             }
             System.arraycopy(
-                _db,
+                savedDBSpectrum,
                 0,
                 dBCache,
                 0,
-                _db.size
+                savedDBSpectrum.size
             )
         }
         val canvasMinFreq = axisX.lowerViewBound
         val canvasMaxFreq = axisX.upperViewBound
-        // There are db.length frequency points, including DC component
+        // There are savedDBSpectrum.length frequency points, including DC component
         val nFreqPointsTotal = dBCache!!.size - 1
         val freqDelta = axisX.upperBound / nFreqPointsTotal
-        var beginFreqPt = Math.floor(canvasMinFreq / freqDelta).toInt() // pointer to tmpLineXY
-        var endFreqPt = Math.ceil(canvasMaxFreq / freqDelta).toInt() + 1
+        var beginFreqPt = floor(canvasMinFreq / freqDelta).toInt() // pointer to tmpLineXY
+        var endFreqPt = ceil(canvasMaxFreq / freqDelta).toInt() + 1
         val minYCanvas = axisY.pxNoZoomFromValue(AnalyzerGraphicView.MIN_DB)
 
         // add one more boundary points
@@ -159,8 +196,8 @@ class SpectrumPlot(_context: Context) {
         }
 
         // spectrum bar
-        if (!isShowLines) {
-            c.save()
+        if (!showLines) {
+            canvas.save()
             // If bars are very close to each other, draw bars as lines
             // Otherwise, zoom in so that lines look like bars.
             if (endFreqPt - beginFreqPt >= axisX.nCanvasPx / 2
@@ -175,7 +212,7 @@ class SpectrumPlot(_context: Context) {
                     1f,
                     axisY.zoom.toFloat()
                 )
-                c.concat(matrix)
+                canvas.concat(matrix)
                 //      float barWidthInPixel = 0.5f * freqDelta / (canvasMaxFreq - canvasMinFreq) * canvasWidth;
                 //      if (barWidthInPixel > 2) {
                 //        linePaint.setStrokeWidth(barWidthInPixel);
@@ -193,7 +230,7 @@ class SpectrumPlot(_context: Context) {
                         tmpLineXY[4 * i + 3] = y
                     }
                 }
-                c.drawLines(
+                canvas.drawLines(
                     tmpLineXY,
                     4 * beginFreqPt,
                     4 * (endFreqPt - beginFreqPt),
@@ -204,13 +241,6 @@ class SpectrumPlot(_context: Context) {
                 val pixelStep = 2 // each bar occupy this virtual pixel
                 matrix.reset()
                 val extraPixelAlignOffset = 0.0
-                //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//          // There is an shift for Android 4.4, while no shift for Android 2.3
-//          // I guess that is relate to GL ES acceleration
-//          if (c.isHardwareAccelerated()) {
-//            extraPixelAlignOffset = 0.5f;
-//          }
-//        }
                 matrix.setTranslate(
                     (-axisX.shift * nFreqPointsTotal * pixelStep - extraPixelAlignOffset).toFloat(),
                     (-axisY.shift * canvasHeight).toFloat()
@@ -219,7 +249,7 @@ class SpectrumPlot(_context: Context) {
                     (canvasWidth / ((canvasMaxFreq - canvasMinFreq) / freqDelta * pixelStep)).toFloat(),
                     axisY.zoom.toFloat()
                 )
-                c.concat(matrix)
+                canvas.concat(matrix)
                 // fill interval same as canvas pixel width.
                 for (i in beginFreqPt until endFreqPt) {
                     val x = (i * pixelStep).toFloat()
@@ -231,18 +261,18 @@ class SpectrumPlot(_context: Context) {
                         tmpLineXY[4 * i + 3] = y
                     }
                 }
-                c.drawLines(
+                canvas.drawLines(
                     tmpLineXY,
                     4 * beginFreqPt,
                     4 * (endFreqPt - beginFreqPt),
                     linePaint
                 )
             }
-            c.restore()
+            canvas.restore()
         }
 
         // spectrum line
-        c.save()
+        canvas.save()
         matrix.reset()
         matrix.setTranslate(
             0f,
@@ -252,7 +282,7 @@ class SpectrumPlot(_context: Context) {
             1f,
             axisY.zoom.toFloat()
         )
-        c.concat(matrix)
+        canvas.concat(matrix)
         var o_x = axisX.pxFromValue(beginFreqPt * freqDelta).toFloat()
         var o_y = axisY.pxNoZoomFromValue(clampDB(dBCache!![beginFreqPt])).toFloat()
         for (i in beginFreqPt + 1 until endFreqPt) {
@@ -265,13 +295,13 @@ class SpectrumPlot(_context: Context) {
             o_x = x
             o_y = y
         }
-        c.drawLines(
+        canvas.drawLines(
             tmpLineXY,
             4 * (beginFreqPt + 1),
             4 * (endFreqPt - beginFreqPt - 1),
             linePaintLight
         )
-        c.restore()
+        canvas.restore()
     }
 
     // x, y is in pixel unit
@@ -279,39 +309,45 @@ class SpectrumPlot(_context: Context) {
         x: Double,
         y: Double
     ) {
-        markerFreq = axisX.valueFromPx(x) // frequency
+        markerFrequency = axisX.valueFromPx(x) // frequency
         markerDB = axisY.valueFromPx(y) // decibel
     }
 
-    fun getMarkerFreq(): Double {
-        return if (canvasWidth == 0) 0.0 else markerFreq
+    fun getMarkerFrequency(): Double {
+        return if (canvasWidth == 0) 0.0 else markerFrequency
+    }
+
+    fun setMarkerFrequency(markerFreq: Double) {
+        this.markerFrequency = markerFreq
     }
 
     fun getMarkerDB(): Double {
         return if (canvasHeight == 0) 0.0 else markerDB
     }
 
+    fun setMarkerDB(markerDB: Double) {
+        this.markerDB = markerDB
+    }
+
     fun hideMarker() {
-        markerFreq = 0.0
+        markerFrequency = 0.0
         markerDB = 0.0
     }
 
-    private fun drawMarker(c: Canvas) {
-        if (markerFreq == 0.0) {
+    private fun drawMarker(canvas: Canvas) {
+        if (markerFrequency == 0.0) {
             return
         }
-        val cX: Float
-        val cY: Float
-        cX = axisX.pxFromValue(markerFreq).toFloat()
-        cY = axisY.pxFromValue(markerDB).toFloat()
-        c.drawLine(
+        val cX: Float = axisX.pxFromValue(markerFrequency).toFloat()
+        val cY: Float = axisY.pxFromValue(markerDB).toFloat()
+        canvas.drawLine(
             cX,
             0f,
             cX,
             canvasHeight.toFloat(),
             markerPaint
         )
-        c.drawLine(
+        canvas.drawLine(
             0f,
             cY,
             canvasWidth.toFloat(),
@@ -320,12 +356,11 @@ class SpectrumPlot(_context: Context) {
         )
     }
 
-    // Plot spectrum with axis and ticks on the whole canvas c
     fun drawSpectrumPlot(
-        c: Canvas,
+        canvas: Canvas,
         savedDBSpectrum: DoubleArray?
     ) {
-        freqGridLabel.updateGridLabels(
+        frequencyGridLabel.updateGridLabels(
             axisX.lowerViewBound,
             axisX.upperViewBound
         )
@@ -333,16 +368,16 @@ class SpectrumPlot(_context: Context) {
             axisY.lowerViewBound,
             axisY.upperViewBound
         )
-        drawGridLines(c)
+        drawGridLines(canvas)
         drawSpectrumOnCanvas(
-            c,
+            canvas,
             savedDBSpectrum
         )
-        drawMarker(c)
+        drawMarker(canvas)
         draw(
-            c,
+            canvas,
             axisX,
-            freqGridLabel,
+            frequencyGridLabel,
             0f,
             0f,
             0,
@@ -352,7 +387,7 @@ class SpectrumPlot(_context: Context) {
             gridPaint
         )
         draw(
-            c,
+            canvas,
             axisY,
             dBGridLabel,
             0f,
@@ -362,60 +397,6 @@ class SpectrumPlot(_context: Context) {
             labelPaint,
             gridPaint,
             gridPaint
-        )
-    }
-
-    fun setMarkerFreq(markerFreq: Double) {
-        this.markerFreq = markerFreq
-    }
-
-    fun setMarkerDB(markerDB: Double) {
-        this.markerDB = markerDB
-    }
-
-    companion object {
-        private val TAG = SpectrumPlot::class.java.simpleName
-    }
-
-    init {
-        density = _context.resources.displayMetrics.density
-        linePaint = Paint()
-        linePaint.color = Color.parseColor("#0D2C6D")
-        linePaint.style = Paint.Style.STROKE
-        linePaint.strokeWidth = 1f
-        linePaintLight = Paint(linePaint)
-        linePaintLight.color = Color.parseColor("#3AB3E2")
-        gridPaint = Paint()
-        gridPaint.color = Color.DKGRAY
-        gridPaint.style = Paint.Style.STROKE
-        gridPaint.strokeWidth = 0.6f * density
-        markerPaint = Paint(gridPaint)
-        markerPaint.color = Color.parseColor("#00CD00")
-        labelPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        labelPaint.color = Color.WHITE
-        labelPaint.textSize = 14.0f * density
-        labelPaint.typeface = Typeface.MONOSPACE // or Typeface.SANS_SERIF
-        markerDB = 0.0
-        markerFreq = markerDB
-        freqGridLabel = GridLabel(
-            GridLabel.Type.FREQ,
-            canvasWidth * gridDensity / density
-        )
-        dBGridLabel = GridLabel(
-            GridLabel.Type.DB,
-            canvasHeight * gridDensity / density
-        )
-        axisX = ScreenPhysicalMapping(
-            0.0,
-            0.0,
-            0.0,
-            ScreenPhysicalMapping.Type.LINEAR
-        )
-        axisY = ScreenPhysicalMapping(
-            0.0,
-            0.0,
-            0.0,
-            ScreenPhysicalMapping.Type.LINEAR
         )
     }
 }

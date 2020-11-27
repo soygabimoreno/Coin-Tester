@@ -92,7 +92,8 @@ public class AnalyzerGraphicView extends View {
         xShift = yShift = 0f;
         canvasWidth = canvasHeight = 0;
 
-        spectrumPlot = new SpectrumPlot(context);
+        float density = context.getResources().getDisplayMetrics().density;
+        spectrumPlot = new SpectrumPlot(density);
         spectrogramPlot = new SpectrogramPlot(context);
 
         spectrumPlot.setCanvas(canvasWidth, canvasHeight, null);
@@ -130,7 +131,7 @@ public class AnalyzerGraphicView extends View {
         Parcelable parentState = super.onSaveInstanceState();
         SavedState savedState = new SavedState(parentState);
         savedState.freqAxisAlongX = spectrogramPlot.isShowFreqAlongX() ? 1 : 0;
-        savedState.markerFreqSpectrum = spectrumPlot.getMarkerFreq();
+        savedState.markerFreqSpectrum = spectrumPlot.getMarkerFrequency();
         savedState.markerFreqSpectrogram = spectrogramPlot.getMarkerFreq();
         savedState.markerDB = spectrumPlot.getMarkerDB();
         savedState.xZoom = xZoom;
@@ -177,7 +178,7 @@ public class AnalyzerGraphicView extends View {
             super.onRestoreInstanceState(restoredState.getSuperState());
 
             spectrogramPlot.setShowFreqAlongX(restoredState.freqAxisAlongX == 1);
-            spectrumPlot.setMarkerFreq(restoredState.markerFreqSpectrum);
+            spectrumPlot.setMarkerFrequency(restoredState.markerFreqSpectrum);
             spectrogramPlot.setMarkerFreq(restoredState.markerFreqSpectrogram);
             spectrumPlot.setMarkerDB(restoredState.markerDB);
             xZoom = restoredState.xZoom;
@@ -273,7 +274,7 @@ public class AnalyzerGraphicView extends View {
             mapType = ScreenPhysicalMapping.Type.LOG;
             gridType = mode.equals(context.getString(R.string.note)) ? GridLabel.Type.FREQ_NOTE : GridLabel.Type.FREQ_LOG;
         }
-        spectrumPlot.setFreqAxisMode(mapType, freqLowerBoundForLog, gridType);
+        spectrumPlot.setFrequencyAxisMode(mapType, freqLowerBoundForLog, gridType);
         spectrogramPlot.setFreqAxisMode(mapType, freqLowerBoundForLog, gridType);
         if (showMode == PlotMode.SPECTRUM) {
             xZoom = spectrumPlot.getAxisX().getZoom();
@@ -473,7 +474,7 @@ public class AnalyzerGraphicView extends View {
 
     public double getMarkerFreq() {
         if (showMode == PlotMode.SPECTRUM) {
-            return spectrumPlot.getMarkerFreq();
+            return spectrumPlot.getMarkerFrequency();
         } else {
             return spectrogramPlot.getMarkerFreq();
         }
