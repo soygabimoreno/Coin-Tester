@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <color name="colorPrimary">@color/deep_peach</color>
-    <color name="colorPrimaryDark">@color/candy_pink</color>
-    <color name="colorAccent">@color/cadet</color>
+    <color name="primary">#1982c4</color>
+    <color name="primaryDark">#6a4c93</color>
+    <color name="accent">#8ac926</color>
+    <color name="accent_alpha_30">#4d8ac926</color>
+    <color name="primaryDark_darkened_1">#573F78</color>
+    <color name="primaryDark_darkened_2">#3F2D57</color>
+    <color name="primaryDark_darkened_3">#2A1F3B</color>
+    <color name="primaryDark_darkened_4">#251B33</color>
+    <color name="background">#2A1F3B</color>
+    <color name="sunglow">#ffca3a</color>
+    <color name="sizzlingRed">#ff595e</color>
+    <color name="gray_light">#CCCCCC</color>
+    <color name="gray_medium">#888888</color>
+    <color name="gray_medium_primary_alpha_50">#80888888</color>
+    <color name="gray_dark">#444444</color>
+    <color name="white">#FFFFFF</color>
+    <color name="white_alpha_10">#1aFFFFFF</color>
 
-    <color name="deep_peach">#f3c7a1</color>
-    <color name="candy_pink">#e87975</color>
-    <color name="cadet">#4d606f</color>
-    <color name="cadet_1">#5b636b</color>
+    <color name="primary_alpha_90">#e61982c4</color>
+    <color name="primary_alpha_80">#cc1982c4</color>
+    <color name="primary_alpha_70">#b31982c4</color>
+    <color name="primary_alpha_60">#991982c4</color>
+    <color name="primary_alpha_50">#801982c4</color>
+    <color name="primary_alpha_40">#661982c4</color>
+    <color name="primary_alpha_30">#4d1982c4</color>
+    <color name="primary_alpha_20">#331982c4</color>
+    <color name="primary_alpha_10">#1a1982c4</color>
 </resources>

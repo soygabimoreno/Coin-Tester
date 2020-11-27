@@ -392,7 +392,7 @@ class SpectrumPlot(_context: Context) {
         markerPaint = Paint(gridPaint)
         markerPaint.color = Color.parseColor("#00CD00")
         labelPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        labelPaint.color = Color.GRAY
+        labelPaint.color = Color.WHITE
         labelPaint.textSize = 14.0f * density
         labelPaint.typeface = Typeface.MONOSPACE // or Typeface.SANS_SERIF
         markerDB = 0.0
