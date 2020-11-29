@@ -40,7 +40,7 @@ class SpectrumPlot(
         gridPaint.style = Paint.Style.STROKE
         gridPaint.strokeWidth = 0.6f * density
         markerPaint = Paint(gridPaint)
-        markerPaint.color = Color.parseColor("#1982c4")
+        markerPaint.color = Color.parseColor("#CCCCCC")
         labelPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         labelPaint.color = Color.WHITE
         labelPaint.textSize = 14.0f * density

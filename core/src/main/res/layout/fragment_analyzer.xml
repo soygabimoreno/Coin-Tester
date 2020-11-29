@@ -16,9 +16,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clControls"
-        android:background="@color/primaryDark_darkened_4"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@color/primaryDark_darkened_4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,7 +28,7 @@
             android:id="@+id/tvCursor1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="24dp"
             android:text="@string/f_hz"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/etCursor1"
@@ -39,13 +39,14 @@
             android:id="@+id/etCursor1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
+            android:textSize="20sp"
             android:layout_marginBottom="16dp"
             android:inputType="numberDecimal"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/tvCursor1"
-            app:layout_constraintStart_toStartOf="@id/tvCursor1"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvCursor1"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -53,8 +54,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:tint="@color/white"
             android:src="@drawable/ic_baseline_refresh_24"
+            android:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="@id/etCursor1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tvCursor1"/>
