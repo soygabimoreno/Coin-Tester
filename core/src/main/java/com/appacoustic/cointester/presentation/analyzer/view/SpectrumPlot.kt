@@ -30,16 +30,17 @@ class SpectrumPlot(
     val axisY: ScreenPhysicalMapping
 
     init {
-        linePaint.color = Color.parseColor("#0D2C6D")
+        linePaint.color = Color.parseColor("#6a4c93")
         linePaint.style = Paint.Style.STROKE
         linePaint.strokeWidth = 1f
         linePaintLight = Paint(linePaint)
-        linePaintLight.color = Color.parseColor("#3AB3E2")
+        linePaintLight.color = Color.parseColor("#FFFFFF")
+        linePaintLight.strokeWidth = 2f
         gridPaint.color = Color.DKGRAY
         gridPaint.style = Paint.Style.STROKE
         gridPaint.strokeWidth = 0.6f * density
         markerPaint = Paint(gridPaint)
-        markerPaint.color = Color.parseColor("#00CD00")
+        markerPaint.color = Color.parseColor("#1982c4")
         labelPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         labelPaint.color = Color.WHITE
         labelPaint.textSize = 14.0f * density

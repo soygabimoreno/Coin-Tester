@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient">
+    android:background="@color/primaryDark_darkened_2">
 
     <com.appacoustic.cointester.presentation.analyzer.view.AnalyzerGraphicView
         android:id="@+id/agv"
@@ -16,6 +16,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clControls"
+        android:background="@color/primary"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -29,6 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="@string/f_hz"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/etCursor1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -40,6 +42,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
             android:inputType="numberDecimal"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/tvCursor1"
             app:layout_constraintStart_toStartOf="@id/tvCursor1"
@@ -50,6 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
+            android:tint="@color/white"
             android:src="@drawable/ic_baseline_refresh_24"
             app:layout_constraintBottom_toBottomOf="@id/etCursor1"
             app:layout_constraintEnd_toEndOf="parent"
