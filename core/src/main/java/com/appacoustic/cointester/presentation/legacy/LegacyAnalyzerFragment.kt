@@ -1,4 +1,4 @@
-package com.appacoustic.cointester.presentation.analyzer
+package com.appacoustic.cointester.presentation.legacy
 
 import android.Manifest
 import android.app.Activity
@@ -22,15 +22,14 @@ import androidx.core.view.GestureDetectorCompat
 import com.appacoustic.cointester.BuildConfig
 import com.appacoustic.cointester.R
 import com.appacoustic.cointester.framework.AnalyzerUtil
-import com.appacoustic.cointester.framework.sampling.SamplingLoopThread
 import com.appacoustic.cointester.libFramework.KLog
+import com.appacoustic.cointester.libFramework.extension.debugToast
 import com.appacoustic.cointester.libFramework.extension.exhaustive
 import com.appacoustic.cointester.libbase.fragment.BaseFragment
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
 import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerGraphicView
 import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerGraphicView.OnReadyListener
 import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerViews
-import com.appacoustic.cointester.presentation.analyzer.view.RangeViewDialogC
 import com.appacoustic.cointester.presentation.analyzer.view.SelectorText
 import com.appacoustic.cointester.presentation.audiosourceschecker.AudioSourcesCheckerActivity
 import com.appacoustic.cointester.presentation.mypreference.MyPreferenceActivity
@@ -38,10 +37,10 @@ import com.appacoustic.libprocessingandroid.calibration.CalibrationLoad
 import kotlinx.android.synthetic.main.fragment_analyzer.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AnalyzerFragment : BaseFragment<
-    AnalyzerViewModel.ViewState,
-    AnalyzerViewModel.ViewEvents,
-    AnalyzerViewModel
+class LegacyAnalyzerFragment : BaseFragment<
+    LegacyAnalyzerViewModel.ViewState,
+    LegacyAnalyzerViewModel.ViewEvents,
+    LegacyAnalyzerViewModel
     >(),
     View.OnLongClickListener,
     View.OnClickListener,
@@ -59,30 +58,30 @@ class AnalyzerFragment : BaseFragment<
         private const val REC = "Rec"
         private const val STOP = "stop"
 
-        fun newInstance() = AnalyzerFragment()
+        fun newInstance() = LegacyAnalyzerFragment()
 
         private const val MIN_VALUE = Double.MIN_VALUE
     }
 
-    override val layoutResId = R.layout.fragment_analyzer
-    override val viewModel: AnalyzerViewModel by viewModel()
+    override val layoutResId = R.layout.fragment_legacy_analyzer
+    override val viewModel: LegacyAnalyzerViewModel by viewModel()
 
     override fun initUI() {
     }
 
-    override fun renderViewState(viewState: AnalyzerViewModel.ViewState) {
+    override fun renderViewState(viewState: LegacyAnalyzerViewModel.ViewState) {
         when (viewState) {
-            is AnalyzerViewModel.ViewState.Content -> showContent()
+            is LegacyAnalyzerViewModel.ViewState.Content -> showContent()
         }.exhaustive
     }
 
     private fun showContent() {
-//        debugToast("showContent")
+        debugToast("LegacyAnalyzerFragment")
     }
 
-    override fun handleViewEvent(viewEvent: AnalyzerViewModel.ViewEvents) {
+    override fun handleViewEvent(viewEvent: LegacyAnalyzerViewModel.ViewEvents) {
         when (viewEvent) {
-            is AnalyzerViewModel.ViewEvents.UpdateRMS -> updateRMS(viewEvent.rmsString)
+            is LegacyAnalyzerViewModel.ViewEvents.UpdateRMS -> updateRMS(viewEvent.rmsString)
         }.exhaustive
     }
 
@@ -91,9 +90,9 @@ class AnalyzerFragment : BaseFragment<
     }
 
     private lateinit var rootView: View
-    private lateinit var analyzerViews: AnalyzerViews
+    private lateinit var analyzerViews: LegacyAnalyzerViews
 
-    private lateinit var rangeViewDialogC: RangeViewDialogC
+    private lateinit var rangeViewDialogC: LegacyRangeViewDialogC
     private lateinit var gestureDetector: GestureDetectorCompat
     private lateinit var analyzerParams: AnalyzerParams
 
@@ -152,7 +151,7 @@ class AnalyzerFragment : BaseFragment<
 
         // Read preferences and set corresponding variables
         loadPreferenceForView()
-        analyzerViews = AnalyzerViews(
+        analyzerViews = LegacyAnalyzerViews(
             activity = requireActivity(),
             analyzerFragment = this,
             agv = agv
@@ -163,15 +162,15 @@ class AnalyzerFragment : BaseFragment<
             agv.rootView as ViewGroup,
             object : Visit {
                 override fun exec(view: View) {
-                    view.setOnLongClickListener(this@AnalyzerFragment)
-                    view.setOnClickListener(this@AnalyzerFragment)
+                    view.setOnLongClickListener(this@LegacyAnalyzerFragment)
+                    view.setOnClickListener(this@LegacyAnalyzerFragment)
                     (view as TextView).freezesText = true
                 }
             },
             "select"
         )
 
-        rangeViewDialogC = RangeViewDialogC(
+        rangeViewDialogC = LegacyRangeViewDialogC(
             requireActivity(),
             this,
             agv
@@ -344,7 +343,7 @@ class AnalyzerFragment : BaseFragment<
             .show()
     }
 
-    fun getSamplingThread(): SamplingLoopThread? = viewModel.samplingThread
+    fun getSamplingThread(): LegacySamplingLoopThread? = viewModel.samplingThread
 
     private fun selectFile() {
         // https://developer.android.com/guide/components/intents-common.html#Storage
@@ -903,12 +902,12 @@ class AnalyzerFragment : BaseFragment<
         if (!bSamplingPreparation) return
 
         // Start sampling
-        val samplingThread = SamplingLoopThread(
+        val samplingThread = LegacySamplingLoopThread(
             params,
             analyzerViews,
             stRunStop.value == STOP,
             saveWav,
-            object : SamplingLoopThread.Listener {
+            object : LegacySamplingLoopThread.Listener {
                 override fun onInitGraphs() {
                     try {
                         graphInit!!.join() // TODO: Seems not working as intended
@@ -921,8 +920,8 @@ class AnalyzerFragment : BaseFragment<
                     maxAmplitudeFreq: Double,
                     maxAmplitudeDB: Double
                 ) {
-                    this@AnalyzerFragment.maxAmplitudeFreq = maxAmplitudeFreq
-                    this@AnalyzerFragment.maxAmplitudeDB = maxAmplitudeDB
+                    this@LegacyAnalyzerFragment.maxAmplitudeFreq = maxAmplitudeFreq
+                    this@LegacyAnalyzerFragment.maxAmplitudeDB = maxAmplitudeDB
                 }
 
                 override fun onUpdateRms(
