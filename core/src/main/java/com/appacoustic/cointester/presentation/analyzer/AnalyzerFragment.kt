@@ -480,11 +480,11 @@ class AnalyzerFragment : BaseFragment<
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(requireActivity())
         analyzerParams.sampleRate = sharedPref.getInt(
             "button_sample_rate",
-            8000
+            44100
         )
         analyzerParams.fftLength = sharedPref.getInt(
             "button_fftlen",
-            1024
+            4096
         )
         analyzerParams.nFftAverage = sharedPref.getInt(
             "button_average",
@@ -493,7 +493,7 @@ class AnalyzerFragment : BaseFragment<
         // toggle-buttons
         analyzerParams.dbaWeighting = sharedPref.getBoolean(
             "dbA",
-            false
+            true
         )
         if (analyzerParams.dbaWeighting) {
             stDBDBA.nextValue()
