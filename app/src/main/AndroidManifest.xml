@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".presentation.start.StartActivity"
+            android:name="com.appacoustic.cointester.core.presentation.start.StartActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -27,23 +27,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.main.MainActivity"
+            android:name="com.appacoustic.cointester.core.presentation.main.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"/>
         <activity
-            android:name="com.appacoustic.cointester.presentation.mypreference.MyPreferenceActivity"
+            android:name="com.appacoustic.cointester.core.presentation.mypreference.MyPreferenceActivity"
             android:label="@string/preferences"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.appacoustic.cointester.presentation.audiosourceschecker.AudioSourcesCheckerActivity"
+            android:name="com.appacoustic.cointester.core.presentation.audiosourceschecker.AudioSourcesCheckerActivity"
             android:label="@string/info_of_input_audio"
-            android:parentActivityName=".presentation.main.MainActivity"
+            android:parentActivityName="com.appacoustic.cointester.core.presentation.main.MainActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:screenOrientation="portrait"
-                android:value=".presentation.main.MainActivity"/>
+                android:value="com.appacoustic.cointester.core.presentation.main.MainActivity"/>
         </activity>
 
         <meta-data

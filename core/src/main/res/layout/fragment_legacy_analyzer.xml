@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <com.appacoustic.core.presentation.analyzer.view.AnalyzerGraphicView
+    <com.appacoustic.cointester.core.presentation.analyzer.view.AnalyzerGraphicView
         android:id="@+id/agv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -57,7 +57,7 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <com.appacoustic.cointester.presentation.analyzer.view.SelectorText
+        <com.appacoustic.cointester.core.presentation.analyzer.view.SelectorText
             android:id="@+id/stMonitorRecord"
             style="@style/SelectorText"
             android:layout_width="wrap_content"
@@ -92,7 +92,7 @@
         android:layout_height="wrap_content"
         android:gravity="end">
 
-        <com.appacoustic.cointester.presentation.analyzer.view.SelectorText
+        <com.appacoustic.cointester.core.presentation.analyzer.view.SelectorText
             android:id="@+id/stSpectrumSpectrogramMode"
             style="@style/SelectorText"
             android:layout_width="wrap_content"
@@ -100,7 +100,7 @@
             app:items="spum spam"
             app:itemsDisplay="@string/tv_spectrum_spectrogram_mode"/>
 
-        <com.appacoustic.cointester.presentation.analyzer.view.SelectorText
+        <com.appacoustic.cointester.core.presentation.analyzer.view.SelectorText
             android:id="@+id/stDBDBA"
             style="@style/SelectorText"
             android:layout_width="wrap_content"
@@ -114,7 +114,7 @@
         android:layout_height="wrap_content"
         android:gravity="end">
 
-        <com.appacoustic.cointester.presentation.analyzer.view.SelectorText
+        <com.appacoustic.cointester.core.presentation.analyzer.view.SelectorText
             android:id="@+id/stLinearLogNote"
             style="@style/SelectorText"
             android:layout_width="wrap_content"
@@ -122,7 +122,7 @@
             app:items="linear log note"
             app:itemsDisplay="@string/tv_linear_log_note"/>
 
-        <com.appacoustic.cointester.presentation.analyzer.view.SelectorText
+        <com.appacoustic.cointester.core.presentation.analyzer.view.SelectorText
             android:id="@+id/stRunStop"
             style="@style/SelectorText"
             android:layout_width="wrap_content"

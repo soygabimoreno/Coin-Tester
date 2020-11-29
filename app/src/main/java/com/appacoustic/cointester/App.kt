@@ -2,9 +2,9 @@ package com.appacoustic.cointester
 
 import android.app.Application
 import com.amplitude.api.AmplitudeClient
+import com.appacoustic.cointester.core.di.serviceLocator
 import com.appacoustic.cointester.coreAnalytics.error.ErrorTrackerComponent
 import com.appacoustic.cointester.coreAnalytics.remoteconfig.RemoteConfig
-import com.appacoustic.cointester.di.serviceLocator
 import com.appacoustic.cointester.libFramework.KLog
 import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.CoroutineScope
