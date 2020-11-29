@@ -126,7 +126,5 @@
         <item>@string/note</item>
     </string-array>
 
-    <string name="f_1_hz">f 1 (Hz)</string>
-    <string name="f_2_hz">f 2 (Hz)</string>
-    <string name="f_3_hz">f 3 (Hz)</string>
+    <string name="f_hz">f (Hz)</string>
 </resources>

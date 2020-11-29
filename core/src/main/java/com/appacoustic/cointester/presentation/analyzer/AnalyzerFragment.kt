@@ -16,14 +16,16 @@ import com.appacoustic.cointester.R
 import com.appacoustic.cointester.framework.AnalyzerUtil
 import com.appacoustic.cointester.framework.sampling.SamplingLoopThread
 import com.appacoustic.cointester.libFramework.KLog
+import com.appacoustic.cointester.libFramework.extension.debugToast
 import com.appacoustic.cointester.libFramework.extension.exhaustive
+import com.appacoustic.cointester.libFramework.extension.isFilled
+import com.appacoustic.cointester.libFramework.extension.setOnTextChangedListener
 import com.appacoustic.cointester.libbase.fragment.BaseFragment
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
 import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerGraphicView
 import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerGraphicView.OnReadyListener
 import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.presentation.analyzer.view.RangeViewDialogC
-import com.appacoustic.libprocessingandroid.calibration.CalibrationLoad
 import kotlinx.android.synthetic.main.fragment_analyzer.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -40,8 +42,6 @@ class AnalyzerFragment : BaseFragment<
         private const val STATE_MAX_AMPLITUDE_DB = "STATE_MAX_AMPLITUDE_DB"
         private const val STATE_MAX_AMPLITUDE_FREQUENCY = "STATE_MAX_AMPLITUDE_FREQUENCY"
 
-        private const val STOP = "stop"
-
         fun newInstance() = AnalyzerFragment()
 
         private const val MIN_VALUE = Double.MIN_VALUE
@@ -51,6 +51,25 @@ class AnalyzerFragment : BaseFragment<
     override val viewModel: AnalyzerViewModel by viewModel()
 
     override fun initUI() {
+        initEditText()
+        initFab()
+    }
+
+    private fun initEditText() {
+        etCursor1.setText(AnalyzerViewModel.FREQUENCY_1.toString())
+        etCursor1.setOnTextChangedListener { frequencyCharSequence ->
+            val frequencyString = frequencyCharSequence.toString()
+            if (frequencyString.isFilled()) {
+                val frequency = frequencyString.toFloat()
+                viewModel.handleCursor1Changed(frequency)
+            }
+        }
+    }
+
+    private fun initFab() {
+        fabRefresh.setOnClickListener {
+            // TODO
+        }
     }
 
     override fun renderViewState(viewState: AnalyzerViewModel.ViewState) {
@@ -65,12 +84,13 @@ class AnalyzerFragment : BaseFragment<
 
     override fun handleViewEvent(viewEvent: AnalyzerViewModel.ViewEvents) {
         when (viewEvent) {
-            is AnalyzerViewModel.ViewEvents.Foo -> foo(viewEvent.foo)
+            is AnalyzerViewModel.ViewEvents.Cursor1Changed -> cursor1Changed(viewEvent.frequencyString)
         }.exhaustive
     }
 
-    private fun foo(rmsString: String) {
+    private fun cursor1Changed(frequencyString: String) {
         // TODO
+        debugToast(frequencyString)
     }
 
     private lateinit var rootView: View
@@ -88,8 +108,6 @@ class AnalyzerFragment : BaseFragment<
     var viewRangeArray: DoubleArray? = null
     private var isMeasure = false
     private var isLockViewRange = false
-
-    private var calibrationLoad = CalibrationLoad()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -241,32 +259,7 @@ class AnalyzerFragment : BaseFragment<
         }
     }
 
-    fun fillFftCalibration(
-        params: AnalyzerParams?,
-        _calibLoad: CalibrationLoad
-    ) {
-        if (_calibLoad.freq == null || _calibLoad.freq.size == 0 || params == null) {
-            return
-        }
-        val freqTick = DoubleArray(params.fftLength / 2)
-        for (i in freqTick.indices) {
-            freqTick[i] = (i + 1.0) / params.fftLength * params.sampleRate
-        }
-        params.micGainDB = AnalyzerUtil.interpLinear(
-            _calibLoad.freq,
-            _calibLoad.gain,
-            freqTick
-        )
-        //        for (int i = 0; i < _analyzerParam.micGainDB.length; i++) {
-//            KLog.Companion.i("calib: " + freqTick[i] + "Hz : " + _analyzerParam.micGainDB[i]);
-//        }
-    } // Popup menu click listener
-
-    // Load preferences for Views
-    // When this function is called, the SamplingLoopThread must not running in the meanwhile.
     private fun loadPreferenceForView() {
-        // load preferences for buttons
-        // list-buttons
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(requireActivity())
         analyzerParams.sampleRate = sharedPref.getInt(
             "button_sample_rate",
@@ -444,17 +437,7 @@ class AnalyzerFragment : BaseFragment<
         y: Float
     ): Boolean {
         agv.getLocationInWindow(windowLocation)
-        return x >= windowLocation[0] && y >= windowLocation[1] && x < windowLocation[0] + (agv.width
-            ?: 0) && y < windowLocation[1] + (agv.height
-            ?: 0)
-    }
-
-    fun getMaxAmplitudeFreq(): Double {
-        return maxAmplitudeFreq
-    }
-
-    fun setMaxAmplitudeFreq(maxAmplitudeFreq: Double) {
-        this.maxAmplitudeFreq = maxAmplitudeFreq
+        return x >= windowLocation[0] && y >= windowLocation[1] && x < windowLocation[0] + agv.width && y < windowLocation[1] + agv.height
     }
 
     /**
