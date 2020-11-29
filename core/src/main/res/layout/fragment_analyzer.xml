@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/primaryDark_darkened_2">
 
-    <com.appacoustic.cointester.presentation.analyzer.view.AnalyzerGraphicView
+    <com.appacoustic.core.presentation.analyzer.view.AnalyzerGraphicView
         android:id="@+id/agv"
         android:layout_width="0dp"
         android:layout_height="0dp"

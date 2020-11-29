@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <com.appacoustic.cointester.presentation.analyzer.view.AnalyzerGraphicView
+    <com.appacoustic.core.presentation.analyzer.view.AnalyzerGraphicView
         android:id="@+id/agv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
