@@ -17,6 +17,7 @@ import com.appacoustic.cointester.framework.AnalyzerUtil
 import com.appacoustic.cointester.framework.sampling.SamplingLoopThread
 import com.appacoustic.cointester.libFramework.KLog
 import com.appacoustic.cointester.libFramework.extension.exhaustive
+import com.appacoustic.cointester.libFramework.extension.hideKeyboard
 import com.appacoustic.cointester.libFramework.extension.isFilled
 import com.appacoustic.cointester.libFramework.extension.setOnTextChangedListener
 import com.appacoustic.cointester.libbase.fragment.BaseFragment
@@ -182,32 +183,10 @@ class AnalyzerFragment : BaseFragment<
             AnalyzerGestureListener()
         )
 
-        rootView.setOnTouchListener { v, event ->
-            if (isInGraphView(
-                    event.getX(0),
-                    event.getY(0)
-                )
-            ) {
-                gestureDetector.onTouchEvent(event)
-                if (isMeasure) {
-                    measureEvent(event)
-                } else {
-                    scaleEvent(event)
-                }
-                analyzerViews.invalidateGraphView()
-                // Go to scaling mode when user release finger in measure mode.
-                if (event.actionMasked == MotionEvent.ACTION_UP) {
-                    v.performClick()
-                    if (isMeasure) {
-                        switchMeasureAndScaleMode()
-                    }
-                }
-            } else {
-                // When finger is outside the plot, hide the marker and go to scaling mode.
-                if (isMeasure) {
-                    agv.hideMarker()
-                    switchMeasureAndScaleMode()
-                }
+        rootView.setOnTouchListener { v, motionEvent ->
+            requireContext().hideKeyboard(v)
+            if (motionEvent.actionMasked == MotionEvent.ACTION_UP) {
+                v.performClick()
             }
             true
         }
