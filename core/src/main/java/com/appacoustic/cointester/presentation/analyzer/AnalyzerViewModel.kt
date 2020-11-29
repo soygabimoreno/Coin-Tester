@@ -23,9 +23,9 @@ class AnalyzerViewModel(
     var samplingLoopThread: SamplingLoopThread? = null
         private set
 
-    fun startSampling(samplingThread: SamplingLoopThread) {
-        this.samplingLoopThread = samplingThread
-        samplingThread.start()
+    fun startSampling(samplingLoopThread: SamplingLoopThread) {
+        this.samplingLoopThread = samplingLoopThread
+        samplingLoopThread.start()
     }
 
     fun finishSampling() {

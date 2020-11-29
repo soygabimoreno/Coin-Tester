@@ -72,7 +72,7 @@ class AnalyzerFragment : BaseFragment<
 
     private fun initFab() {
         fabRefresh.setOnClickListener {
-            // TODO
+            restartSampling(analyzerParams)
         }
     }
 
