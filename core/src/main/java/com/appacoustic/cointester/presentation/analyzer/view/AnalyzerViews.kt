@@ -4,13 +4,11 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Typeface
 import android.os.Handler
 import android.os.SystemClock
 import android.text.Html
 import android.text.Spanned
 import android.text.method.ScrollingMovementMethod
-import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +21,6 @@ import com.appacoustic.cointester.presentation.analyzer.AnalyzerFragment
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
 import com.appacoustic.cointester.presentation.analyzer.domain.StringBuilderNumberFormat
 import kotlinx.android.synthetic.main.fragment_analyzer.*
-import kotlin.math.log10
 import kotlin.math.min
 
 /**
@@ -78,34 +75,6 @@ class AnalyzerViews(
         popupMenuFFTAverage = popupMenuCreate(
             activity.resources.getStringArray(R.array.fft_averages),
             R.id.btnAverage
-        )
-        setTextViewFontSize()
-    }
-
-    private fun setTextViewFontSize() {
-        // At this point tv.getWidth(), tv.getLineCount() will return 0
-        val display = activity.windowManager.defaultDisplay
-        // pixels left
-        val px = display.width - activity.resources.getDimension(R.dimen.tv_RMS_layout_width) - 5
-        var fs = activity.tvMarker.textSize // size in pixel
-
-        // shrink font size if it can not fit in one line.
-        val text = activity.getString(R.string.tv_peak_text)
-        // note: mTestPaint.measureText(text) do not scale like sp.
-        val mTestPaint = Paint()
-        mTestPaint.textSize = fs
-        mTestPaint.typeface = Typeface.MONOSPACE
-        while (mTestPaint.measureText(text) > px && fs > 5) {
-            fs -= 0.5f
-            mTestPaint.textSize = fs
-        }
-        activity.tvMarker.setTextSize(
-            TypedValue.COMPLEX_UNIT_PX,
-            fs
-        )
-        activity.tvPeak.setTextSize(
-            TypedValue.COMPLEX_UNIT_PX,
-            fs
         )
     }
 
@@ -349,118 +318,6 @@ class AnalyzerViews(
         }
     }
 
-    private fun refreshTvMarker() {
-        val f1 = agv.markerFreq
-        sbMarker.setLength(0)
-        sbMarker.append(activity.getString(R.string.tv_marker_text_empty))
-        StringBuilderNumberFormat.fillInNumFixedWidthPositive(
-            sbMarker,
-            f1,
-            5,
-            1
-        )
-        sbMarker.append("Hz(")
-        AnalyzerUtil.freq2Cent(
-            sbMarker,
-            f1,
-            " "
-        )
-        sbMarker.append(") ")
-        StringBuilderNumberFormat.fillInNumFixedWidth(
-            sbMarker,
-            agv.markerDB,
-            3,
-            1
-        )
-        sbMarker.append("dB")
-        sbMarker.getChars(
-            0,
-            min(
-                sbMarker.length,
-                charMarker.size
-            ),
-            charMarker,
-            0
-        )
-        activity.tvMarker.setText(
-            charMarker,
-            0,
-            min(
-                sbMarker.length,
-                charMarker.size
-            )
-        )
-    }
-
-    private fun refreshTvRMS(dtRMSFromFT: Double) {
-        sbRMS.setLength(0)
-        sbRMS.append("RMS:dB \n")
-        StringBuilderNumberFormat.fillInNumFixedWidth(
-            sbRMS,
-            20 * log10(dtRMSFromFT),
-            3,
-            1
-        )
-        sbRMS.getChars(
-            0,
-            min(
-                sbRMS.length,
-                charRMS.size
-            ),
-            charRMS,
-            0
-        )
-        activity.tvRMS.setText(
-            charRMS,
-            0,
-            charRMS.size
-        )
-        activity.tvRMS.invalidate()
-    }
-
-    private fun refreshTvPeak(
-        maxAmpFreq: Double,
-        maxAmpDB: Double
-    ) {
-        sbPeak.setLength(0)
-        sbPeak.append(activity.getString(R.string.tv_peak_text_empty))
-        StringBuilderNumberFormat.fillInNumFixedWidthPositive(
-            sbPeak,
-            maxAmpFreq,
-            5,
-            1
-        )
-        sbPeak.append("Hz(")
-        AnalyzerUtil.freq2Cent(
-            sbPeak,
-            maxAmpFreq,
-            " "
-        )
-        sbPeak.append(") ")
-        StringBuilderNumberFormat.fillInNumFixedWidth(
-            sbPeak,
-            maxAmpDB,
-            3,
-            1
-        )
-        sbPeak.append("dB")
-        sbPeak.getChars(
-            0,
-            min(
-                sbPeak.length,
-                charPeak.size
-            ),
-            charPeak,
-            0
-        )
-        activity.tvPeak.setText(
-            charPeak,
-            0,
-            charPeak.size
-        )
-        activity.tvPeak.invalidate()
-    }
-
     private fun refreshTvRec(
         wavSec: Double,
         wavSecRemain: Double
@@ -529,14 +386,6 @@ class AnalyzerViews(
             // Take care of synchronization of analyzerGraphic.spectrogramColors and iTimePointer,
             // and then just do invalidate() here.
             if (viewMask and VIEW_MASK_graphView != 0) agv.invalidate()
-            // RMS
-            if (viewMask and VIEW_MASK_textview_RMS != 0) refreshTvRMS(analyzerFragment.dtRMSFromFT)
-            // peak frequency
-            if (viewMask and VIEW_MASK_textview_peak != 0) refreshTvPeak(
-                analyzerFragment.getMaxAmplitudeFreq(),
-                analyzerFragment.maxAmplitudeDB
-            )
-            if (viewMask and VIEW_MASK_MarkerLabel != 0) refreshTvMarker()
 
             val samplingThread = analyzerFragment.getSamplingThread()
             if (viewMask and VIEW_MASK_RecTimeLable != 0 && samplingThread != null) refreshTvRec(

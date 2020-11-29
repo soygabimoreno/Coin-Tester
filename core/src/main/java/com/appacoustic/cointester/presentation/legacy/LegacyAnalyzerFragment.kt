@@ -29,7 +29,6 @@ import com.appacoustic.cointester.libbase.fragment.BaseFragment
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
 import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerGraphicView
 import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerGraphicView.OnReadyListener
-import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.presentation.analyzer.view.SelectorText
 import com.appacoustic.cointester.presentation.audiosourceschecker.AudioSourcesCheckerActivity
 import com.appacoustic.cointester.presentation.mypreference.MyPreferenceActivity
@@ -331,7 +330,7 @@ class LegacyAnalyzerFragment : BaseFragment<
             TypedValue.COMPLEX_UNIT_SP,
             15f
         )
-        tv.text = AnalyzerViews.fromHtml(getString(R.string.instructions_text))
+        tv.text = LegacyAnalyzerViews.fromHtml(getString(R.string.instructions_text))
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.instructions_title)
             .setView(tv)

@@ -22,7 +22,7 @@ import com.appacoustic.cointester.framework.AnalyzerUtil
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
 import com.appacoustic.cointester.presentation.analyzer.domain.StringBuilderNumberFormat
 import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerGraphicView
-import kotlinx.android.synthetic.main.fragment_analyzer.*
+import kotlinx.android.synthetic.main.fragment_legacy_analyzer.*
 import kotlin.math.log10
 import kotlin.math.min
 
