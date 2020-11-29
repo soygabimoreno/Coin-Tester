@@ -19,9 +19,6 @@ import com.appacoustic.cointester.R
 import com.appacoustic.cointester.framework.AnalyzerUtil
 import com.appacoustic.cointester.presentation.analyzer.AnalyzerFragment
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
-import com.appacoustic.cointester.presentation.analyzer.domain.StringBuilderNumberFormat
-import kotlinx.android.synthetic.main.fragment_analyzer.*
-import kotlin.math.min
 
 /**
  * Operate the views in the UI here.
@@ -172,42 +169,6 @@ class AnalyzerViews(
             .create().show()
     }
 
-    fun enableSaveWavView(bSaveWav: Boolean) {
-        if (bSaveWav) {
-            activity.tvRec.height = (19 * dpRatio).toInt()
-        } else {
-            activity.tvRec.height = (0 * dpRatio).toInt()
-        }
-    }
-
-    fun showPopupMenu(view: View) {
-        val wl = IntArray(2)
-        view.getLocationInWindow(wl)
-        val x_left = wl[0]
-        val y_bottom = activity.windowManager.defaultDisplay.height - wl[1]
-        val gravity = Gravity.START or Gravity.BOTTOM
-        when (view.id) {
-            R.id.btnSampleRate -> popupMenuSampleRate.showAtLocation(
-                view,
-                gravity,
-                x_left,
-                y_bottom
-            )
-            R.id.btnFFTLength -> popupMenuFFTLen.showAtLocation(
-                view,
-                gravity,
-                x_left,
-                y_bottom
-            )
-            R.id.btnAverage -> popupMenuFFTAverage.showAtLocation(
-                view,
-                gravity,
-                x_left,
-                y_bottom
-            )
-        }
-    }
-
     // Maybe put this PopupWindow into a class
     private fun popupMenuCreate(
         popUpContents: Array<String>,
@@ -318,43 +279,6 @@ class AnalyzerViews(
         }
     }
 
-    private fun refreshTvRec(
-        wavSec: Double,
-        wavSecRemain: Double
-    ) {
-        // consist with @string/textview_rec_text
-        sbRec.setLength(0)
-        sbRec.append(activity.getString(R.string.tv_rec_text_empty))
-        StringBuilderNumberFormat.fillTime(
-            sbRec,
-            wavSec,
-            1
-        )
-        sbRec.append(activity.getString(R.string.tv_rec_remain_text))
-        StringBuilderNumberFormat.fillTime(
-            sbRec,
-            wavSecRemain,
-            0
-        )
-        sbRec.getChars(
-            0,
-            min(
-                sbRec.length,
-                charRec.size
-            ),
-            charRec,
-            0
-        )
-        activity.tvRec.setText(
-            charRec,
-            0,
-            min(
-                sbRec.length,
-                charRec.size
-            )
-        )
-    }
-
     private var timeToUpdate = SystemClock.uptimeMillis()
 
     @Volatile
@@ -386,12 +310,6 @@ class AnalyzerViews(
             // Take care of synchronization of analyzerGraphic.spectrogramColors and iTimePointer,
             // and then just do invalidate() here.
             if (viewMask and VIEW_MASK_graphView != 0) agv.invalidate()
-
-            val samplingThread = analyzerFragment.getSamplingThread()
-            if (viewMask and VIEW_MASK_RecTimeLable != 0 && samplingThread != null) refreshTvRec(
-                samplingThread.wavSeconds,
-                samplingThread.wavSecondsRemain
-            )
         } else {
             if (!idPaddingInvalidate) {
                 idPaddingInvalidate = true

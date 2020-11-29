@@ -1,7 +1,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
@@ -15,99 +14,4 @@
         android:layout_weight="0.32"
         app:cutoffDB="-25"
         app:sampleRate="16000"/>
-
-    <TextView
-        android:id="@+id/tvRec"
-        style="@style/TvAnalyzer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/tv_rec_text"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <com.appacoustic.cointester.presentation.analyzer.view.SelectorText
-            android:id="@+id/stMonitorRecord"
-            style="@style/SelectorText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:items="Mon Rec"
-            app:itemsDisplay="@string/tv_monitor_record"/>
-
-        <Button
-            android:id="@+id/btnSampleRate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/btn_text_font_size"
-            tools:text="8000"/>
-
-        <Button
-            android:id="@+id/btnFFTLength"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/btn_text_font_size"
-            tools:text="1024"/>
-
-        <Button
-            android:id="@+id/btnAverage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/btn_text_font_size"
-            tools:text="1"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end">
-
-        <com.appacoustic.cointester.presentation.analyzer.view.SelectorText
-            android:id="@+id/stSpectrumSpectrogramMode"
-            style="@style/SelectorText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:items="spum spam"
-            app:itemsDisplay="@string/tv_spectrum_spectrogram_mode"/>
-
-        <com.appacoustic.cointester.presentation.analyzer.view.SelectorText
-            android:id="@+id/stDBDBA"
-            style="@style/SelectorText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:items="dB dBA"
-            app:itemsDisplay="@string/tv_dB_dBA"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end">
-
-        <com.appacoustic.cointester.presentation.analyzer.view.SelectorText
-            android:id="@+id/stLinearLogNote"
-            style="@style/SelectorText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:items="linear log note"
-            app:itemsDisplay="@string/tv_linear_log_note"/>
-
-        <com.appacoustic.cointester.presentation.analyzer.view.SelectorText
-            android:id="@+id/stRunStop"
-            style="@style/SelectorText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:items="run stop"
-            app:itemsDisplay="@string/tv_run_stop"/>
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvCustomRMS"
-        tools:text="3.5 dB"
-        android:textStyle="bold"
-        android:textSize="28sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
 </LinearLayout>

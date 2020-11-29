@@ -33,7 +33,7 @@ import com.appacoustic.cointester.presentation.analyzer.view.SelectorText
 import com.appacoustic.cointester.presentation.audiosourceschecker.AudioSourcesCheckerActivity
 import com.appacoustic.cointester.presentation.mypreference.MyPreferenceActivity
 import com.appacoustic.libprocessingandroid.calibration.CalibrationLoad
-import kotlinx.android.synthetic.main.fragment_analyzer.*
+import kotlinx.android.synthetic.main.fragment_legacy_analyzer.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LegacyAnalyzerFragment : BaseFragment<

@@ -82,12 +82,12 @@ class AnalyzerFragment : BaseFragment<
 
     override fun handleViewEvent(viewEvent: AnalyzerViewModel.ViewEvents) {
         when (viewEvent) {
-            is AnalyzerViewModel.ViewEvents.UpdateRMS -> updateRMS(viewEvent.rmsString)
+            is AnalyzerViewModel.ViewEvents.Foo -> foo(viewEvent.foo)
         }.exhaustive
     }
 
-    private fun updateRMS(rmsString: String) {
-        tvCustomRMS.text = rmsString
+    private fun foo(rmsString: String) {
+        // TODO
     }
 
     private lateinit var rootView: View
@@ -106,8 +106,6 @@ class AnalyzerFragment : BaseFragment<
     private var isMeasure = false
     private var isLockViewRange = false
 
-    @Volatile
-    var saveWav = false
     private var calibrationLoad = CalibrationLoad()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -211,16 +209,12 @@ class AnalyzerFragment : BaseFragment<
             }
             true
         }
-        btnSampleRate.setOnClickListener { v -> analyzerViews.showPopupMenu(v) }
-        btnFFTLength.setOnClickListener { v -> analyzerViews.showPopupMenu(v) }
-        btnAverage.setOnClickListener { v -> analyzerViews.showPopupMenu(v) }
     }
 
     override fun onResume() {
         super.onResume()
         loadPreferences()
         agv.setReady(this) // TODO: move this earlier?
-        analyzerViews.enableSaveWavView(saveWav)
 
         // Used to prevent extra calling to restartSampling() (e.g. in LoadPreferences())
         bSamplingPreparation = true
@@ -495,25 +489,8 @@ class AnalyzerFragment : BaseFragment<
             "dbA",
             true
         )
-        if (analyzerParams.dbaWeighting) {
-            stDBDBA.nextValue()
-        }
-        val isSpam = sharedPref.getBoolean(
-            "spectrum_spectrogram_mode",
-            true
-        )
-        if (!isSpam) {
-            stSpectrumSpectrogramMode.nextValue()
-        }
-        val axisMode = sharedPref.getString(
-            "freq_scaling_mode",
-            "linear"
-        )
-        stLinearLogNote.setValue(axisMode!!)
+
         KLog.i("sampleRate = ${analyzerParams.sampleRate}, fFTLength = ${analyzerParams.fftLength}, nFFTAverage = ${analyzerParams.nFftAverage}")
-        btnSampleRate.text = analyzerParams.sampleRate.toString()
-        btnFFTLength.text = analyzerParams.fftLength.toString()
-        btnAverage.text = analyzerParams.nFftAverage.toString()
     }
 
     private fun loadPreferences() {
@@ -904,11 +881,11 @@ class AnalyzerFragment : BaseFragment<
 
         // Start sampling
         val samplingThread = SamplingLoopThread(
-            params,
-            analyzerViews,
-            stRunStop.value == STOP,
-            saveWav,
-            object : SamplingLoopThread.Listener {
+            params = params,
+            analyzerViews = analyzerViews,
+            paused = false,
+            saveWav = false,
+            listener = object : SamplingLoopThread.Listener {
                 override fun onInitGraphs() {
                     try {
                         graphInit!!.join() // TODO: Seems not working as intended
@@ -929,7 +906,6 @@ class AnalyzerFragment : BaseFragment<
                     rms: Double,
                     rmsFromFT: Double
                 ) {
-                    viewModel.onUpdateRMS(rms)
                     dtRMS = rms
                     dtRMSFromFT = rmsFromFT
                 }
@@ -987,49 +963,7 @@ class AnalyzerFragment : BaseFragment<
             }
             return false
         }
-        if (saveWav &&
-            ContextCompat.checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            stMonitorRecord.nextValue()
-            saveWav = false
-            analyzerViews.enableSaveWavView(saveWav)
-            //      ((SelectorText) findViewById(R.id.tvAnalyzerRecording)).performClick();
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE
-            )
-            // Still possible to proceed with saveWav == false
-            // simulate a view click, so that saveWav = false
-        }
         return true
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        when (requestCode) {
-            MY_PERMISSIONS_REQUEST_RECORD_AUDIO -> {
-            }
-            MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE -> {
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (!saveWav) {
-                        requireActivity().runOnUiThread {
-                            stMonitorRecord.nextValue()
-                            saveWav = true
-                            analyzerViews.enableSaveWavView(saveWav)
-                        }
-                    }
-                }
-            }
-        }
-        // Then onResume() will be called.
     }
 
     /**
@@ -1048,18 +982,6 @@ class AnalyzerFragment : BaseFragment<
             (v as TextView).text.toString()
         }
         return when (v.id) {
-            R.id.stMonitorRecord -> {
-                saveWav = value == REC
-                //  SelectorText st = (SelectorText) findViewById(R.id.run);
-                //  if (saveWav && ! st.getText().toString().equals(STOP)) {
-                //    st.nextValue();
-                //    if (samplingThread != null) {
-                //      samplingThread.setPaused(true);
-                //    }
-                //  }
-                analyzerViews.enableSaveWavView(saveWav)
-                true
-            }
             R.id.stRunStop -> {
                 val paused = value == STOP
                 viewModel.setSamplingPaused(paused)
