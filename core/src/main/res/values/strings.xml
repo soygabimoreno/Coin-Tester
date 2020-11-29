@@ -127,4 +127,8 @@
     </string-array>
 
     <string name="stuck_tab">Stuck Tab</string>
+    <string name="refresh">Refresh</string>
+    <string name="f_1_hz">f 1 (Hz)</string>
+    <string name="f_2_hz">f 2 (Hz)</string>
+    <string name="f_3_hz">f 3 (Hz)</string>
 </resources>

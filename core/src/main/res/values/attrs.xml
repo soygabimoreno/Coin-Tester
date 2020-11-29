@@ -13,9 +13,4 @@
         <attr name="itemsDisplay" format="string"/>
         <attr name="itemsSeparator" format="string"/>
     </declare-styleable>
-
-    <declare-styleable name="AnalyzerGraphicView">
-        <attr name="sampleRate" format="integer"/>
-        <attr name="cutoffDB" format="integer"/>
-    </declare-styleable>
 </resources>
