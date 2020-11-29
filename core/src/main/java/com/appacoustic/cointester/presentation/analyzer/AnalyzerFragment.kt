@@ -157,7 +157,6 @@ class AnalyzerFragment : BaseFragment<
         loadPreferenceForView()
         analyzerViews = AnalyzerViews(
             activity = requireActivity(),
-            analyzerFragment = this,
             agv = agv
         )
 

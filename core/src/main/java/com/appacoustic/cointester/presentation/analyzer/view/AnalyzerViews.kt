@@ -11,7 +11,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
 import com.appacoustic.cointester.R
-import com.appacoustic.cointester.presentation.analyzer.AnalyzerFragment
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
 
 /**
@@ -20,7 +19,6 @@ import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
  */
 class AnalyzerViews(
     private val activity: Activity,
-    private val analyzerFragment: AnalyzerFragment,
     private val agv: AnalyzerGraphicView
 ) {
 

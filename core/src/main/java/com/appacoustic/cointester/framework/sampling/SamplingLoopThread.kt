@@ -59,6 +59,7 @@ class SamplingLoopThread(
     private var sineGenerator0: SineGenerator
     private val sineGenerator1: SineGenerator
     private var spectrumAmplitudeDBCopy: DoubleArray? = null // Transfer data from SamplingLoopThread to AnalyzerGraphic
+    private var cumulative: DoubleArray? = null
 
     private val bytesPerSample = AnalyzerParams.BYTES_PER_SAMPLE
     private val sampleValueMax = AnalyzerParams.SAMPLE_VALUE_MAX
@@ -211,6 +212,10 @@ class SamplingLoopThread(
         val arraySize = fftLength / 2 + 1
         if (spectrumAmplitudeDBCopy == null || spectrumAmplitudeDBCopy?.size != arraySize) {
             spectrumAmplitudeDBCopy = DoubleArray(arraySize)
+            cumulative = DoubleArray(arraySize)
+            cumulative?.forEachIndexed { index, _ ->
+                cumulative!![index] = Double.NEGATIVE_INFINITY
+            }
         }
 
         val recorderMonitor = RecorderMonitor(
@@ -289,7 +294,10 @@ class SamplingLoopThread(
                     0,
                     spectrumAmplitudeDB.size
                 )
-                analyzerViews.update(spectrumAmplitudeDBCopy) // Update
+
+                ensureMaxValue(spectrumAmplitudeDBCopy)
+
+                analyzerViews.update(cumulative) // Update
 
                 stft.calculatePeak()
                 val maxAmplitudeFreq = stft.maxAmplitudeFreq
@@ -393,5 +401,21 @@ class SamplingLoopThread(
     fun finish() {
         running = false
         interrupt()
+    }
+
+    private fun ensureMaxValue(spectrumAmplitudeDBCopy: DoubleArray?) {
+        if (spectrumAmplitudeDBCopy != null) {
+            if (cumulative != null) {
+                spectrumAmplitudeDBCopy.forEachIndexed { index, element ->
+                    if (element > cumulative!![index]) {
+                        cumulative!![index] = element
+                    }
+                }
+            } else {
+                cumulative = spectrumAmplitudeDBCopy
+            }
+        } else {
+            cumulative = spectrumAmplitudeDBCopy
+        }
     }
 }
