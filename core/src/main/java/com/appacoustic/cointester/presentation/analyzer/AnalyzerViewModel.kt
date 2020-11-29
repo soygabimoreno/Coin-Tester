@@ -13,50 +13,40 @@ class AnalyzerViewModel(
     AnalyzerViewModel.ViewEvents>() {
 
     companion object {
-        const val FREQUENCY_1 = 1000f
+        const val FREQUENCY_1 = 1000.0
     }
 
     init {
         updateViewState(ViewState.Content("foo"))
     }
 
-    var samplingThread: SamplingLoopThread? = null
+    var samplingLoopThread: SamplingLoopThread? = null
         private set
 
     fun startSampling(samplingThread: SamplingLoopThread) {
-        this.samplingThread = samplingThread
+        this.samplingLoopThread = samplingThread
         samplingThread.start()
     }
 
     fun finishSampling() {
-        samplingThread?.finish()
+        samplingLoopThread?.finish()
     }
 
     fun releaseSampling() {
-        if (samplingThread != null) {
-            samplingThread?.finish()
+        if (samplingLoopThread != null) {
+            samplingLoopThread?.finish()
             try {
-                samplingThread?.join()
+                samplingLoopThread?.join()
             } catch (e: InterruptedException) {
                 e.printStackTrace()
             }
-            samplingThread = null
+            samplingLoopThread = null
         }
     }
 
-    fun setSamplingPaused(paused: Boolean) {
-        if (samplingThread != null && samplingThread?.paused != paused) {
-            samplingThread?.paused = paused
-        }
-    }
-
-    fun setSamplingDbaWeighting(dbaWeighting: Boolean) {
-        samplingThread?.setDbaWeighting(dbaWeighting)
-    }
-
-    fun handleCursor1Changed(frequency: Float) {
+    fun handleCursor1Changed(frequency: Double) {
         viewModelScope.launch {
-            sendViewEvent(ViewEvents.Cursor1Changed(frequency.toString()))
+            sendViewEvent(ViewEvents.Cursor1Changed(frequency))
         }
     }
 
@@ -65,6 +55,6 @@ class AnalyzerViewModel(
     }
 
     sealed class ViewEvents {
-        data class Cursor1Changed(val frequencyString: String) : ViewEvents()
+        data class Cursor1Changed(val frequency: Double) : ViewEvents()
     }
 }

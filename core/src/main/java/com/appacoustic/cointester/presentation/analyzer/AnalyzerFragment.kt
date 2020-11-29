@@ -16,7 +16,6 @@ import com.appacoustic.cointester.R
 import com.appacoustic.cointester.framework.AnalyzerUtil
 import com.appacoustic.cointester.framework.sampling.SamplingLoopThread
 import com.appacoustic.cointester.libFramework.KLog
-import com.appacoustic.cointester.libFramework.extension.debugToast
 import com.appacoustic.cointester.libFramework.extension.exhaustive
 import com.appacoustic.cointester.libFramework.extension.isFilled
 import com.appacoustic.cointester.libFramework.extension.setOnTextChangedListener
@@ -27,6 +26,8 @@ import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerGraphicView
 import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.presentation.analyzer.view.RangeViewDialogC
 import kotlinx.android.synthetic.main.fragment_analyzer.*
+import kotlinx.android.synthetic.main.fragment_analyzer.agv
+import kotlinx.android.synthetic.main.fragment_legacy_analyzer.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AnalyzerFragment : BaseFragment<
@@ -57,10 +58,12 @@ class AnalyzerFragment : BaseFragment<
 
     private fun initEditText() {
         etCursor1.setText(AnalyzerViewModel.FREQUENCY_1.toString())
+        viewModel.handleCursor1Changed(AnalyzerViewModel.FREQUENCY_1)
+
         etCursor1.setOnTextChangedListener { frequencyCharSequence ->
             val frequencyString = frequencyCharSequence.toString()
             if (frequencyString.isFilled()) {
-                val frequency = frequencyString.toFloat()
+                val frequency = frequencyString.toDouble()
                 viewModel.handleCursor1Changed(frequency)
             }
         }
@@ -84,13 +87,12 @@ class AnalyzerFragment : BaseFragment<
 
     override fun handleViewEvent(viewEvent: AnalyzerViewModel.ViewEvents) {
         when (viewEvent) {
-            is AnalyzerViewModel.ViewEvents.Cursor1Changed -> cursor1Changed(viewEvent.frequencyString)
+            is AnalyzerViewModel.ViewEvents.Cursor1Changed -> cursor1Changed(viewEvent.frequency)
         }.exhaustive
     }
 
-    private fun cursor1Changed(frequencyString: String) {
-        // TODO
-        debugToast(frequencyString)
+    private fun cursor1Changed(frequency: Double) {
+        agv.setMarkerFrequency(frequency)
     }
 
     private lateinit var rootView: View
@@ -140,6 +142,7 @@ class AnalyzerFragment : BaseFragment<
             view,
             savedInstanceState
         )
+        agv.setAxisModeLinear("log")
 
         analyzerParams = viewModel.analyzerParams
 

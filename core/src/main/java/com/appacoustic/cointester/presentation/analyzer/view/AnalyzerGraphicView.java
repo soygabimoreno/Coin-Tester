@@ -171,6 +171,10 @@ public class AnalyzerGraphicView extends View {
         return savedState;
     }
 
+    public void setMarkerFrequency(double markerFreq) {
+        spectrumPlot.setMarkerFrequency(markerFreq);
+    }
+
     @Override
     public void onRestoreInstanceState(Parcelable state) {
         if (state instanceof SavedState) {
