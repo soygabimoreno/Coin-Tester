@@ -2,21 +2,15 @@ package com.appacoustic.cointester.presentation.analyzer.view
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.graphics.Color
-import android.graphics.Paint
 import android.os.Handler
 import android.os.SystemClock
 import android.text.Html
 import android.text.Spanned
 import android.text.method.ScrollingMovementMethod
-import android.view.Gravity
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.*
+import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.StringRes
 import com.appacoustic.cointester.R
-import com.appacoustic.cointester.framework.AnalyzerUtil
 import com.appacoustic.cointester.presentation.analyzer.AnalyzerFragment
 import com.appacoustic.cointester.presentation.analyzer.domain.AnalyzerParams
 
@@ -55,25 +49,7 @@ class AnalyzerViews(
     private val charMarker: CharArray = CharArray(activity.resources.getString(R.string.tv_marker_text).length)
     private val charPeak: CharArray = CharArray(activity.resources.getString(R.string.tv_peak_text).length)
     private val charRec: CharArray = CharArray(activity.resources.getString(R.string.tv_rec_text).length)
-    var popupMenuSampleRate: PopupWindow
-    var popupMenuFFTLen: PopupWindow
-    var popupMenuFFTAverage: PopupWindow
     var isWarnOverrun = true
-
-    init {
-        popupMenuSampleRate = popupMenuCreate(
-            AnalyzerUtil.validateAudioRates(activity.resources.getStringArray(R.array.sample_rates)),
-            R.id.btnSampleRate
-        )
-        popupMenuFFTLen = popupMenuCreate(
-            activity.resources.getStringArray(R.array.fft_lengths),
-            R.id.btnFFTLength
-        )
-        popupMenuFFTAverage = popupMenuCreate(
-            activity.resources.getStringArray(R.array.fft_averages),
-            R.id.btnAverage
-        )
-    }
 
     // Prepare the spectrum and spectrogram plot (from scratch or full reset)
     // Should be called before samplingThread starts.
@@ -167,116 +143,6 @@ class AnalyzerViews(
                 null
             )
             .create().show()
-    }
-
-    // Maybe put this PopupWindow into a class
-    private fun popupMenuCreate(
-        popUpContents: Array<String>,
-        resId: Int
-    ): PopupWindow {
-
-        // initialize a pop up window type
-        val popupWindow = PopupWindow(activity)
-
-        // the drop down list is a list view
-        val listView = ListView(activity)
-
-        // set our adapter and pass our pop up window contents
-        val aa = popupMenuAdapter(popUpContents)
-        listView.adapter = aa
-
-        // set the item click listener
-        listView.onItemClickListener = analyzerFragment
-        listView.tag = resId // button res ID, so we can trace back which button is pressed
-
-        // get max text width
-        val mTestPaint = Paint()
-        val listItemTextSize = activity.resources.getDimension(R.dimen.btn_text_font_size)
-        mTestPaint.textSize = listItemTextSize
-        var w = 0f
-        var wi: Float // max text width in pixel
-        for (popUpContent in popUpContents) {
-            val sts = popUpContent.split("::").toTypedArray()
-            val st = sts[0]
-            if (sts.size == 2 && sts[1] == "0") {
-                mTestPaint.textSize = activity.resources.getDimension(R.dimen.btn_text_font_size_small)
-                wi = mTestPaint.measureText(st)
-                mTestPaint.textSize = listItemTextSize
-            } else {
-                wi = mTestPaint.measureText(st)
-            }
-            if (w < wi) {
-                w = wi
-            }
-        }
-
-        // left and right padding, at least +7, or the whole app will stop respond, don't know why
-        w += 20 * dpRatio
-        if (w < 60) {
-            w = 60f
-        }
-
-        // some other visual settings
-        popupWindow.isFocusable = true
-        popupWindow.height = WindowManager.LayoutParams.WRAP_CONTENT
-        // Set window width according to max text width
-        popupWindow.width = w.toInt()
-
-        // set the list view as pop up window content
-        popupWindow.contentView = listView
-        return popupWindow
-    }
-
-    /*
-     * adapter where the list values will be set
-     */
-    private fun popupMenuAdapter(itemTagArray: Array<String>): ArrayAdapter<String> {
-        return object : ArrayAdapter<String>(
-            activity,
-            android.R.layout.simple_list_item_1,
-            itemTagArray
-        ) {
-            override fun getView(
-                position: Int,
-                convertView: View?,
-                parent: ViewGroup
-            ): View {
-                // setting the ID and text for every items in the list
-                val item = getItem(position)
-                val itemArr = item!!.split("::").toTypedArray()
-                val text = itemArr[0]
-                val id = itemArr[1]
-
-                // visual settings for the list item
-                val listItem = TextView(activity)
-                if (id == "0") {
-                    listItem.text = text
-                    listItem.tag = id
-                    listItem.textSize = activity.resources.getDimension(R.dimen.btn_text_font_size_small) / dpRatio
-                    listItem.setPadding(
-                        5,
-                        5,
-                        5,
-                        5
-                    )
-                    listItem.setTextColor(Color.GREEN)
-                    listItem.gravity = Gravity.CENTER
-                } else {
-                    listItem.text = text
-                    listItem.tag = id
-                    listItem.textSize = activity.resources.getDimension(R.dimen.btn_text_font_size) / dpRatio
-                    listItem.setPadding(
-                        5,
-                        5,
-                        5,
-                        5
-                    )
-                    listItem.setTextColor(Color.WHITE)
-                    listItem.gravity = Gravity.CENTER
-                }
-                return listItem
-            }
-        }
     }
 
     private var timeToUpdate = SystemClock.uptimeMillis()

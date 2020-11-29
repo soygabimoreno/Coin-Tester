@@ -1,25 +1,17 @@
 package com.appacoustic.cointester.presentation.analyzer
 
 import android.Manifest
-import android.app.Activity
-import android.app.AlertDialog
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.SystemClock
 import android.preference.PreferenceManager
-import android.text.method.LinkMovementMethod
-import android.util.TypedValue
 import android.view.*
-import android.widget.AdapterView
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GestureDetectorCompat
-import com.appacoustic.cointester.BuildConfig
 import com.appacoustic.cointester.R
 import com.appacoustic.cointester.framework.AnalyzerUtil
 import com.appacoustic.cointester.framework.sampling.SamplingLoopThread
@@ -31,9 +23,6 @@ import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerGraphicView
 import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerGraphicView.OnReadyListener
 import com.appacoustic.cointester.presentation.analyzer.view.AnalyzerViews
 import com.appacoustic.cointester.presentation.analyzer.view.RangeViewDialogC
-import com.appacoustic.cointester.presentation.analyzer.view.SelectorText
-import com.appacoustic.cointester.presentation.audiosourceschecker.AudioSourcesCheckerActivity
-import com.appacoustic.cointester.presentation.mypreference.MyPreferenceActivity
 import com.appacoustic.libprocessingandroid.calibration.CalibrationLoad
 import kotlinx.android.synthetic.main.fragment_analyzer.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -43,20 +32,14 @@ class AnalyzerFragment : BaseFragment<
     AnalyzerViewModel.ViewEvents,
     AnalyzerViewModel
     >(),
-    View.OnLongClickListener,
-    View.OnClickListener,
-    AdapterView.OnItemClickListener,
     OnReadyListener {
 
     companion object {
-        private const val REQUEST_CODE_LOAD_CALIBRATION = 1001
-
         private const val STATE_DT_RMS = "STATE_DT_RMS"
         private const val STATE_DT_RMS_FROM_FT = "STATE_DT_RMS_FROM_FT"
         private const val STATE_MAX_AMPLITUDE_DB = "STATE_MAX_AMPLITUDE_DB"
         private const val STATE_MAX_AMPLITUDE_FREQUENCY = "STATE_MAX_AMPLITUDE_FREQUENCY"
 
-        private const val REC = "Rec"
         private const val STOP = "stop"
 
         fun newInstance() = AnalyzerFragment()
@@ -161,8 +144,6 @@ class AnalyzerFragment : BaseFragment<
             agv.rootView as ViewGroup,
             object : Visit {
                 override fun exec(view: View) {
-                    view.setOnLongClickListener(this@AnalyzerFragment)
-                    view.setOnClickListener(this@AnalyzerFragment)
                     (view as TextView).freezesText = true
                 }
             },
@@ -260,106 +241,6 @@ class AnalyzerFragment : BaseFragment<
         }
     }
 
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?
-    ) {
-        if (requestCode == REQUEST_CODE_LOAD_CALIBRATION && resultCode == Activity.RESULT_OK) {
-            val uri = data!!.data!!
-            calibrationLoad.loadFile(
-                uri,
-                requireActivity()
-            )
-            fillFftCalibration(
-                analyzerParams,
-                calibrationLoad
-            )
-        }
-    }
-
-    override fun onCreateOptionsMenu(
-        menu: Menu,
-        inflater: MenuInflater
-    ) {
-        requireActivity().menuInflater.inflate(
-            R.menu.menu_main,
-            menu
-        )
-        menu.findItem(R.id.menuMainInstructions).isVisible = BuildConfig.DEBUG
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menuMainInstructions -> {
-                showInstructions()
-                true
-            }
-            R.id.menuMainPreferences -> {
-                MyPreferenceActivity.launch(
-                    requireContext(),
-                    analyzerParams.audioSourceIds,
-                    analyzerParams.audioSourceNames
-                )
-                true
-            }
-            R.id.menuMainAudioSourcesChecker -> {
-                AudioSourcesCheckerActivity.launch(requireContext())
-                true
-            }
-            R.id.menuMainRanges -> {
-                rangeViewDialogC.show()
-                true
-            }
-            R.id.menuMainCalibration -> {
-                selectFile()
-                super.onOptionsItemSelected(item)
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    private fun showInstructions() {
-        val tv = TextView(requireContext())
-        tv.movementMethod = LinkMovementMethod.getInstance()
-        tv.setTextSize(
-            TypedValue.COMPLEX_UNIT_SP,
-            15f
-        )
-        tv.text = AnalyzerViews.fromHtml(getString(R.string.instructions_text))
-        AlertDialog.Builder(requireContext())
-            .setTitle(R.string.instructions_title)
-            .setView(tv)
-            .setNegativeButton(
-                R.string.instructions_dismiss,
-                null
-            )
-            .create()
-            .show()
-    }
-
-    fun getSamplingThread(): SamplingLoopThread? = viewModel.samplingThread
-
-    private fun selectFile() {
-        // https://developer.android.com/guide/components/intents-common.html#Storage
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "*/*"
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
-        if (intent.resolveActivity(requireActivity().packageManager) != null) {
-            startActivityForResult(
-                intent,
-                REQUEST_CODE_LOAD_CALIBRATION
-            )
-        } else {
-            // Potentially direct the user to the Market with a Dialog
-            Toast.makeText(
-                requireActivity(),
-                "Please install a File Manager.",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
     fun fillFftCalibration(
         params: AnalyzerParams?,
         _calibLoad: CalibrationLoad
@@ -380,91 +261,6 @@ class AnalyzerFragment : BaseFragment<
 //            KLog.Companion.i("calib: " + freqTick[i] + "Hz : " + _analyzerParam.micGainDB[i]);
 //        }
     } // Popup menu click listener
-
-    // Read chosen preference, save the preference, set the state.
-    override fun onItemClick(
-        parent: AdapterView<*>,
-        v: View,
-        position: Int,
-        id: Long
-    ) {
-        // get the tag, which is the value we are going to use
-        val selectedItemTag = v.tag.toString()
-        // if tag() is "0" then do not update anything (it is a title)
-        if (selectedItemTag == "0") {
-            return
-        }
-
-        // get the text and set it as the button text
-        val selectedItemText = (v as TextView).text.toString()
-        val buttonId = parent.tag.toString().toInt()
-        val buttonView = rootView.findViewById<View>(buttonId) as Button
-        buttonView.text = selectedItemText
-        val b_need_restart_audio: Boolean
-
-        // Save the choosen preference
-        val sharedPref = PreferenceManager.getDefaultSharedPreferences(requireActivity())
-        val editor = sharedPref.edit()
-
-        // so change of sample rate do not change view range
-        if (!isLockViewRange) {
-            viewRangeArray = agv.viewPhysicalRange as DoubleArray
-            // if range is align at boundary, extend the range.
-            if (viewRangeArray!!.get(0) == viewRangeArray!!.get(6)) {
-                viewRangeArray!!.set(
-                    0,
-                    0.0
-                )
-            }
-        }
-        when (buttonId) {
-            R.id.btnSampleRate -> {
-                analyzerViews.popupMenuSampleRate.dismiss()
-                if (!isLockViewRange) {
-                    if (viewRangeArray!![1] == viewRangeArray!![6 + 1]) {
-                        viewRangeArray!![1] = (selectedItemTag.toInt() / 2).toDouble()
-                    }
-                }
-                analyzerParams.sampleRate = selectedItemTag.toInt()
-                b_need_restart_audio = true
-                editor.putInt(
-                    "button_sample_rate",
-                    analyzerParams.sampleRate
-                )
-            }
-            R.id.btnFFTLength -> {
-                analyzerViews.popupMenuFFTLen.dismiss()
-                analyzerParams.fftLength = selectedItemTag.toInt()
-                analyzerParams.hopLength = (analyzerParams.fftLength * (1 - analyzerParams.overlapPercent / 100) + 0.5).toInt()
-                b_need_restart_audio = true
-                editor.putInt(
-                    "button_fftlen",
-                    analyzerParams.fftLength
-                )
-                fillFftCalibration(
-                    analyzerParams,
-                    calibrationLoad
-                )
-            }
-            R.id.btnAverage -> {
-                analyzerViews.popupMenuFFTAverage.dismiss()
-                analyzerParams.nFftAverage = selectedItemTag.toInt()
-                agv.setTimeMultiplier(analyzerParams.nFftAverage)
-                b_need_restart_audio = false
-                editor.putInt(
-                    "button_average",
-                    analyzerParams.nFftAverage
-                )
-            }
-            else -> {
-                b_need_restart_audio = false
-            }
-        }
-        editor.apply()
-        if (b_need_restart_audio) {
-            restartSampling(analyzerParams)
-        }
-    }
 
     // Load preferences for Views
     // When this function is called, the SamplingLoopThread must not running in the meanwhile.
@@ -599,7 +395,7 @@ class AnalyzerFragment : BaseFragment<
             agv.rootView as ViewGroup,
             object : Visit {
                 override fun exec(v: View) {
-                    processClick(v)
+//                    processClick(v)
                 }
             },
             "select"
@@ -840,22 +636,7 @@ class AnalyzerFragment : BaseFragment<
         }
     }
 
-    override fun onLongClick(view: View): Boolean {
-        vibrate(300)
-        return true
-    }
-
-    // Responds to layout with android:tag="select"
-    // Called from SelectorText.super.performClick()
-    override fun onClick(v: View) {
-        if (processClick(v)) {
-            restartSampling(analyzerParams)
-        }
-        analyzerViews.invalidateGraphView()
-    }
-
     private val MY_PERMISSIONS_REQUEST_RECORD_AUDIO = 1 // just a number
-    private val MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2
     var graphInit: Thread? = null
     private var bSamplingPreparation = false
 
@@ -919,11 +700,6 @@ class AnalyzerFragment : BaseFragment<
     // For preventing infinity loop: onResume() -> requestPermissions() -> onRequestPermissionsResult() -> onResume()
     private var count_permission_request = 0
 
-    // Test and try to gain permissions.
-    // Return true if it is OK to proceed.
-    // Ref.
-    //   https://developer.android.com/training/permissions/requesting.html
-    //   https://developer.android.com/guide/topics/permissions/requesting.html
     private fun checkAndRequestPermissions(): Boolean {
         if (ContextCompat.checkSelfPermission(
                 requireActivity(),
@@ -964,68 +740,6 @@ class AnalyzerFragment : BaseFragment<
             return false
         }
         return true
-    }
-
-    /**
-     * Process a click on one of our selectors.
-     *
-     * @param v The view that was clicked
-     * @return true if we need to update the graph
-     */
-    fun processClick(v: View): Boolean {
-        val sharedPref = PreferenceManager.getDefaultSharedPreferences(requireActivity())
-        val editor = sharedPref.edit()
-        val value: String
-        value = if (v is SelectorText) {
-            v.value!!
-        } else {
-            (v as TextView).text.toString()
-        }
-        return when (v.id) {
-            R.id.stRunStop -> {
-                val paused = value == STOP
-                viewModel.setSamplingPaused(paused)
-                agv.spectrogramPlot?.setPause(paused)
-                false
-            }
-            R.id.stLinearLogNote -> {
-                agv.setAxisModeLinear(value)
-                editor.putString(
-                    "freq_scaling_mode",
-                    value
-                )
-                editor.apply()
-                false
-            }
-            R.id.stDBDBA -> {
-                analyzerParams.dbaWeighting = value != "dB"
-                viewModel.setSamplingDbaWeighting(analyzerParams.dbaWeighting)
-                editor.putBoolean(
-                    "dbA",
-                    analyzerParams.dbaWeighting
-                )
-                editor.commit()
-                false
-            }
-            R.id.stSpectrumSpectrogramMode -> {
-                if (value == "spum") {
-                    agv.switch2Spectrum()
-                } else {
-                    agv.switch2Spectrogram()
-                }
-                editor.putBoolean(
-                    "spectrum_spectrogram_mode",
-                    value == "spum"
-                )
-                editor.commit()
-                false
-            }
-            else -> true
-        }
-    }
-
-    private fun vibrate(ms: Int) {
-//        ((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(ms);
     }
 
     /**
