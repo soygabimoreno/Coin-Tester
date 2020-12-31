@@ -68,3 +68,6 @@ app/release/output.json
 hs_err_pid*
 **/*.directory
 *.directory
+
+# API Keys
+app/src/main/cpp/api-keys.cpp

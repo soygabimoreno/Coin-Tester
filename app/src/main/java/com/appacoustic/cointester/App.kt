@@ -3,13 +3,8 @@ package com.appacoustic.cointester
 import android.app.Application
 import com.amplitude.api.AmplitudeClient
 import com.appacoustic.cointester.core.di.serviceLocator
-import com.appacoustic.cointester.coreAnalytics.error.ErrorTrackerComponent
-import com.appacoustic.cointester.coreAnalytics.remoteconfig.RemoteConfig
 import com.appacoustic.cointester.libFramework.KLog
 import com.google.firebase.FirebaseApp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.logger.AndroidLogger
@@ -39,21 +34,11 @@ class App : Application() {
     }
 
     private fun initAmplitude() {
-        val remoteConfig: RemoteConfig by inject()
-        val errorTrackerComponent: ErrorTrackerComponent by inject()
         val amplitudeClient: AmplitudeClient by inject()
-        CoroutineScope(Dispatchers.IO).launch {
-            remoteConfig.getAmplitudeApiKey()
-                .fold(
-                    {
-                        errorTrackerComponent.trackError(it)
-                    },
-                    { amplitudeApiKey ->
-                        amplitudeClient.initialize(
-                            this@App,
-                            amplitudeApiKey
-                        )
-                    })
-        }
+        val amplitudeApiKey = ApiKeyRetriever.getAmplitudeApiKey()
+        amplitudeClient.initialize(
+            this,
+            amplitudeApiKey
+        )
     }
 }
