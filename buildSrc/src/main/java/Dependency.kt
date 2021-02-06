@@ -1,28 +1,28 @@
 object Version {
-    const val KOTLIN = "1.4.10"
+    const val KOTLIN = "1.4.30"
     const val FIREBASE_BOM = "25.12.0"
 
-    const val CORE_KTX = "1.3.1"
+    const val CORE_KTX = "1.3.2"
     const val COROUTINES = "1.3.9"
     const val APP_COMPAT = "1.2.0"
-    const val CONSTRAINT_LAYOUT = "2.0.1"
+    const val CONSTRAINT_LAYOUT = "2.0.4"
     const val RECYCLER_VIEW = "1.2.0-alpha02"
     const val LIFECYCLE = "2.2.0"
     const val ACTIVITY_API = "1.2.0-beta01"
     const val FRAGMENT_API = "1.3.0-beta01"
-    const val FIREBASE_ANALYTICS = "17.5.0"
-    const val FIREBASE_CRASHLYTICS = "17.2.1"
+    const val FIREBASE_ANALYTICS = "18.0.2"
+    const val FIREBASE_CRASHLYTICS = "17.3.1"
     const val MATERIAL = "1.2.1"
     const val GSON = "2.8.5"
-    const val KOIN = "2.2.0-rc-1"
-    const val ARROW = "0.10.5"
+    const val KOIN = "2.2.2"
+    const val ARROW = "0.11.0"
     const val AMPLITUDE = "2.25.2"
     const val OK_HTTP = "4.8.1"
 }
 
 object TestVersion {
-    const val J_UNIT = "4.13"
-    const val MOCKK = "1.10.0"
+    const val J_UNIT = "4.13.1"
+    const val MOCKK = "1.10.2"
     const val ARCH_CORE = "2.1.0"
     const val COROUTINES = "1.3.9"
 
