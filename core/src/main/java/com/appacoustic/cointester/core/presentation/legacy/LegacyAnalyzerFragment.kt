@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GestureDetectorCompat
 import com.appacoustic.cointester.core.BuildConfig
 import com.appacoustic.cointester.core.R
+import com.appacoustic.cointester.core.databinding.FragmentLegacyAnalyzerBinding
 import com.appacoustic.cointester.core.framework.AnalyzerUtil
 import com.appacoustic.cointester.core.presentation.analyzer.domain.AnalyzerParams
 import com.appacoustic.cointester.core.presentation.analyzer.view.AnalyzerGraphicView
@@ -37,6 +38,7 @@ import kotlinx.android.synthetic.main.fragment_legacy_analyzer.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LegacyAnalyzerFragment : BaseFragment<
+    FragmentLegacyAnalyzerBinding,
     LegacyAnalyzerViewModel.ViewState,
     LegacyAnalyzerViewModel.ViewEvents,
     LegacyAnalyzerViewModel
@@ -62,7 +64,14 @@ class LegacyAnalyzerFragment : BaseFragment<
         private const val MIN_VALUE = Double.MIN_VALUE
     }
 
-    override val layoutResId = R.layout.fragment_legacy_analyzer
+    override val viewBinding: (LayoutInflater, ViewGroup?) -> FragmentLegacyAnalyzerBinding = { layoutInflater, viewGroup ->
+        FragmentLegacyAnalyzerBinding.inflate(
+            layoutInflater,
+            viewGroup,
+            false
+        )
+    }
+
     override val viewModel: LegacyAnalyzerViewModel by viewModel()
 
     override fun initUI() {
@@ -124,7 +133,7 @@ class LegacyAnalyzerFragment : BaseFragment<
             savedInstanceState
         )
         rootView = inflater.inflate(
-            layoutResId,
+            R.layout.fragment_legacy_analyzer,
             container,
             false
         )

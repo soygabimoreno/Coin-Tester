@@ -3,13 +3,15 @@ package com.appacoustic.cointester.libbase.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import androidx.viewbinding.ViewBinding
 import com.appacoustic.cointester.libbase.viewmodel.BaseViewModel
 
 abstract class BaseFragment<
+    BINDING : ViewBinding,
     VIEW_STATE,
     VIEW_EVENT,
     VIEW_MODEL : BaseViewModel<VIEW_STATE, VIEW_EVENT>
-    > : StatelessBaseFragment<VIEW_EVENT, VIEW_MODEL>() {
+    > : StatelessBaseFragment<BINDING, VIEW_EVENT, VIEW_MODEL>() {
 
     override fun onViewCreated(
         view: View,
