@@ -12,9 +12,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import com.appacoustic.cointester.core.R
+import com.appacoustic.cointester.core.databinding.ActivityAudioSourcesCheckerBinding
 import com.appacoustic.cointester.core.framework.AnalyzerUtil
-import kotlinx.android.synthetic.main.activity_audio_sources_checker.*
-import java.util.*
+import java.util.ArrayList
 
 /**
  * Check all (including unknown) recorder sources by open it and read data.
@@ -43,13 +43,16 @@ class AudioSourcesCheckerActivity : AppCompatActivity() {
     @Volatile
     private var bShouldStop = false
 
+    private lateinit var binding: ActivityAudioSourcesCheckerBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_audio_sources_checker)
+        binding = ActivityAudioSourcesCheckerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setupActionBar()
         analyzerUtil = AnalyzerUtil(this)
         testResultSt = null
-        tvAudioSourcesChecker.movementMethod = ScrollingMovementMethod()
+        binding.tvAudioSourcesChecker.movementMethod = ScrollingMovementMethod()
     }
 
     private fun setupActionBar() {
@@ -81,21 +84,21 @@ class AudioSourcesCheckerActivity : AppCompatActivity() {
             R.id.menuAudioSourcesCheckerStandardSources -> {
                 bShouldStop = true
                 runTest(
-                    tvAudioSourcesChecker,
+                    binding.tvAudioSourcesChecker,
                     TEST_LEVEL_STANDARD_SOURCES
                 )
             }
             R.id.menuAudioSourcesCheckerSupportedSources -> {
                 bShouldStop = true
                 runTest(
-                    tvAudioSourcesChecker,
+                    binding.tvAudioSourcesChecker,
                     TEST_LEVEL_SUPPORTED_SOURCES
                 )
             }
             R.id.menuAudioSourcesCheckerAllSources -> {
                 bShouldStop = true
                 runTest(
-                    tvAudioSourcesChecker,
+                    binding.tvAudioSourcesChecker,
                     TEST_LEVEL_ALL_SOURCES
                 )
             }
@@ -106,11 +109,11 @@ class AudioSourcesCheckerActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (testResultSt != null) {
-            tvAudioSourcesChecker.text = testResultSt
+            binding.tvAudioSourcesChecker.text = testResultSt
             return
         }
         runTest(
-            tvAudioSourcesChecker,
+            binding.tvAudioSourcesChecker,
             TEST_LEVEL_SUPPORTED_SOURCES
         )
     }

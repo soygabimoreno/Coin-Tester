@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import com.appacoustic.cointester.core.databinding.FragmentSonometerBinding
 import com.appacoustic.cointester.libFramework.extension.exhaustive
 import com.appacoustic.cointester.libbase.fragment.BaseFragment
-import kotlinx.android.synthetic.main.fragment_sonometer.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SonometerFragment : BaseFragment<
@@ -50,6 +49,6 @@ class SonometerFragment : BaseFragment<
     }
 
     private fun updateRMS(rmsString: String) {
-        tvCustomRMS.text = rmsString
+        binding.tvCustomRMS.text = rmsString
     }
 }

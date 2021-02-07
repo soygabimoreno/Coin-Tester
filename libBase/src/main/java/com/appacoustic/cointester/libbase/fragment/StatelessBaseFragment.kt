@@ -20,7 +20,6 @@ abstract class StatelessBaseFragment<
 
     abstract val viewBinding: (LayoutInflater, ViewGroup?) -> BINDING
     protected lateinit var binding: BINDING
-        private set
 
     protected abstract val viewModel: VIEW_MODEL
 

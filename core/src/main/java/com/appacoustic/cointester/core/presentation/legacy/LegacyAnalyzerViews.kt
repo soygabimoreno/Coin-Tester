@@ -15,14 +15,18 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import android.widget.PopupWindow
+import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.StringRes
 import com.appacoustic.cointester.core.R
+import com.appacoustic.cointester.core.databinding.FragmentLegacyAnalyzerBinding
 import com.appacoustic.cointester.core.framework.AnalyzerUtil
 import com.appacoustic.cointester.core.presentation.analyzer.domain.AnalyzerParams
 import com.appacoustic.cointester.core.presentation.analyzer.domain.StringBuilderNumberFormat
 import com.appacoustic.cointester.core.presentation.analyzer.view.AnalyzerGraphicView
-import kotlinx.android.synthetic.main.fragment_legacy_analyzer.*
 import kotlin.math.log10
 import kotlin.math.min
 
@@ -33,7 +37,8 @@ import kotlin.math.min
 class LegacyAnalyzerViews(
     private val activity: Activity,
     private val analyzerFragment: LegacyAnalyzerFragment,
-    private val agv: AnalyzerGraphicView
+    private val agv: AnalyzerGraphicView,
+    private val binding: FragmentLegacyAnalyzerBinding,
 ) {
 
     companion object {
@@ -87,7 +92,7 @@ class LegacyAnalyzerViews(
         val display = activity.windowManager.defaultDisplay
         // pixels left
         val px = display.width - activity.resources.getDimension(R.dimen.tv_RMS_layout_width) - 5
-        var fs = activity.tvMarker.textSize // size in pixel
+        var fs = binding.tvMarker.textSize // size in pixel
 
         // shrink font size if it can not fit in one line.
         val text = activity.getString(R.string.tv_peak_text)
@@ -99,11 +104,11 @@ class LegacyAnalyzerViews(
             fs -= 0.5f
             mTestPaint.textSize = fs
         }
-        activity.tvMarker.setTextSize(
+        binding.tvMarker.setTextSize(
             TypedValue.COMPLEX_UNIT_PX,
             fs
         )
-        activity.tvPeak.setTextSize(
+        binding.tvPeak.setTextSize(
             TypedValue.COMPLEX_UNIT_PX,
             fs
         )
@@ -205,9 +210,9 @@ class LegacyAnalyzerViews(
 
     fun enableSaveWavView(bSaveWav: Boolean) {
         if (bSaveWav) {
-            activity.tvRec.height = (19 * dpRatio).toInt()
+            binding.tvRec.height = (19 * dpRatio).toInt()
         } else {
-            activity.tvRec.height = (0 * dpRatio).toInt()
+            binding.tvRec.height = (0 * dpRatio).toInt()
         }
     }
 
@@ -382,7 +387,7 @@ class LegacyAnalyzerViews(
             charMarker,
             0
         )
-        activity.tvMarker.setText(
+        binding.tvMarker.setText(
             charMarker,
             0,
             min(
@@ -410,12 +415,12 @@ class LegacyAnalyzerViews(
             charRMS,
             0
         )
-        activity.tvRMS.setText(
+        binding.tvRMS.setText(
             charRMS,
             0,
             charRMS.size
         )
-        activity.tvRMS.invalidate()
+        binding.tvRMS.invalidate()
     }
 
     private fun refreshTvPeak(
@@ -453,12 +458,12 @@ class LegacyAnalyzerViews(
             charPeak,
             0
         )
-        activity.tvPeak.setText(
+        binding.tvPeak.setText(
             charPeak,
             0,
             charPeak.size
         )
-        activity.tvPeak.invalidate()
+        binding.tvPeak.invalidate()
     }
 
     private fun refreshTvRec(
@@ -488,7 +493,7 @@ class LegacyAnalyzerViews(
             charRec,
             0
         )
-        activity.tvRec.setText(
+        binding.tvRec.setText(
             charRec,
             0,
             min(

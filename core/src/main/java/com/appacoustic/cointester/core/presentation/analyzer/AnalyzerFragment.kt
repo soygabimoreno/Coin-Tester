@@ -27,9 +27,6 @@ import com.appacoustic.cointester.libFramework.extension.hideKeyboard
 import com.appacoustic.cointester.libFramework.extension.isFilled
 import com.appacoustic.cointester.libFramework.extension.setOnTextChangedListener
 import com.appacoustic.cointester.libbase.fragment.BaseFragment
-import kotlinx.android.synthetic.main.fragment_analyzer.*
-import kotlinx.android.synthetic.main.fragment_analyzer.agv
-import kotlinx.android.synthetic.main.fragment_legacy_analyzer.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AnalyzerFragment : BaseFragment<
@@ -67,10 +64,10 @@ class AnalyzerFragment : BaseFragment<
     }
 
     private fun initEditText() {
-        etCursor1.setText(AnalyzerViewModel.FREQUENCY_1.toString())
+        binding.etCursor1.setText(AnalyzerViewModel.FREQUENCY_1.toString())
         viewModel.handleCursor1Changed(AnalyzerViewModel.FREQUENCY_1)
 
-        etCursor1.setOnTextChangedListener { frequencyCharSequence ->
+        binding.etCursor1.setOnTextChangedListener { frequencyCharSequence ->
             val frequencyString = frequencyCharSequence.toString()
             if (frequencyString.isFilled()) {
                 val frequency = frequencyString.toDouble()
@@ -80,7 +77,7 @@ class AnalyzerFragment : BaseFragment<
     }
 
     private fun initFab() {
-        fabRefresh.setOnClickListener {
+        binding.fabRefresh.setOnClickListener {
             restartSampling(analyzerParams)
         }
     }
@@ -102,7 +99,7 @@ class AnalyzerFragment : BaseFragment<
     }
 
     private fun cursor1Changed(frequency: Double) {
-        agv.setMarkerFrequency(frequency)
+        binding.agv.setMarkerFrequency(frequency)
     }
 
     private lateinit var rootView: View
@@ -136,11 +133,12 @@ class AnalyzerFragment : BaseFragment<
             container,
             savedInstanceState
         )
-        rootView = inflater.inflate(
-            R.layout.fragment_analyzer,
+        binding = FragmentAnalyzerBinding.inflate(
+            inflater,
             container,
             false
         )
+        rootView = binding.root
         return rootView
     }
 
@@ -152,7 +150,7 @@ class AnalyzerFragment : BaseFragment<
             view,
             savedInstanceState
         )
-        agv.setAxisModeLinear("log")
+        binding.agv.setAxisModeLinear("log")
 
         analyzerParams = viewModel.analyzerParams
 
@@ -166,12 +164,12 @@ class AnalyzerFragment : BaseFragment<
         loadPreferenceForView()
         analyzerViews = AnalyzerViews(
             activity = requireActivity(),
-            agv = agv
+            agv = binding.agv
         )
 
         // travel Views, and attach ClickListener to the views that contain android:tag="select"
         visit(
-            agv.rootView as ViewGroup,
+            binding.agv.rootView as ViewGroup,
             object : Visit {
                 override fun exec(view: View) {
                     (view as TextView).freezesText = true
@@ -183,7 +181,7 @@ class AnalyzerFragment : BaseFragment<
         rangeViewDialogC = RangeViewDialogC(
             requireActivity(),
             this,
-            agv
+            binding.agv
         )
 
         gestureDetector = GestureDetectorCompat(
@@ -203,7 +201,7 @@ class AnalyzerFragment : BaseFragment<
     override fun onResume() {
         super.onResume()
         loadPreferences()
-        agv.setReady(this) // TODO: move this earlier?
+        binding.agv.setReady(this) // TODO: move this earlier?
 
         // Used to prevent extra calling to restartSampling() (e.g. in LoadPreferences())
         bSamplingPreparation = true
@@ -304,59 +302,63 @@ class AnalyzerFragment : BaseFragment<
 
         // Settings of graph view
         // spectrum
-        agv.setShowLines(
+        binding.agv.setShowLines(
             sharedPref.getBoolean(
                 "showLines",
                 false
             )
         )
         // set spectrum show range
-        agv.setSpectrumDBLowerBound(
+        binding.agv.setSpectrumDBLowerBound(
             sharedPref.getString(
                 "spectrumRange",
                 java.lang.Double.toString(AnalyzerGraphicView.MIN_DB)
-            )!!.toFloat().toDouble()
+            )!!
+                .toFloat()
+                .toDouble()
         )
 
         // spectrogram
-        agv.setSpectrogramModeShifting(
+        binding.agv.setSpectrogramModeShifting(
             sharedPref.getBoolean(
                 "spectrogramShifting",
                 false
             )
         )
-        agv.setShowTimeAxis(
+        binding.agv.setShowTimeAxis(
             sharedPref.getBoolean(
                 "spectrogramTimeAxis",
                 true
             )
         )
-        agv.setShowFreqAlongX(
+        binding.agv.setShowFreqAlongX(
             sharedPref.getBoolean(
                 "spectrogramShowFreqAlongX",
                 true
             )
         )
-        agv.setSmoothRender(
+        binding.agv.setSmoothRender(
             sharedPref.getBoolean(
                 "spectrogramSmoothRender",
                 false
             )
         )
-        agv.setColorMap(
+        binding.agv.setColorMap(
             sharedPref.getString(
                 "spectrogramColorMap",
                 "Hot"
             )
         )
         // set spectrogram show range
-        agv.setSpectrogramDBLowerBound(
+        binding.agv.setSpectrogramDBLowerBound(
             sharedPref.getString(
                 "spectrogramRange",
-                java.lang.Double.toString(agv.spectrogramPlot!!.spectrogramBMP.getdBLowerBound())
-            )!!.toFloat().toDouble()
+                java.lang.Double.toString(binding.agv.spectrogramPlot!!.spectrogramBMP.getdBLowerBound())
+            )!!
+                .toFloat()
+                .toDouble()
         )
-        agv.setLogAxisMode(
+        binding.agv.setLogAxisMode(
             sharedPref.getBoolean(
                 "spectrogramLogPlotMethod",
                 true
@@ -375,7 +377,7 @@ class AnalyzerFragment : BaseFragment<
 
         // Apply settings by travel the views with android:tag="select":
         visit(
-            agv.rootView as ViewGroup,
+            binding.agv.rootView as ViewGroup,
             object : Visit {
                 override fun exec(v: View) {
 //                    processClick(v)
@@ -426,8 +428,8 @@ class AnalyzerFragment : BaseFragment<
         x: Float,
         y: Float
     ): Boolean {
-        agv.getLocationInWindow(windowLocation)
-        return x >= windowLocation[0] && y >= windowLocation[1] && x < windowLocation[0] + agv.width && y < windowLocation[1] + agv.height
+        binding.agv.getLocationInWindow(windowLocation)
+        return x >= windowLocation[0] && y >= windowLocation[1] && x < windowLocation[0] + binding.agv.width && y < windowLocation[1] + binding.agv.height
     }
 
     /**
@@ -458,7 +460,7 @@ class AnalyzerFragment : BaseFragment<
         override fun onDoubleTap(event: MotionEvent): Boolean {
             if (!isMeasure) {
                 scaleEvent(event) // ends scale mode
-                agv.resetViewScale()
+                binding.agv.resetViewScale()
             }
             return true
         }
@@ -508,8 +510,8 @@ class AnalyzerFragment : BaseFragment<
                 if (shiftingVelocity > 0f
                     && SystemClock.uptimeMillis() - timeFlingStart < 10000
                 ) {
-                    agv.xShift = agv.xShift - shiftingComponentX * shiftingPixel / agv.canvasWidth / agv.xZoom
-                    agv.yShift = agv.yShift - shiftingComponentY * shiftingPixel / agv.canvasHeight / agv.yZoom
+                    binding.agv.xShift = binding.agv.xShift - shiftingComponentX * shiftingPixel / binding.agv.canvasWidth / binding.agv.xZoom
+                    binding.agv.yShift = binding.agv.yShift - shiftingComponentY * shiftingPixel / binding.agv.canvasHeight / binding.agv.yZoom
                     // Am I need to use runOnUiThread() ?
                     analyzerViews.invalidateGraphView()
                     flyingMoveHandler.postDelayed(
@@ -534,7 +536,7 @@ class AnalyzerFragment : BaseFragment<
      */
     private fun measureEvent(event: MotionEvent) {
         when (event.pointerCount) {
-            1 -> agv.setMarker(
+            1 -> binding.agv.setMarker(
                 event.x,
                 event.y
             )
@@ -566,18 +568,26 @@ class AnalyzerFragment : BaseFragment<
         when (event.pointerCount) {
             2 -> {
                 if (isPinching) {
-                    agv.setShiftScale(
-                        event.getX(0).toDouble(),
-                        event.getY(0).toDouble(),
-                        event.getX(1).toDouble(),
-                        event.getY(1).toDouble()
+                    binding.agv.setShiftScale(
+                        event.getX(0)
+                            .toDouble(),
+                        event.getY(0)
+                            .toDouble(),
+                        event.getX(1)
+                            .toDouble(),
+                        event.getY(1)
+                            .toDouble()
                     )
                 } else {
-                    agv.setShiftScaleBegin(
-                        event.getX(0).toDouble(),
-                        event.getY(0).toDouble(),
-                        event.getX(1).toDouble(),
-                        event.getY(1).toDouble()
+                    binding.agv.setShiftScaleBegin(
+                        event.getX(0)
+                            .toDouble(),
+                        event.getY(0)
+                            .toDouble(),
+                        event.getX(1)
+                            .toDouble(),
+                        event.getY(1)
+                            .toDouble()
                     )
                 }
                 isPinching = true
@@ -585,22 +595,22 @@ class AnalyzerFragment : BaseFragment<
             1 -> {
                 val x = event.getX(0)
                 val y = event.getY(0)
-                agv.getLocationInWindow(windowLocation)
+                binding.agv.getLocationInWindow(windowLocation)
                 // KLog.Companion.i("scaleEvent(): xy=" + x + " " + y + "  wc = " + wc[0] + " " + wc[1]);
                 if (isPinching || xShift0 == MIN_VALUE) {
-                    xShift0 = agv.xShift
+                    xShift0 = binding.agv.xShift
                     x0 = x.toDouble()
-                    yShift0 = agv.yShift
+                    yShift0 = binding.agv.yShift
                     y0 = y.toDouble()
                 } else {
                     // when close to the axis, scroll that axis only
                     if (x0 < windowLocation[0] + 50) {
-                        agv.yShift = yShift0 + (y0 - y) / agv.canvasHeight / agv.yZoom
+                        binding.agv.yShift = yShift0 + (y0 - y) / binding.agv.canvasHeight / binding.agv.yZoom
                     } else if (y0 < windowLocation[1] + 50) {
-                        agv.xShift = xShift0 + (x0 - x) / agv.canvasWidth / agv.xZoom
+                        binding.agv.xShift = xShift0 + (x0 - x) / binding.agv.canvasWidth / binding.agv.xZoom
                     } else {
-                        agv.xShift = xShift0 + (x0 - x) / agv.canvasWidth / agv.xZoom
-                        agv.yShift = yShift0 + (y0 - y) / agv.canvasHeight / agv.yZoom
+                        binding.agv.xShift = xShift0 + (x0 - x) / binding.agv.canvasWidth / binding.agv.xZoom
+                        binding.agv.yShift = yShift0 + (y0 - y) / binding.agv.canvasHeight / binding.agv.yZoom
                     }
                 }
                 isPinching = false
@@ -616,9 +626,9 @@ class AnalyzerFragment : BaseFragment<
     private fun restartSampling(params: AnalyzerParams) {
         viewModel.releaseSampling()
         if (viewRangeArray != null) {
-            agv.setupAxes(this.analyzerParams)
-            val rangeDefault = agv.viewPhysicalRange
-            agv.setViewRange(
+            binding.agv.setupAxes(this.analyzerParams)
+            val rangeDefault = binding.agv.viewPhysicalRange
+            binding.agv.setViewRange(
                 viewRangeArray,
                 rangeDefault
             )
