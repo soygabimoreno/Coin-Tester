@@ -1,5 +1,6 @@
 package com.appacoustic.cointester.core.framework.sampling
 
+import android.annotation.SuppressLint
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.os.SystemClock
@@ -12,7 +13,7 @@ import com.appacoustic.cointester.libFramework.KLog
 import com.appacoustic.libprocessing.SineGenerator
 import com.appacoustic.libprocessing.dBToLinear
 import com.appacoustic.libprocessingandroid.wav.WavWriter
-import java.util.*
+import java.util.Arrays
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
@@ -101,6 +102,7 @@ class SamplingLoopThread(
         )
     }
 
+    @SuppressLint("MissingPermission")
     override fun run() {
         val timeStart = SystemClock.uptimeMillis()
         listener.onInitGraphs()
@@ -359,7 +361,8 @@ class SamplingLoopThread(
                 )
             }
             2 -> for (i in 0 until sizeInShorts) {
-                shorts[i] = (sampleValueMax * (2.0 * Math.random() - 1)).toShort()
+                shorts[i] = (sampleValueMax * (2.0 * Math.random() - 1)).toInt()
+                    .toShort()
             }
             else -> KLog.w("This id has no source: $audioSourceId")
         }
@@ -373,7 +376,8 @@ class SamplingLoopThread(
         offsetInShorts: Int
     ) {
         for (i in 0 until sizeInShorts) {
-            shorts[offsetInShorts + i] = round(data!![i]).toShort()
+            shorts[offsetInShorts + i] = round(data!![i]).toInt()
+                .toShort()
         }
     }
 

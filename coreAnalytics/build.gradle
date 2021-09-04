@@ -16,7 +16,6 @@ dependencies {
     implementation KoinDependency.KOIN_VIEW_MODEL
 
     implementation ArrowDependency.ARROW_CORE
-    implementation ArrowDependency.ARROW_SYNTAX
     kapt ArrowDependency.ARROW_META
 
     implementation(AmplitudeDependency.AMPLITUDE)
