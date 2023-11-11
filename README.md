@@ -17,3 +17,13 @@ Anyway, if you see any class or whatever that needs any reference to any code, p
 
 
 More info on [AppAcoustiC](http://appacoustic.com/).
+
+### Collaborate
+
+I am [Gabi Moreno](https://gabimoreno.soy).
+
+This is an open source project. **Feel free to request issues**.
+
+And for sure, **Pull Requests are opened** and super-well received.
+
+Thank you very much! 🤗
