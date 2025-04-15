@@ -308,6 +308,7 @@ class LegacyAnalyzerFragment : BaseFragment<
                 showInstructions()
                 true
             }
+
             R.id.menuMainPreferences -> {
                 MyPreferenceActivity.launch(
                     requireContext(),
@@ -316,18 +317,22 @@ class LegacyAnalyzerFragment : BaseFragment<
                 )
                 true
             }
+
             R.id.menuMainAudioSourcesChecker -> {
                 AudioSourcesCheckerActivity.launch(requireContext())
                 true
             }
+
             R.id.menuMainRanges -> {
                 rangeViewDialogC.show()
                 true
             }
+
             R.id.menuMainCalibration -> {
                 selectFile()
                 super.onOptionsItemSelected(item)
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -445,6 +450,7 @@ class LegacyAnalyzerFragment : BaseFragment<
                     analyzerParams.sampleRate
                 )
             }
+
             R.id.btnFFTLength -> {
                 analyzerViews.popupMenuFFTLen.dismiss()
                 analyzerParams.fftLength = selectedItemTag.toInt()
@@ -459,6 +465,7 @@ class LegacyAnalyzerFragment : BaseFragment<
                     calibrationLoad
                 )
             }
+
             R.id.btnAverage -> {
                 analyzerViews.popupMenuFFTAverage.dismiss()
                 analyzerParams.nFftAverage = selectedItemTag.toInt()
@@ -469,6 +476,7 @@ class LegacyAnalyzerFragment : BaseFragment<
                     analyzerParams.nFftAverage
                 )
             }
+
             else -> {
                 b_need_restart_audio = false
             }
@@ -646,18 +654,17 @@ class LegacyAnalyzerFragment : BaseFragment<
         )
         if (isLock) {
             // Set view range and stick to measure mode
-            var rr: DoubleArray? = DoubleArray(AnalyzerGraphicView.VIEW_RANGE_DATA_LENGTH)
-            for (i in rr!!.indices) {
-                rr[i] = AnalyzerUtil.getDouble(
+            val tempRr = DoubleArray(AnalyzerGraphicView.VIEW_RANGE_DATA_LENGTH)
+            val hasInvalidValues = tempRr.indices.any { i ->
+                tempRr[i] = AnalyzerUtil.getDouble(
                     sharedPref,
                     "view_range_rr_$i",
                     0.0 / 0.0
                 )
-                if (java.lang.Double.isNaN(rr[i])) {  // not properly initialized
-                    rr = null
-                    break
-                }
+                java.lang.Double.isNaN(tempRr[i])
             }
+
+            val rr = if (hasInvalidValues) null else tempRr
             viewRangeArray = rr
             stickToMeasureMode()
         } else {
@@ -729,8 +736,8 @@ class LegacyAnalyzerFragment : BaseFragment<
         }
 
         override fun onFling(
-            event1: MotionEvent,
-            event2: MotionEvent,
+            e1: MotionEvent?,
+            e2: MotionEvent,
             velocityX: Float,
             velocityY: Float
         ): Boolean {
@@ -803,6 +810,7 @@ class LegacyAnalyzerFragment : BaseFragment<
                 event.x,
                 event.y
             )
+
             2 -> if (isInGraphView(
                     event.getX(1),
                     event.getY(1)
@@ -855,6 +863,7 @@ class LegacyAnalyzerFragment : BaseFragment<
                 }
                 isPinching = true
             }
+
             1 -> {
                 val x = event.getX(0)
                 val y = event.getY(0)
@@ -878,6 +887,7 @@ class LegacyAnalyzerFragment : BaseFragment<
                 }
                 isPinching = false
             }
+
             else -> KLog.i("Invalid touch count")
         }
     }
@@ -1036,6 +1046,7 @@ class LegacyAnalyzerFragment : BaseFragment<
         when (requestCode) {
             MY_PERMISSIONS_REQUEST_RECORD_AUDIO -> {
             }
+
             MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE -> {
                 if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (!saveWav) {
@@ -1079,12 +1090,14 @@ class LegacyAnalyzerFragment : BaseFragment<
                 analyzerViews.enableSaveWavView(saveWav)
                 true
             }
+
             R.id.stRunStop -> {
                 val paused = value == STOP
                 viewModel.setSamplingPaused(paused)
                 binding.agv.spectrogramPlot?.setPause(paused)
                 false
             }
+
             R.id.stLinearLogNote -> {
                 binding.agv.setAxisModeLinear(value)
                 editor.putString(
@@ -1094,6 +1107,7 @@ class LegacyAnalyzerFragment : BaseFragment<
                 editor.apply()
                 false
             }
+
             R.id.stDBDBA -> {
                 analyzerParams.dbaWeighting = value != "dB"
                 viewModel.setSamplingDbaWeighting(analyzerParams.dbaWeighting)
@@ -1104,6 +1118,7 @@ class LegacyAnalyzerFragment : BaseFragment<
                 editor.commit()
                 false
             }
+
             R.id.stSpectrumSpectrogramMode -> {
                 if (value == "spum") {
                     binding.agv.switch2Spectrum()
@@ -1117,6 +1132,7 @@ class LegacyAnalyzerFragment : BaseFragment<
                 editor.commit()
                 false
             }
+
             else -> true
         }
     }

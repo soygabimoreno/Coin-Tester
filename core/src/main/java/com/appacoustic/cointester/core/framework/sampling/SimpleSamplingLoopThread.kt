@@ -12,7 +12,6 @@ import com.appacoustic.cointester.libFramework.KLog
 import com.appacoustic.libprocessing.SineGenerator
 import com.appacoustic.libprocessing.dBToLinear
 import com.appacoustic.libprocessingandroid.wav.WavWriter
-import org.koin.core.component.KoinApiExtension
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.Arrays
@@ -24,7 +23,6 @@ import kotlin.math.round
 /**
  * Read a snapshot of audio data at a regular interval and compute the FFT.
  */
-@OptIn(KoinApiExtension::class)
 class SimpleSamplingLoopThread(
     private val analyzerParams: AnalyzerParams,
     @Volatile var paused: Boolean,

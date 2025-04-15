@@ -51,23 +51,19 @@ class ListAdapterBuilder<T, VH : ListAdapterBuilder.ViewHolder<T>>() {
         val createViewHolder = requireNotNull(viewHolderCreation)
 
         val diffCalculator = object : DiffUtil.ItemCallback<T>() {
-            override fun areItemsTheSame(
-                oldItem: T,
-                newItem: T
-            ): Boolean =
-                byReference(
+            override fun areItemsTheSame(oldItem: T & Any, newItem: T & Any): Boolean {
+                return byReference(
                     oldItem,
                     newItem
                 )
+            }
 
-            override fun areContentsTheSame(
-                oldItem: T,
-                newItem: T
-            ): Boolean =
-                byContent(
+            override fun areContentsTheSame(oldItem: T & Any, newItem: T & Any): Boolean {
+                return byContent(
                     oldItem,
                     newItem
                 )
+            }
         }
 
         return object : ListAdapter<T, VH>(diffCalculator) {
