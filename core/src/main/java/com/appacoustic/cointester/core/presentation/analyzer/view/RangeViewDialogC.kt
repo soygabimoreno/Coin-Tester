@@ -70,26 +70,33 @@ class RangeViewDialogC(
         )
         // If locked, load the saved value
         if (isLock || loadSaved) {
-            var rr: DoubleArray? = DoubleArray(AnalyzerGraphicView.VIEW_RANGE_DATA_LENGTH)
-            for (i in rr!!.indices) {
-                rr[i] = AnalyzerUtil.getDouble(
+            val tempRr = DoubleArray(AnalyzerGraphicView.VIEW_RANGE_DATA_LENGTH)
+            var isValid = true
+
+            for (i in tempRr.indices) {
+                tempRr[i] = AnalyzerUtil.getDouble(
                     sharedPref,
                     "view_range_rr_$i",
                     0.0 / 0.0
                 )
-                if (java.lang.Double.isNaN(rr[i])) {  // not properly initialized
+                if (java.lang.Double.isNaN(tempRr[i])) {  // not properly initialized
                     w("rr is not properly initialized")
-                    rr = null
+                    isValid = false
                     break
                 }
             }
-            if (rr != null) System.arraycopy(
-                rr,
-                0,
-                vals,
-                0,
-                rr.size
-            )
+
+            val rr = if (isValid) tempRr else null
+
+            if (rr != null) {
+                System.arraycopy(
+                    rr,
+                    0,
+                    vals,
+                    0,
+                    rr.size
+                )
+            }
         }
         val df = DecimalFormat("#.##")
         (rangeViewView.findViewById<View>(R.id.etRangesFreqLowerBound) as EditText)

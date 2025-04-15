@@ -393,18 +393,17 @@ class AnalyzerFragment : BaseFragment<
         )
         if (isLock) {
             // Set view range and stick to measure mode
-            var rr: DoubleArray? = DoubleArray(AnalyzerGraphicView.VIEW_RANGE_DATA_LENGTH)
-            for (i in rr!!.indices) {
-                rr[i] = AnalyzerUtil.getDouble(
+            val tempRr: DoubleArray = DoubleArray(AnalyzerGraphicView.VIEW_RANGE_DATA_LENGTH)
+            val hasInvalidValues = tempRr.indices.any { i ->
+                tempRr[i] = AnalyzerUtil.getDouble(
                     sharedPref,
                     "view_range_rr_$i",
                     0.0 / 0.0
                 )
-                if (java.lang.Double.isNaN(rr[i])) {  // not properly initialized
-                    rr = null
-                    break
-                }
+                java.lang.Double.isNaN(tempRr[i])
             }
+
+            val rr = if (hasInvalidValues) null else tempRr
             viewRangeArray = rr
             stickToMeasureMode()
         } else {
@@ -466,8 +465,8 @@ class AnalyzerFragment : BaseFragment<
         }
 
         override fun onFling(
-            event1: MotionEvent,
-            event2: MotionEvent,
+            e1: MotionEvent?,
+            e2: MotionEvent,
             velocityX: Float,
             velocityY: Float
         ): Boolean {
@@ -540,6 +539,7 @@ class AnalyzerFragment : BaseFragment<
                 event.x,
                 event.y
             )
+
             2 -> if (isInGraphView(
                     event.getX(1),
                     event.getY(1)
@@ -592,6 +592,7 @@ class AnalyzerFragment : BaseFragment<
                 }
                 isPinching = true
             }
+
             1 -> {
                 val x = event.getX(0)
                 val y = event.getY(0)
@@ -615,6 +616,7 @@ class AnalyzerFragment : BaseFragment<
                 }
                 isPinching = false
             }
+
             else -> KLog.i("Invalid touch count")
         }
     }

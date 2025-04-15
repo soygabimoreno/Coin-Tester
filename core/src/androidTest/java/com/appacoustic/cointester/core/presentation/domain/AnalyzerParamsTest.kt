@@ -1,7 +1,6 @@
 package com.appacoustic.cointester.core.presentation.domain
 
 import androidx.test.InstrumentationRegistry
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.appacoustic.cointester.core.R
 import com.appacoustic.cointester.core.presentation.analyzer.domain.AnalyzerParams
 import com.appacoustic.cointester.coreAnalytics.error.ErrorTrackerComponent
@@ -10,9 +9,8 @@ import io.mockk.verify
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
+
 class AnalyzerParamsTest {
 
     private lateinit var audioSourceNames: Array<String>

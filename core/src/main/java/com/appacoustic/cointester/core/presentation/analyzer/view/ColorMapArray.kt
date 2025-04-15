@@ -8,7 +8,7 @@ import com.appacoustic.cointester.libFramework.KLog.Companion.i
 internal object ColorMapArray {
     @JvmStatic
     fun selectColorMap(colorMapName: String): IntArray {
-        return when (colorMapName.toLowerCase()) {
+        return when (colorMapName.lowercase()) {
             "hot" -> hot
             "jet" -> jet
             "gray" -> gray

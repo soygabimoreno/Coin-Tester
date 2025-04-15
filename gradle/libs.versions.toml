@@ -1,0 +1,179 @@
+[versions]
+# Build Tools
+agp = "8.9.1"
+
+# Kotlin & Language Tools
+androidTools = "31.9.1"
+kotlin = "2.1.10"
+ksp = "2.1.10-1.0.29"
+coroutinesCore = "1.10.1"
+coroutinesAndroid = "1.10.1"
+coroutinesTest = "1.10.1"
+jetbrainsKotlinJvmVersion = "2.0.0"
+
+# AndroidX Core & UI
+activity = "1.10.1"
+appcompat = "1.7.0"
+constraintlayout = "2.2.1"
+coreKtx = "1.16.0"
+lifecycle = "2.8.7"
+material = "1.12.0"
+browser = "1.8.0"
+recyclerview = "1.4.0"
+swiperefreshlayout = "1.1.0"
+
+# DI
+koin = "4.0.2"
+
+# Firebase
+firebaseBom = "33.12.0"
+firebase-crashlytics = "3.0.3"
+google-services = "4.4.2"
+
+# Arrow
+arrowCore = "1.2.0"
+
+# Room
+room = "2.7.0"
+
+# Networking
+retrofit = "2.9.0"
+okhttp = "4.12.0"
+okhttp-logging = "4.12.0"
+
+# Media
+exoplayer = "2.19.1"
+lottie = "6.1.0"
+
+# External Libraries
+amplitude = "3.35.1"
+dexter = "6.2.3"
+gson = "2.11.0"
+mpandroidchart = "v3.1.0"
+playReview = "2.0.2"
+iirj = "1.1"
+glide = "4.16.0"
+viewpagerdotsindicator = "4.3"
+circleimageview = "3.1.0"
+
+# Testing
+junit = "4.13.2"
+junitVersion = "1.2.1"
+mockk = "1.13.10"
+coreTesting = "2.2.0"
+espressoCore = "3.6.1"
+testRunner = "1.6.2"
+testExtJunit = "1.2.1"
+testCore = "1.6.1"
+arch-core = "2.2.0"
+barista = "4.2.0"
+mockwebserver = "4.12.0"
+idling-resource = "1.0.0"
+
+# Project versions
+applicationId = "com.appacoustic.cointester"
+compileSdkVersion = "35"
+buildToolsVersion = "35.0.0"
+minSdkVersion = "26"
+targetSdkVersion = "35"
+versionCode = "5"
+versionName = "0.3.0"
+
+[libraries]
+# AndroidX Core & UI
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
+androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
+
+# Architecture & DI
+koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
+koin-android = { group = "io.insert-koin", name = "koin-android" }
+koin-core = { group = "io.insert-koin", name = "koin-core" }
+koin-test = { group = "io.insert-koin", name = "koin-test" }
+
+# Kotlin & Coroutines
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutinesCore" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutinesAndroid" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+
+# Arrow
+arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrowCore" }
+arrow-optics = { module = "io.arrow-kt:arrow-optics", version.ref = "arrowCore" }
+arrow-fx = { group = "io.arrow-kt", name = "arrow-fx-coroutines", version.ref = "arrowCore" }
+arrow-optics-ksp-plugin = { module = "io.arrow-kt:arrow-optics-ksp-plugin", version.ref = "arrowCore" }
+
+# Firebase
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+firebase-config = { module = "com.google.firebase:firebase-config-ktx" }
+
+# Room
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+
+# Networking
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp-logging" }
+
+# Media
+exoplayer-core = { group = "com.google.android.exoplayer", name = "exoplayer-core", version.ref = "exoplayer" }
+exoplayer-ui = { group = "com.google.android.exoplayer", name = "exoplayer-ui", version.ref = "exoplayer" }
+lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
+
+# External Libraries
+google-play-review = { group = "com.google.android.play", name = "review-ktx", version.ref = "playReview" }
+karumi-dexter = { group = "com.karumi", name = "dexter", version.ref = "dexter" }
+mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpandroidchart" }
+amplitude = { group = "com.amplitude", name = "android-sdk", version.ref = "amplitude" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+iirj = { group = "uk.me.berndporr", name = "iirj", version.ref = "iirj" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref = "glide" }
+glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
+viewpagerdotsindicator = { group = "com.tbuonomo", name = "dotsindicator", version.ref = "viewpagerdotsindicator" }
+circleimageview = { group = "de.hdodenhof", name = "circleimageview", version.ref = "circleimageview" }
+
+# Testing
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
+mockk-webserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "mockwebserver" }
+androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "testRunner" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "testExtJunit" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "testCore" }
+barista = { group = "com.adevinta.android", name = "barista", version.ref = "barista" }
+idling-resource = { group = "androidx.test", name = "espresso-idling-resource", version.ref = "idling-resource" }
+
+# Gradle
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
+android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrainsKotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvmVersion" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+room = { id = "androidx.room", version.ref = "room" }
+
+cointester-android-library = { id = "cointester.android.library", version = "unspecified" }
+cointester-jvm-library = { id = "cointester.jvm.library", version = "unspecified" }

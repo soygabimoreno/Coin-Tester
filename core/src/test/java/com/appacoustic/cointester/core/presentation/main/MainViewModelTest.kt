@@ -6,8 +6,7 @@ import com.appacoustic.cointester.coreAnalytics.AnalyticsTrackerComponent
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -22,8 +21,7 @@ class MainViewModelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val testDispatcher = TestCoroutineDispatcher()
-    private val testCoroutineScope = TestCoroutineScope(testDispatcher)
+    private val testDispatcher = StandardTestDispatcher()
 
     private val analyzerParams = mockk<AnalyzerParams>()
     val analyticsTrackerComponent = mockk<AnalyticsTrackerComponent>(relaxed = true)
@@ -36,14 +34,14 @@ class MainViewModelTest {
     @After
     fun cleanup() {
         Dispatchers.resetMain()
-        testCoroutineScope.cleanupTestCoroutines()
     }
 
     @Test
     fun `at start, navigate to the analyzer`() {
         val viewModel = buildViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
 
-        val event = viewModel.viewEvents.poll()
+        val event = viewModel.viewEvents.tryReceive().getOrNull()
         assertTrue(event is MainViewModel.ViewEvents.NavigateToAnalyzer)
     }
 
